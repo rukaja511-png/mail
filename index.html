@@ -10,12 +10,12 @@
     
     <style>
         :root {
-            --bg-body: #0b132b;
-            --card-bg: #1c2541;
+            --bg-body: #070d1b;
+            --card-bg: #111c38;
             --text-main: #ffffff;
-            --text-sub: #cbd5e1;
-            --border-color: #3a506b;
-            --input-bg: #0f172a;
+            --text-sub: #94a3b8;
+            --border-color: #233554;
+            --input-bg: #090f1d;
             --accent-blue: #3b82f6;
             --accent-green: #10b981;
             --accent-red: #ef4444;
@@ -97,28 +97,89 @@
 
         .main-content {
             padding: 20px;
-            max-width: 1100px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
         .card-box {
-            background-color: var(--card-bg);
+            background: linear-gradient(145deg, #132247, #0e1732);
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 18px;
-            height: 100%;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            padding: 22px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: 0.2s;
+            transition: 0.3s;
         }
 
-        .card-box:hover {
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .shop-item-card {
+            background: #111c38;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.25s ease;
+            position: relative;
+        }
+
+        .shop-item-card:hover {
             border-color: var(--accent-blue);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.2);
         }
 
-        /* Main Category Tabs with Neon Glow Effect */
+        .pay-method-card {
+            background: #090f1d;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 16px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pay-method-card:hover {
+            border-color: var(--accent-blue);
+            background: #0d1730;
+        }
+
+        .pay-method-card.selected {
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            background: #101c38;
+        }
+
+        .pay-logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 12px;
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .logo-bkash { background: #e2136e; }
+        .logo-nagad { background: #ec1c24; }
+        .logo-rocket { background: #8c359d; }
+        .logo-upay { background: #f36c21; }
+        .logo-default { background: #3b82f6; }
+
         .main-categories-wrapper {
             display: flex;
             gap: 12px;
@@ -153,7 +214,7 @@
             background: linear-gradient(135deg, #1e3a8a, #2563eb);
             color: #ffffff;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), inset 0 0 10px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
         }
 
         .form-control, .form-select {
@@ -166,7 +227,7 @@
         }
 
         .form-control::placeholder, .form-select::placeholder {
-            color: #94a3b8 !important;
+            color: #64748b !important;
         }
 
         .form-control:focus, .form-select:focus {
@@ -191,7 +252,7 @@
         .table td {
             background-color: transparent !important;
             border-color: var(--border-color) !important;
-            color: #e2e8f0 !important;
+            color: #cbd5e1 !important;
         }
 
         .section-pane { display: none; }
@@ -241,38 +302,51 @@
             font-size: 15px;
         }
 
+        /* Fixed High Z-Index Modal Overlays - Positioned Centered on Top */
         .custom-alert-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            z-index: 9999;
+            background: rgba(4, 8, 18, 0.85);
+            backdrop-filter: blur(6px);
+            z-index: 999999;
             display: none;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
         }
 
         .custom-alert-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 18px;
+            border-radius: 20px;
             width: 100%;
-            max-width: 380px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+            max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 25px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+            animation: modalScaleUp 0.3s ease;
+            margin: auto;
+        }
+
+        @keyframes modalScaleUp {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
+<!-- GENERAL NOTICE MODAL -->
 <div id="custom-alert-overlay" class="custom-alert-overlay">
     <div class="custom-alert-box">
-        <div class="d-flex justify-content-between align-items-center mb-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold text-info fs-5"><i class="fa-solid fa-circle-info me-2"></i>Notice</span>
             <button onclick="closeCustomAlert()" class="btn-close btn-close-white"></button>
         </div>
-        <div id="custom-alert-message" class="text-white py-3 mb-2" style="font-size: 15px;"></div>
+        <div id="custom-alert-message" class="text-white py-3 mb-3" style="font-size: 15px; word-break: break-all;"></div>
         <div class="text-end">
             <button onclick="closeCustomAlert()" class="btn btn-primary rounded-pill px-4 fw-bold">OK</button>
         </div>
@@ -306,7 +380,7 @@
                 <div class="qty-box">
                     <button onclick="changeModalQty(-1)" class="qty-btn">-</button>
                     <input type="text" id="modal-qty-input" class="qty-input" value="1" readonly>
-                    <button onclick="changeModalQty(1)" class="qty-btn">+</button>
+                    <button onclick="changeModalQty(1)" class="qty-btn">-</button>
                 </div>
             </div>
         </div>
@@ -317,6 +391,23 @@
         <div class="d-flex gap-2">
             <button onclick="closePurchaseModal()" class="btn btn-outline-secondary w-50 rounded-pill fw-bold py-2">Cancel</button>
             <button onclick="confirmAndBuy()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Confirm Buy</button>
+        </div>
+    </div>
+</div>
+
+<!-- SUCCESSFUL PURCHASE RESULT MODAL -->
+<div id="success-result-modal" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold text-success fs-5"><i class="fa-solid fa-circle-check me-2"></i>Purchase Successful!</span>
+            <button onclick="closeSuccessModal()" class="btn-close btn-close-white"></button>
+        </div>
+        <p class="text-sub small mb-2">Here are your purchased account details:</p>
+        <div class="p-3 rounded-3 bg-dark border border-success border-opacity-50 mb-3 font-monospace text-info user-select-all" id="success-accounts-text" style="font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap;"></div>
+        
+        <div class="d-flex gap-2">
+            <button onclick="copySuccessAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
+            <button onclick="closeSuccessModal()" class="btn btn-success w-50 rounded-pill fw-bold py-2">Done</button>
         </div>
     </div>
 </div>
@@ -366,57 +457,107 @@
     <div class="main-content">
         <!-- Home / Shop Tab -->
         <div id="user-section-home" class="section-pane active">
-            <!-- Main Category Navigation Pills -->
             <div id="main-categories-container" class="main-categories-wrapper"></div>
-            
-            <!-- Sub Categories / Items Grid (Responsive: 1 col on mobile, 2 on tablet, 3 on PC) -->
-            <div class="row g-3" id="user-shop-subcategories-grid"></div>
+            <div class="shop-grid" id="user-shop-subcategories-grid"></div>
         </div>
 
         <!-- Deposit Tab -->
         <div id="user-section-deposit" class="section-pane">
-            <div class="card-box">
-                <h5 class="fw-bold mb-3 text-white">Payment Methods</h5>
-                <div id="user-payment-methods-list" class="d-flex flex-column gap-2 mb-4"></div>
-                
-                <h5 class="fw-bold mb-3 text-white">Add Balance Request (Min: ৳20)</h5>
-                <div class="mb-3">
-                    <label class="small text-sub mb-1 fw-semibold">Select Method</label>
-                    <select id="deposit-method-select" class="form-select"></select>
+            <div id="deposit-step-1" class="card-box">
+                <div class="p-3 rounded-3 bg-input border border-primary border-opacity-25 mb-4 d-flex justify-content-between align-items-center">
+                    <div>
+                        <div class="text-sub" style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">MINIMUM DEPOSIT</div>
+                        <div class="fw-bold text-primary fs-5">৳20</div>
+                    </div>
+                    <div class="text-primary bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 14px;">
+                        <i class="fa-solid fa-info"></i>
+                    </div>
                 </div>
+
                 <div class="mb-3">
                     <label class="small text-sub mb-1 fw-semibold">Amount (BDT)</label>
-                    <input type="number" id="deposit-amount" class="form-control" placeholder="20">
+                    <div class="position-relative">
+                        <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-sub fw-bold" style="z-index: 5;">৳</span>
+                        <input type="number" id="deposit-input-amount" class="form-control ps-5" placeholder="0.00">
+                    </div>
                 </div>
+
                 <div class="mb-4">
-                    <label class="small text-sub mb-1 fw-semibold">Transaction ID (TrxID)</label>
-                    <input type="text" id="deposit-trx" class="form-control" placeholder="TrxID here">
+                    <label class="small text-sub mb-2 fw-semibold">Payment Method</label>
+                    <div id="user-payment-methods-list" class="d-flex flex-column gap-2"></div>
                 </div>
-                <button onclick="submitDepositRequest()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Submit Request</button>
+
+                <button onclick="proceedToPaymentInstruction()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">
+                    <i class="fa-solid fa-arrow-right me-2"></i>Continue to Payment
+                </button>
+            </div>
+
+            <div id="deposit-step-2" class="card-box" style="display: none;">
+                <div class="text-center mb-4">
+                    <div id="instruction-method-logo" class="pay-logo logo-default mx-auto mb-2" style="width: 50px; height: 50px; font-size: 16px;">BK</div>
+                    <h5 class="fw-bold text-white m-0" id="instruction-method-title">bKash Payment</h5>
+                </div>
+
+                <div class="p-3 rounded-3 bg-input border border-secondary border-opacity-25 mb-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="text-sub small">Deposit Amount:</span>
+                        <span class="fw-bold text-success fs-5" id="instruction-amount-display">৳0.00 BDT</span>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-column gap-3 mb-4" style="font-size: 14px;">
+                    <div class="d-flex align-items-start gap-3">
+                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">1</span>
+                        <div>Dial <span class="text-info fw-bold" id="instruction-dial-code">*247#</span> or open your <span id="instruction-app-name" class="fw-bold text-white">bKash</span> app.</div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">2</span>
+                        <div>Choose: <span class="text-success fw-bold">Send Money</span></div>
+                    </div>
+                    <div class="d-flex align-items-start gap-3 align-items-center">
+                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">3</span>
+                        <div class="flex-grow-1">
+                            Enter the Number: <span class="text-info fw-bold font-monospace" id="instruction-agent-number">01XXXXXXXXX</span>
+                        </div>
+                        <button onclick="copyInstructionNumber()" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                    </div>
+                    <div class="d-flex align-items-start gap-3 align-items-center">
+                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">4</span>
+                        <div class="flex-grow-1">
+                            Enter the Amount: <span class="text-info fw-bold" id="instruction-amount-text">0 BDT</span>
+                        </div>
+                        <button onclick="copyInstructionAmount()" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                    </div>
+                    <div class="d-flex align-items-start gap-3">
+                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">5</span>
+                        <div>Now enter your <span id="instruction-method-name-pin" class="fw-bold text-white">bKash</span> PIN to confirm.</div>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="small text-sub mb-1 fw-semibold">Enter Transaction ID (TrxID)</label>
+                    <input type="text" id="deposit-trx-input" class="form-control" placeholder="e.g. 9N78XYZ123">
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button onclick="backToDepositStep1()" class="btn btn-outline-secondary w-50 rounded-pill fw-bold py-2">Back</button>
+                    <button onclick="submitFinalDepositRequest()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Submit Request</button>
+                </div>
             </div>
         </div>
 
         <!-- History Tab -->
         <div id="user-section-history" class="section-pane">
-            <div class="card-box">
+            <div class="card-box mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold m-0 text-white">Purchased Accounts</h5>
+                    <h5 class="fw-bold m-0 text-white"><i class="fa-solid fa-bag-shopping text-primary me-2"></i>Purchased Accounts History</h5>
                     <button onclick="copyAllOrders()" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
                 </div>
-                <div class="table-responsive mb-4">
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Details</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody id="user-orders-table-body"></tbody>
-                    </table>
-                </div>
+                <div id="user-orders-cards-container" class="d-flex flex-column gap-3"></div>
+            </div>
 
-                <h5 class="fw-bold mb-3 text-white">Deposit History</h5>
+            <div class="card-box">
+                <h5 class="fw-bold mb-3 text-white"><i class="fa-solid fa-wallet text-success me-2"></i>Deposit History</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered">
                         <thead>
@@ -435,20 +576,44 @@
 
         <!-- Profile Tab -->
         <div id="user-section-profile" class="section-pane">
-            <div class="card-box text-center py-4">
-                <div class="mx-auto mb-3 position-relative" style="width: 85px; height: 85px;">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MailMarketUser" alt="Avatar" class="rounded-circle bg-primary bg-opacity-25 p-2 border border-primary border-opacity-50 w-100 h-100 object-fit-cover shadow">
-                    <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle" style="width: 15px; height: 15px;"></span>
+            <div class="card-box">
+                <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>Account Details</h5>
+                
+                <div class="d-flex flex-column gap-3 mb-4" style="font-size: 14px;">
+                    <div>
+                        <div class="text-sub small">Email Address</div>
+                        <div class="fw-bold text-white fs-6" id="profile-email-text">-</div>
+                    </div>
+                    
+                    <div style="cursor: pointer;" onclick="toggleProfilePassword()" title="Click to show/hide password">
+                        <div class="text-sub small d-flex justify-content-between align-items-center">
+                            <span>Password</span>
+                            <span class="text-primary" style="font-size: 12px;"><i class="fa-solid fa-eye me-1" id="pass-eye-icon"></i><span id="pass-toggle-label">Click to view</span></span>
+                        </div>
+                        <div class="fw-bold text-info font-monospace fs-6" id="profile-pass-display">••••••••</div>
+                    </div>
+
+                    <div>
+                        <div class="text-sub small">Account Balance</div>
+                        <div class="fw-bold text-success fs-6" id="profile-balance-text">৳0.00</div>
+                    </div>
+
+                    <div>
+                        <div class="text-sub small">Account Type</div>
+                        <div class="fw-bold text-white">Customer</div>
+                    </div>
+
+                    <div>
+                        <div class="text-sub small">Member Since</div>
+                        <div class="fw-bold text-white" id="profile-member-since">-</div>
+                    </div>
+
+                    <div>
+                        <div class="text-sub small">Account Status</div>
+                        <div class="fw-bold text-success">Active</div>
+                    </div>
                 </div>
 
-                <h5 class="fw-bold text-white mb-1" id="profile-email-text">-</h5>
-                <div class="bg-input border border-secondary border-opacity-25 rounded-3 p-2 mx-auto my-3" style="max-width: 280px;">
-                    <span class="text-sub small d-block">Password</span>
-                    <span class="text-info font-monospace fw-bold fs-6" id="profile-pass-text">-</span>
-                </div>
-                
-                <span class="badge bg-success bg-opacity-15 text-success px-3 py-1.5 rounded-pill mb-4"><i class="fa-solid fa-shield-check me-1"></i> Active Member</span>
-                
                 <button onclick="userLogout()" class="btn btn-danger w-100 fw-bold py-3 rounded-pill shadow"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout Account</button>
             </div>
         </div>
@@ -495,6 +660,9 @@
 
     let isRegisterMode = false;
     let selectedMainCategory = null;
+    let selectedPaymentMethodData = null;
+    let actualUserPassword = '';
+    let isPasswordVisible = false;
 
     let currentModalData = {
         categoryName: '',
@@ -509,6 +677,17 @@
 
     function closeCustomAlert() {
         document.getElementById('custom-alert-overlay').style.display = 'none';
+    }
+
+    function closeSuccessModal() {
+        document.getElementById('success-result-modal').style.display = 'none';
+    }
+
+    function copySuccessAccounts() {
+        let text = document.getElementById('success-accounts-text').innerText;
+        navigator.clipboard.writeText(text).then(() => {
+            showCustomAlert('Accounts copied to clipboard successfully!');
+        });
     }
 
     window.onload = function() {
@@ -553,13 +732,18 @@
         if(!email || !pass) return showCustomAlert('Please fill in all fields!');
 
         let safeKey = email.replace(/[@.]/g, '_');
+        let currentDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
 
         if(isRegisterMode) {
             db.ref(`users/${safeKey}`).once('value', (snap) => {
                 if(snap.exists()) {
                     showCustomAlert('User already exists with this email!');
                 } else {
-                    db.ref(`users/${safeKey}`).set({ email: email, pass: pass });
+                    db.ref(`users/${safeKey}`).set({ 
+                        email: email, 
+                        pass: pass,
+                        memberSince: currentDate 
+                    });
                     db.ref(`balances/${safeKey}`).set(0);
                     showCustomAlert('Registration successful! Please login.');
                     toggleAuthMode();
@@ -596,7 +780,8 @@
             if(snap.exists()) {
                 let u = snap.val();
                 document.getElementById('profile-email-text').innerText = u.email;
-                document.getElementById('profile-pass-text').innerText = u.pass;
+                actualUserPassword = u.pass;
+                document.getElementById('profile-member-since').innerText = u.memberSince || 'May 15, 2025';
             }
         });
 
@@ -609,7 +794,25 @@
         db.ref(`balances/${safeKey}`).on('value', (snap) => {
             let bal = snap.val() || 0;
             document.getElementById('user-top-balance').innerText = `৳${bal}`;
+            document.getElementById('profile-balance-text').innerText = `৳${bal}`;
         });
+    }
+
+    function toggleProfilePassword() {
+        isPasswordVisible = !isPasswordVisible;
+        let passDisplay = document.getElementById('profile-pass-display');
+        let eyeIcon = document.getElementById('pass-eye-icon');
+        let toggleLabel = document.getElementById('pass-toggle-label');
+
+        if(isPasswordVisible) {
+            passDisplay.innerText = actualUserPassword;
+            eyeIcon.className = "fa-solid fa-eye-slash me-1";
+            toggleLabel.innerText = "Hide password";
+        } else {
+            passDisplay.innerText = "••••••••";
+            eyeIcon.className = "fa-solid fa-eye me-1";
+            toggleLabel.innerText = "Click to view";
+        }
     }
 
     function switchUserTab(tab) {
@@ -620,7 +823,11 @@
         document.getElementById(`user-menu-${tab}`).classList.add('active');
 
         if(tab === 'home') loadUserShop();
-        if(tab === 'deposit') loadUserPaymentMethods();
+        if(tab === 'deposit') {
+            document.getElementById('deposit-step-1').style.display = 'flex';
+            document.getElementById('deposit-step-2').style.display = 'none';
+            loadUserPaymentMethods();
+        }
         if(tab === 'history') {
             loadUserOrders();
             loadUserDepositHistory();
@@ -672,7 +879,7 @@
 
                 let filteredCats = catList.filter(c => c.cat === selectedMainCategory);
                 if(filteredCats.length === 0) {
-                    grid.innerHTML = `<div class="col-12 text-center text-sub py-4">No sub-categories available in this section.</div>`;
+                    grid.innerHTML = `<div class="text-center text-sub py-4">No sub-categories available in this section.</div>`;
                     return;
                 }
 
@@ -687,15 +894,26 @@
                         : `<button class="btn btn-danger fw-bold rounded-pill py-2 w-100 opacity-75 shadow-sm" style="font-size: 14px;" disabled>Stock Out</button>`;
 
                     grid.innerHTML += `
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card-box">
+                        <div class="shop-item-card">
+                            <div>
+                                <h5 class="fw-bold text-white mb-2" style="font-size: 18px;">${c.subCat}</h5>
                                 <div class="mb-3">
-                                    <h5 class="fw-bold text-white mb-2" style="font-size: 16px;">${c.subCat}</h5>
-                                    <div class="text-sub" style="font-size: 13px;">Stock: <span class="text-success fw-bold">${stockCount}</span> | Price: <span class="text-info fw-bold">৳${price}</span></div>
+                                    <span class="fw-bold text-info fs-4">৳${price}</span>
+                                    <span class="text-sub" style="font-size: 11px;"> / account</span>
                                 </div>
-                                <div>
-                                    ${actionBtnHtml}
+
+                                <div class="d-flex flex-column gap-1.5 mb-4 text-sub" style="font-size: 13px;">
+                                    <div><i class="fa-solid fa-check text-success me-2"></i>High Quality</div>
+                                    <div><i class="fa-solid fa-check text-success me-2"></i>Instant Delivery</div>
+                                    <div><i class="fa-solid fa-check text-success me-2"></i>Secure Access</div>
                                 </div>
+                            </div>
+                            <div>
+                                <div class="d-flex justify-content-between align-items-center mb-3" style="font-size: 13px;">
+                                    <span class="text-sub">Stock:</span>
+                                    <span class="text-success fw-bold">${stockCount} available</span>
+                                </div>
+                                ${actionBtnHtml}
                             </div>
                         </div>
                     `;
@@ -765,12 +983,16 @@
 
                 db.ref(`balances/${safeKey}`).set(bal - totalCost);
 
+                let purchasedDetailsList = [];
+
                 targetStockKeys.forEach(stockKey => {
                     let stockData = stocks[stockKey];
                     db.ref(`stocks/${stockKey}`).update({
                         status: 'sold',
                         soldTo: email
                     });
+
+                    purchasedDetailsList.push(stockData.accountDetails);
 
                     db.ref('orders').push({
                         user: email,
@@ -781,7 +1003,10 @@
                 });
 
                 closePurchaseModal();
-                showCustomAlert(`${buyQty} account(s) purchased successfully!`);
+                
+                document.getElementById('success-accounts-text').innerText = purchasedDetailsList.join('\n');
+                document.getElementById('success-result-modal').style.display = 'flex';
+
                 loadUserShop();
             });
         });
@@ -791,27 +1016,44 @@
         let email = localStorage.getItem('apex_logged_user');
         db.ref('orders').on('value', (snap) => {
             let orders = snap.val() || {};
-            let tbody = document.getElementById('user-orders-table-body');
-            tbody.innerHTML = '';
+            let container = document.getElementById('user-orders-cards-container');
+            container.innerHTML = '';
 
             let keys = Object.keys(orders);
             let userOrders = keys.filter(k => orders[k].user === email);
 
             if(userOrders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No purchased orders found.</td></tr>`;
+                container.innerHTML = `<div class="text-center text-sub py-3">No purchased orders found.</div>`;
                 return;
             }
 
             userOrders.reverse().forEach(k => {
                 let o = orders[k];
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${o.category}</td>
-                        <td class="font-monospace text-info user-select-all">${o.accountDetails}</td>
-                        <td class="small text-sub">${o.date}</td>
-                    </tr>
+                let singleAccountText = o.accountDetails;
+
+                container.innerHTML += `
+                    <div class="p-3 rounded-3" style="background: #090f1d; border: 1px solid var(--border-color);">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="fw-bold text-info" style="font-size: 14px;"><i class="fa-solid fa-folder-open me-1"></i> ${o.category}</span>
+                            <span class="text-sub" style="font-size: 12px;"><i class="fa-regular fa-clock me-1"></i> ${o.date}</span>
+                        </div>
+                        <div class="p-2 rounded bg-dark border border-secondary border-opacity-25 font-monospace text-warning mb-2 user-select-all" style="font-size: 13px; word-break: break-all;">
+                            ${singleAccountText}
+                        </div>
+                        <div class="text-end">
+                            <button onclick='copySingleOrderText(${JSON.stringify(singleAccountText)})' class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" style="font-size: 12px;">
+                                <i class="fa-solid fa-copy me-1"></i> Copy Details
+                            </button>
+                        </div>
+                    </div>
                 `;
             });
+        });
+    }
+
+    function copySingleOrderText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showCustomAlert('Account details copied to clipboard!');
         });
     }
 
@@ -834,9 +1076,7 @@
     function loadUserPaymentMethods() {
         db.ref('paymentMethods').on('value', (snap) => {
             let methods = snap.val() || {};
-            let select = document.getElementById('deposit-method-select');
             let listDiv = document.getElementById('user-payment-methods-list');
-            select.innerHTML = '';
             listDiv.innerHTML = '';
 
             let keys = Object.keys(methods);
@@ -845,40 +1085,127 @@
                 return;
             }
 
-            keys.forEach(k => {
+            keys.forEach((k, index) => {
                 let m = methods[k];
-                select.innerHTML += `<option value="${m.name} (${m.type}: ${m.number})">${m.name} - ${m.type} (${m.number})</option>`;
+                let nameLower = m.name.toLowerCase();
+                let logoClass = 'logo-default';
+                let shortText = m.name.substring(0, 3).toUpperCase();
+
+                if(nameLower.includes('bkash')) { logoClass = 'logo-bkash'; shortText = 'bKash'; }
+                else if(nameLower.includes('nagad')) { logoClass = 'logo-nagad'; shortText = 'Nagad'; }
+                else if(nameLower.includes('rocket')) { logoClass = 'logo-rocket'; shortText = 'Rocket'; }
+                else if(nameLower.includes('upay')) { logoClass = 'logo-upay'; shortText = 'Upay'; }
+
+                let isSelectedClass = index === 0 ? 'selected' : '';
+                if(index === 0) {
+                    selectedPaymentMethodData = { name: m.name, number: m.number, type: m.type };
+                }
+
                 listDiv.innerHTML += `
-                    <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25">
-                        <div class="fw-bold text-white">${m.name} (${m.type})</div>
-                        <div class="text-info font-monospace fs-5">${m.number}</div>
+                    <div class="pay-method-card ${isSelectedClass}" id="pay-method-card-${k}" onclick='selectThisPaymentMethod("${k}", ${JSON.stringify(m)})'>
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="pay-logo ${logoClass}">${shortText}</div>
+                            <div>
+                                <div class="fw-bold text-white" style="font-size: 14px;">${m.name}</div>
+                                <div class="text-sub" style="font-size: 12px;">${m.type} Account</div>
+                            </div>
+                        </div>
+                        <div class="form-check m-0">
+                            <input class="form-check-input" type="radio" name="payMethodRadio" id="radio-${k}" ${index === 0 ? 'checked' : ''} style="cursor: pointer;">
+                        </div>
                     </div>
                 `;
             });
         });
     }
 
-    function submitDepositRequest() {
-        let email = localStorage.getItem('apex_logged_user');
-        let method = document.getElementById('deposit-method-select').value;
-        let amount = parseFloat(document.getElementById('deposit-amount').value);
-        let trx = document.getElementById('deposit-trx').value.trim();
+    function selectThisPaymentMethod(key, methodObj) {
+        document.querySelectorAll('.pay-method-card').forEach(el => el.classList.remove('selected'));
+        document.querySelectorAll('input[name="payMethodRadio"]').forEach(el => el.checked = false);
 
-        if(!method || isNaN(amount) || amount < 20 || !trx) {
-            return showCustomAlert('Please fill all fields correctly! Minimum deposit amount is ৳20.');
+        let card = document.getElementById(`pay-method-card-${key}`);
+        let radio = document.getElementById(`radio-${key}`);
+        if(card) card.classList.add('selected');
+        if(radio) radio.checked = true;
+
+        selectedPaymentMethodData = methodObj;
+    }
+
+    function proceedToPaymentInstruction() {
+        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
+        if(isNaN(amount) || amount < 20) return showCustomAlert('Minimum deposit amount is ৳20!');
+        if(!selectedPaymentMethodData) return showCustomAlert('Please select a payment method!');
+
+        document.getElementById('deposit-step-1').style.display = 'none';
+        document.getElementById('deposit-step-2').style.display = 'flex';
+
+        let name = selectedPaymentMethodData.name;
+        let nameLower = name.toLowerCase();
+        let logoClass = 'logo-default';
+        let shortText = name.substring(0, 3).toUpperCase();
+        let dialCode = '*247#';
+
+        if(nameLower.includes('bkash')) { logoClass = 'logo-bkash'; shortText = 'bKash'; dialCode = '*247#'; }
+        else if(nameLower.includes('nagad')) { logoClass = 'logo-nagad'; shortText = 'Nagad'; dialCode = '*167#'; }
+        else if(nameLower.includes('rocket')) { logoClass = 'logo-rocket'; shortText = 'Rocket'; dialCode = '*322#'; }
+        else if(nameLower.includes('upay')) { logoClass = 'logo-upay'; shortText = 'Upay'; dialCode = '*268#'; }
+
+        let logoDiv = document.getElementById('instruction-method-logo');
+        logoDiv.className = `pay-logo ${logoClass} mx-auto mb-2`;
+        logoDiv.innerText = shortText;
+
+        document.getElementById('instruction-method-title').innerText = `${name} Payment`;
+        document.getElementById('instruction-amount-display').innerText = `৳${amount.toFixed(2)} BDT`;
+        document.getElementById('instruction-dial-code').innerText = dialCode;
+        document.getElementById('instruction-app-name').innerText = name;
+        document.getElementById('instruction-agent-number').innerText = selectedPaymentMethodData.number;
+        document.getElementById('instruction-amount-text').innerText = `৳${amount.toFixed(2)} BDT`;
+        document.getElementById('instruction-method-name-pin').innerText = name;
+        document.getElementById('deposit-trx-input').value = '';
+    }
+
+    function backToDepositStep1() {
+        document.getElementById('deposit-step-2').style.display = 'none';
+        document.getElementById('deposit-step-1').style.display = 'flex';
+    }
+
+    function copyInstructionNumber() {
+        let num = selectedPaymentMethodData ? selectedPaymentMethodData.number : '';
+        if(num) {
+            navigator.clipboard.writeText(num).then(() => {
+                showCustomAlert(`Number ${num} copied successfully!`);
+            });
         }
+    }
+
+    function copyInstructionAmount() {
+        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
+        if(!isNaN(amount)) {
+            navigator.clipboard.writeText(amount.toString()).then(() => {
+                showCustomAlert(`Amount ${amount} copied successfully!`);
+            });
+        }
+    }
+
+    function submitFinalDepositRequest() {
+        let email = localStorage.getItem('apex_logged_user');
+        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
+        let trx = document.getElementById('deposit-trx-input').value.trim();
+
+        if(!trx) return showCustomAlert('Please enter your Transaction ID (TrxID)!');
+        let methodStr = `${selectedPaymentMethodData.name} (${selectedPaymentMethodData.type}: ${selectedPaymentMethodData.number})`;
 
         db.ref('deposits').push({
             email: email,
-            method: method,
+            method: methodStr,
             amount: amount,
             trx: trx,
             status: 'Pending',
             date: new Date().toLocaleString()
         });
 
-        document.getElementById('deposit-amount').value = '';
-        document.getElementById('deposit-trx').value = '';
+        document.getElementById('deposit-input-amount').value = '';
+        document.getElementById('deposit-trx-input').value = '';
         showCustomAlert('Deposit request submitted successfully!');
         switchUserTab('history');
     }
