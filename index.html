@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mail Market - User Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --bg-body: #0b132b;
+            --card-bg: #1c2541;
+            --text-main: #ffffff;
+            --text-sub: #cbd5e1;
+            --border-color: #3a506b;
+            --input-bg: #0f172a;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-cyan: #06b6d4;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding-bottom: 70px;
+        }
+
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        .user-container {
+            display: none;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; right: 0;
+            background-color: var(--card-bg);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .bottom-nav a {
+            color: var(--text-sub);
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 11px;
+            gap: 4px;
+            transition: 0.2s;
+        }
+
+        .bottom-nav a i {
+            font-size: 18px;
+        }
+
+        .bottom-nav a.active, .bottom-nav a:hover {
+            color: var(--accent-blue);
+        }
+
+        .top-header {
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .main-content {
+            padding: 20px;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px;
+            height: 100%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: 0.2s;
+        }
+
+        .card-box:hover {
+            border-color: var(--accent-blue);
+        }
+
+        /* Main Category Tabs with Neon Glow Effect */
+        .main-categories-wrapper {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            scrollbar-width: thin;
+        }
+
+        .main-category-pill {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-sub);
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .main-category-pill:hover {
+            color: #ffffff;
+            border-color: var(--accent-blue);
+        }
+
+        .main-category-pill.active {
+            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            color: #ffffff;
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), inset 0 0 10px rgba(59, 130, 246, 0.4);
+        }
+
+        .form-control, .form-select {
+            background-color: var(--input-bg) !important;
+            color: #ffffff !important;
+            border: 1px solid var(--border-color) !important;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+
+        .form-control::placeholder, .form-select::placeholder {
+            color: #94a3b8 !important;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-blue) !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+            color: #ffffff !important;
+        }
+
+        .table {
+            color: #ffffff !important;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        .table th {
+            background-color: var(--input-bg) !important;
+            color: #ffffff !important;
+            border-color: var(--border-color) !important;
+            font-weight: 600;
+        }
+
+        .table td {
+            background-color: transparent !important;
+            border-color: var(--border-color) !important;
+            color: #e2e8f0 !important;
+        }
+
+        .section-pane { display: none; }
+        .section-pane.active { display: block; }
+
+        .stat-icon {
+            width: 55px; height: 55px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .qty-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+            width: 140px;
+        }
+
+        .qty-btn {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .qty-btn:hover {
+            background: var(--border-color);
+        }
+
+        .qty-input {
+            background: transparent;
+            border: none;
+            color: white;
+            width: 50px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .custom-alert-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .custom-alert-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 380px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.7);
+        }
+    </style>
+</head>
+<body>
+
+<div id="custom-alert-overlay" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-info fs-5"><i class="fa-solid fa-circle-info me-2"></i>Notice</span>
+            <button onclick="closeCustomAlert()" class="btn-close btn-close-white"></button>
+        </div>
+        <div id="custom-alert-message" class="text-white py-3 mb-2" style="font-size: 15px;"></div>
+        <div class="text-end">
+            <button onclick="closeCustomAlert()" class="btn btn-primary rounded-pill px-4 fw-bold">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- PURCHASE CONFIRMATION MODAL -->
+<div id="purchase-modal-overlay" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold text-white fs-5"><i class="fa-solid fa-cart-shopping me-2 text-primary"></i>Confirm Purchase</span>
+            <button onclick="closePurchaseModal()" class="btn-close btn-close-white"></button>
+        </div>
+        <div class="mb-3">
+            <div class="text-sub small mb-1">Category</div>
+            <div id="modal-cat-name" class="fw-bold text-info fs-6"></div>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <div class="text-sub small">Price Per Unit</div>
+                <div class="fw-bold text-white" id="modal-unit-price">৳0</div>
+            </div>
+            <div>
+                <div class="text-sub small">Available Stock</div>
+                <div class="fw-bold text-success" id="modal-stock-count">0</div>
+            </div>
+        </div>
+        <div class="mb-3">
+            <div class="text-sub small mb-1">Select Quantity</div>
+            <div class="d-flex justify-content-center">
+                <div class="qty-box">
+                    <button onclick="changeModalQty(-1)" class="qty-btn">-</button>
+                    <input type="text" id="modal-qty-input" class="qty-input" value="1" readonly>
+                    <button onclick="changeModalQty(1)" class="qty-btn">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 mb-4 d-flex justify-content-between align-items-center">
+            <span class="text-sub">Total Cost:</span>
+            <span class="fw-bold text-info fs-5" id="modal-total-price">৳0</span>
+        </div>
+        <div class="d-flex gap-2">
+            <button onclick="closePurchaseModal()" class="btn btn-outline-secondary w-50 rounded-pill fw-bold py-2">Cancel</button>
+            <button onclick="confirmAndBuy()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Confirm Buy</button>
+        </div>
+    </div>
+</div>
+
+<!-- AUTH SECTION -->
+<div id="auth-section" class="auth-container">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="stat-icon bg-primary bg-opacity-15 text-primary mx-auto mb-3" style="width: 65px; height: 65px; font-size: 28px;">
+                <i class="fa-solid fa-envelope-circle-check"></i>
+            </div>
+            <h4 class="fw-bold text-white" id="auth-title">Account Login</h4>
+            <p class="text-sub small" id="auth-subtitle">Access your Mail Market account</p>
+        </div>
+
+        <div class="mb-3">
+            <label class="small text-sub mb-1 fw-semibold">Gmail Address</label>
+            <input type="email" id="auth-email" class="form-control" placeholder="example@gmail.com">
+        </div>
+        <div class="mb-4">
+            <label class="small text-sub mb-1 fw-semibold">Password</label>
+            <input type="password" id="auth-pass" class="form-control" placeholder="••••••••">
+        </div>
+
+        <button onclick="handleAuthSubmit()" id="auth-btn" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow mb-3">Login to Account</button>
+        
+        <div class="text-center">
+            <span id="auth-switch-text" class="text-sub small">Don't have an account? <a href="#" onclick="toggleAuthMode(event)" class="text-primary fw-bold text-decoration-none">Create Account</a></span>
+        </div>
+    </div>
+</div>
+
+<!-- USER PANEL DASHBOARD -->
+<div id="user-panel-container" class="user-container">
+    <div class="top-header">
+        <div class="d-flex align-items-center gap-2">
+            <div class="bg-primary p-2 rounded-3 text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+                <i class="fa-solid fa-envelope"></i>
+            </div>
+            <span class="fw-bold fs-6 text-white">Mail Market</span>
+        </div>
+        <div class="bg-primary bg-opacity-10 border border-primary border-opacity-25 px-3 py-1.5 rounded-pill">
+            <span class="fw-bold text-info" id="user-top-balance">৳0.00</span>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <!-- Home / Shop Tab -->
+        <div id="user-section-home" class="section-pane active">
+            <!-- Main Category Navigation Pills -->
+            <div id="main-categories-container" class="main-categories-wrapper"></div>
+            
+            <!-- Sub Categories / Items Grid (Responsive: 1 col on mobile, 2 on tablet, 3 on PC) -->
+            <div class="row g-3" id="user-shop-subcategories-grid"></div>
+        </div>
+
+        <!-- Deposit Tab -->
+        <div id="user-section-deposit" class="section-pane">
+            <div class="card-box">
+                <h5 class="fw-bold mb-3 text-white">Payment Methods</h5>
+                <div id="user-payment-methods-list" class="d-flex flex-column gap-2 mb-4"></div>
+                
+                <h5 class="fw-bold mb-3 text-white">Add Balance Request (Min: ৳20)</h5>
+                <div class="mb-3">
+                    <label class="small text-sub mb-1 fw-semibold">Select Method</label>
+                    <select id="deposit-method-select" class="form-select"></select>
+                </div>
+                <div class="mb-3">
+                    <label class="small text-sub mb-1 fw-semibold">Amount (BDT)</label>
+                    <input type="number" id="deposit-amount" class="form-control" placeholder="20">
+                </div>
+                <div class="mb-4">
+                    <label class="small text-sub mb-1 fw-semibold">Transaction ID (TrxID)</label>
+                    <input type="text" id="deposit-trx" class="form-control" placeholder="TrxID here">
+                </div>
+                <button onclick="submitDepositRequest()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Submit Request</button>
+            </div>
+        </div>
+
+        <!-- History Tab -->
+        <div id="user-section-history" class="section-pane">
+            <div class="card-box">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold m-0 text-white">Purchased Accounts</h5>
+                    <button onclick="copyAllOrders()" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
+                </div>
+                <div class="table-responsive mb-4">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Details</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-orders-table-body"></tbody>
+                    </table>
+                </div>
+
+                <h5 class="fw-bold mb-3 text-white">Deposit History</h5>
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Method</th>
+                                <th>Amount</th>
+                                <th>TrxID</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-deposit-history-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="user-section-profile" class="section-pane">
+            <div class="card-box text-center py-4">
+                <div class="mx-auto mb-3 position-relative" style="width: 85px; height: 85px;">
+                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=MailMarketUser" alt="Avatar" class="rounded-circle bg-primary bg-opacity-25 p-2 border border-primary border-opacity-50 w-100 h-100 object-fit-cover shadow">
+                    <span class="position-absolute bottom-0 end-0 bg-success border border-white rounded-circle" style="width: 15px; height: 15px;"></span>
+                </div>
+
+                <h5 class="fw-bold text-white mb-1" id="profile-email-text">-</h5>
+                <div class="bg-input border border-secondary border-opacity-25 rounded-3 p-2 mx-auto my-3" style="max-width: 280px;">
+                    <span class="text-sub small d-block">Password</span>
+                    <span class="text-info font-monospace fw-bold fs-6" id="profile-pass-text">-</span>
+                </div>
+                
+                <span class="badge bg-success bg-opacity-15 text-success px-3 py-1.5 rounded-pill mb-4"><i class="fa-solid fa-shield-check me-1"></i> Active Member</span>
+                
+                <button onclick="userLogout()" class="btn btn-danger w-100 fw-bold py-3 rounded-pill shadow"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <a href="#" onclick="switchUserTab('home')" class="active" id="user-menu-home">
+            <i class="fa-solid fa-house"></i>
+            <span>Home</span>
+        </a>
+        <a href="#" onclick="switchUserTab('deposit')" id="user-menu-deposit">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Deposit</span>
+        </a>
+        <a href="#" onclick="switchUserTab('history')" id="user-menu-history">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>History</span>
+        </a>
+        <a href="#" onclick="switchUserTab('profile')" id="user-menu-profile">
+            <i class="fa-solid fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDCIMosLNehv92LBKawC-53ErJ13QhnJy0",
+        authDomain: "mywebsite-709e3.firebaseapp.com",
+        databaseURL: "https://mywebsite-709e3-default-rtdb.firebaseio.com",
+        projectId: "mywebsite-709e3",
+        storageBucket: "mywebsite-709e3.firebasestorage.app",
+        messagingSenderId: "218299688364",
+        appId: "1:218299688364:web:98aafc682ba92bf102c609",
+        measurementId: "G-4LE965PQLF"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    let isRegisterMode = false;
+    let selectedMainCategory = null;
+
+    let currentModalData = {
+        categoryName: '',
+        price: 0,
+        stockCount: 0
+    };
+
+    function showCustomAlert(msg) {
+        document.getElementById('custom-alert-message').innerText = msg;
+        document.getElementById('custom-alert-overlay').style.display = 'flex';
+    }
+
+    function closeCustomAlert() {
+        document.getElementById('custom-alert-overlay').style.display = 'none';
+    }
+
+    window.onload = function() {
+        let loggedUser = localStorage.getItem('apex_logged_user');
+        if(loggedUser) {
+            showUserPanel(loggedUser);
+        } else {
+            showAuthSection();
+        }
+    };
+
+    function showAuthSection() {
+        document.getElementById('auth-section').style.display = 'flex';
+        document.getElementById('user-panel-container').style.display = 'none';
+    }
+
+    function toggleAuthMode(e) {
+        if(e) e.preventDefault();
+        isRegisterMode = !isRegisterMode;
+        let title = document.getElementById('auth-title');
+        let sub = document.getElementById('auth-subtitle');
+        let btn = document.getElementById('auth-btn');
+        let switchText = document.getElementById('auth-switch-text');
+
+        if(isRegisterMode) {
+            title.innerText = "Create Account";
+            sub.innerText = "Register a new Mail Market account";
+            btn.innerText = "Register Account";
+            switchText.innerHTML = `Already have an account? <a href="#" onclick="toggleAuthMode(event)" class="text-primary fw-bold text-decoration-none">Login</a>`;
+        } else {
+            title.innerText = "Account Login";
+            sub.innerText = "Access your Mail Market account";
+            btn.innerText = "Login to Account";
+            switchText.innerHTML = `Don't have an account? <a href="#" onclick="toggleAuthMode(event)" class="text-primary fw-bold text-decoration-none">Create Account</a>`;
+        }
+    }
+
+    function handleAuthSubmit() {
+        let email = document.getElementById('auth-email').value.trim();
+        let pass = document.getElementById('auth-pass').value.trim();
+
+        if(!email || !pass) return showCustomAlert('Please fill in all fields!');
+
+        let safeKey = email.replace(/[@.]/g, '_');
+
+        if(isRegisterMode) {
+            db.ref(`users/${safeKey}`).once('value', (snap) => {
+                if(snap.exists()) {
+                    showCustomAlert('User already exists with this email!');
+                } else {
+                    db.ref(`users/${safeKey}`).set({ email: email, pass: pass });
+                    db.ref(`balances/${safeKey}`).set(0);
+                    showCustomAlert('Registration successful! Please login.');
+                    toggleAuthMode();
+                }
+            });
+        } else {
+            db.ref(`users/${safeKey}`).once('value', (snap) => {
+                if(!snap.exists()) {
+                    showCustomAlert('User not found! Please register first.');
+                } else {
+                    let uData = snap.val();
+                    if(uData.pass === pass) {
+                        localStorage.setItem('apex_logged_user', email);
+                        showUserPanel(email);
+                    } else {
+                        showCustomAlert('Incorrect password!');
+                    }
+                }
+            });
+        }
+    }
+
+    function userLogout() {
+        localStorage.removeItem('apex_logged_user');
+        location.reload();
+    }
+
+    function showUserPanel(email) {
+        document.getElementById('auth-section').style.display = 'none';
+        document.getElementById('user-panel-container').style.display = 'block';
+        
+        let safeKey = email.replace(/[@.]/g, '_');
+        db.ref(`users/${safeKey}`).once('value', (snap) => {
+            if(snap.exists()) {
+                let u = snap.val();
+                document.getElementById('profile-email-text').innerText = u.email;
+                document.getElementById('profile-pass-text').innerText = u.pass;
+            }
+        });
+
+        switchUserTab('home');
+        loadUserBalance(email);
+    }
+
+    function loadUserBalance(email) {
+        let safeKey = email.replace(/[@.]/g, '_');
+        db.ref(`balances/${safeKey}`).on('value', (snap) => {
+            let bal = snap.val() || 0;
+            document.getElementById('user-top-balance').innerText = `৳${bal}`;
+        });
+    }
+
+    function switchUserTab(tab) {
+        document.querySelectorAll('.section-pane').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.bottom-nav a').forEach(el => el.classList.remove('active'));
+
+        document.getElementById(`user-section-${tab}`).classList.add('active');
+        document.getElementById(`user-menu-${tab}`).classList.add('active');
+
+        if(tab === 'home') loadUserShop();
+        if(tab === 'deposit') loadUserPaymentMethods();
+        if(tab === 'history') {
+            loadUserOrders();
+            loadUserDepositHistory();
+        }
+    }
+
+    function loadUserShop() {
+        db.ref('categories').once('value', (catSnap) => {
+            let cats = catSnap.val() || {};
+            db.ref('stocks').once('value', (stockSnap) => {
+                let stocks = stockSnap.val() || {};
+                
+                let mainCatsSet = new Set();
+                let catList = [];
+
+                Object.keys(cats).forEach(ckey => {
+                    let c = cats[ckey];
+                    if(c.status === 'ON') {
+                        mainCatsSet.add(c.cat);
+                        catList.push({ key: ckey, ...c });
+                    }
+                });
+
+                let mainCats = Array.from(mainCatsSet);
+                let container = document.getElementById('main-categories-container');
+                container.innerHTML = '';
+
+                if(mainCats.length === 0) {
+                    container.innerHTML = `<div class="text-sub small">No categories added by admin yet.</div>`;
+                    document.getElementById('user-shop-subcategories-grid').innerHTML = '';
+                    return;
+                }
+
+                if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) {
+                    selectedMainCategory = mainCats[0];
+                }
+
+                mainCats.forEach(mCat => {
+                    let isActive = mCat === selectedMainCategory ? 'active' : '';
+                    container.innerHTML += `
+                        <div class="main-category-pill ${isActive}" onclick="selectMainCategory('${mCat}')">
+                            <i class="fa-solid fa-folder-open"></i> ${mCat}
+                        </div>
+                    `;
+                });
+
+                let grid = document.getElementById('user-shop-subcategories-grid');
+                grid.innerHTML = '';
+
+                let filteredCats = catList.filter(c => c.cat === selectedMainCategory);
+                if(filteredCats.length === 0) {
+                    grid.innerHTML = `<div class="col-12 text-center text-sub py-4">No sub-categories available in this section.</div>`;
+                    return;
+                }
+
+                filteredCats.forEach((c) => {
+                    let catString = `${c.cat} - ${c.subCat}`;
+                    let availableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
+                    let price = availableStocks.length > 0 ? availableStocks[0].price : 0;
+                    let stockCount = availableStocks.length;
+
+                    let actionBtnHtml = stockCount > 0 
+                        ? `<button onclick="openPurchaseModal('${catString}', ${price}, ${stockCount})" class="btn btn-primary fw-bold rounded-pill py-2 w-100 shadow-sm" style="font-size: 14px;">Buy Now</button>`
+                        : `<button class="btn btn-danger fw-bold rounded-pill py-2 w-100 opacity-75 shadow-sm" style="font-size: 14px;" disabled>Stock Out</button>`;
+
+                    grid.innerHTML += `
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-box">
+                                <div class="mb-3">
+                                    <h5 class="fw-bold text-white mb-2" style="font-size: 16px;">${c.subCat}</h5>
+                                    <div class="text-sub" style="font-size: 13px;">Stock: <span class="text-success fw-bold">${stockCount}</span> | Price: <span class="text-info fw-bold">৳${price}</span></div>
+                                </div>
+                                <div>
+                                    ${actionBtnHtml}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        });
+    }
+
+    function selectMainCategory(catName) {
+        selectedMainCategory = catName;
+        loadUserShop();
+    }
+
+    function openPurchaseModal(categoryName, price, stockCount) {
+        currentModalData = { categoryName, price, stockCount };
+        document.getElementById('modal-cat-name').innerText = categoryName;
+        document.getElementById('modal-unit-price').innerText = `৳${price}`;
+        document.getElementById('modal-stock-count').innerText = stockCount;
+        document.getElementById('modal-qty-input').value = 1;
+        document.getElementById('modal-total-price').innerText = `৳${price}`;
+        document.getElementById('purchase-modal-overlay').style.display = 'flex';
+    }
+
+    function closePurchaseModal() {
+        document.getElementById('purchase-modal-overlay').style.display = 'none';
+    }
+
+    function changeModalQty(delta) {
+        let input = document.getElementById('modal-qty-input');
+        let val = parseInt(input.value) + delta;
+        if(val < 1) val = 1;
+        if(val > currentModalData.stockCount) val = currentModalData.stockCount;
+        input.value = val;
+        let total = val * currentModalData.price;
+        document.getElementById('modal-total-price').innerText = `৳${total}`;
+    }
+
+    function confirmAndBuy() {
+        let buyQty = parseInt(document.getElementById('modal-qty-input').value);
+        let categoryName = currentModalData.categoryName;
+        let price = currentModalData.price;
+        let stockCount = currentModalData.stockCount;
+
+        if(stockCount <= 0) return showCustomAlert('Stock out for this category!');
+        if(buyQty > stockCount) return showCustomAlert('Requested quantity exceeds available stock!');
+
+        let email = localStorage.getItem('apex_logged_user');
+        let safeKey = email.replace(/[@.]/g, '_');
+        let totalCost = price * buyQty;
+
+        db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
+            let bal = balSnap.val() || 0;
+            if(bal < totalCost) return showCustomAlert('Insufficient balance! Please add balance first.');
+
+            db.ref('stocks').once('value', (stockSnap) => {
+                let stocks = stockSnap.val() || {};
+                let targetStockKeys = [];
+
+                for(let key in stocks) {
+                    if(stocks[key].category === categoryName && stocks[key].status === 'available') {
+                        targetStockKeys.push(key);
+                        if(targetStockKeys.length === buyQty) break;
+                    }
+                }
+
+                if(targetStockKeys.length < buyQty) return showCustomAlert('Not enough stock available.');
+
+                db.ref(`balances/${safeKey}`).set(bal - totalCost);
+
+                targetStockKeys.forEach(stockKey => {
+                    let stockData = stocks[stockKey];
+                    db.ref(`stocks/${stockKey}`).update({
+                        status: 'sold',
+                        soldTo: email
+                    });
+
+                    db.ref('orders').push({
+                        user: email,
+                        category: categoryName,
+                        accountDetails: stockData.accountDetails,
+                        date: new Date().toLocaleString()
+                    });
+                });
+
+                closePurchaseModal();
+                showCustomAlert(`${buyQty} account(s) purchased successfully!`);
+                loadUserShop();
+            });
+        });
+    }
+
+    function loadUserOrders() {
+        let email = localStorage.getItem('apex_logged_user');
+        db.ref('orders').on('value', (snap) => {
+            let orders = snap.val() || {};
+            let tbody = document.getElementById('user-orders-table-body');
+            tbody.innerHTML = '';
+
+            let keys = Object.keys(orders);
+            let userOrders = keys.filter(k => orders[k].user === email);
+
+            if(userOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No purchased orders found.</td></tr>`;
+                return;
+            }
+
+            userOrders.reverse().forEach(k => {
+                let o = orders[k];
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${o.category}</td>
+                        <td class="font-monospace text-info user-select-all">${o.accountDetails}</td>
+                        <td class="small text-sub">${o.date}</td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
+    function copyAllOrders() {
+        let email = localStorage.getItem('apex_logged_user');
+        db.ref('orders').once('value', (snap) => {
+            let orders = snap.val() || {};
+            let keys = Object.keys(orders);
+            let userOrders = keys.filter(k => orders[k].user === email);
+
+            if(userOrders.length === 0) return showCustomAlert('No orders to copy!');
+
+            let allText = userOrders.map(k => orders[k].accountDetails).join('\n');
+            navigator.clipboard.writeText(allText).then(() => {
+                showCustomAlert('All account details copied to clipboard!');
+            });
+        });
+    }
+
+    function loadUserPaymentMethods() {
+        db.ref('paymentMethods').on('value', (snap) => {
+            let methods = snap.val() || {};
+            let select = document.getElementById('deposit-method-select');
+            let listDiv = document.getElementById('user-payment-methods-list');
+            select.innerHTML = '';
+            listDiv.innerHTML = '';
+
+            let keys = Object.keys(methods);
+            if(keys.length === 0) {
+                listDiv.innerHTML = `<span class="text-sub small">No active payment methods found.</span>`;
+                return;
+            }
+
+            keys.forEach(k => {
+                let m = methods[k];
+                select.innerHTML += `<option value="${m.name} (${m.type}: ${m.number})">${m.name} - ${m.type} (${m.number})</option>`;
+                listDiv.innerHTML += `
+                    <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25">
+                        <div class="fw-bold text-white">${m.name} (${m.type})</div>
+                        <div class="text-info font-monospace fs-5">${m.number}</div>
+                    </div>
+                `;
+            });
+        });
+    }
+
+    function submitDepositRequest() {
+        let email = localStorage.getItem('apex_logged_user');
+        let method = document.getElementById('deposit-method-select').value;
+        let amount = parseFloat(document.getElementById('deposit-amount').value);
+        let trx = document.getElementById('deposit-trx').value.trim();
+
+        if(!method || isNaN(amount) || amount < 20 || !trx) {
+            return showCustomAlert('Please fill all fields correctly! Minimum deposit amount is ৳20.');
+        }
+
+        db.ref('deposits').push({
+            email: email,
+            method: method,
+            amount: amount,
+            trx: trx,
+            status: 'Pending',
+            date: new Date().toLocaleString()
+        });
+
+        document.getElementById('deposit-amount').value = '';
+        document.getElementById('deposit-trx').value = '';
+        showCustomAlert('Deposit request submitted successfully!');
+        switchUserTab('history');
+    }
+
+    function loadUserDepositHistory() {
+        let email = localStorage.getItem('apex_logged_user');
+        db.ref('deposits').on('value', (snap) => {
+            let deposits = snap.val() || {};
+            let tbody = document.getElementById('user-deposit-history-tbody');
+            tbody.innerHTML = '';
+
+            let keys = Object.keys(deposits);
+            let userDeps = keys.filter(k => deposits[k].email === email);
+
+            if(userDeps.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No deposit history found.</td></tr>`;
+                return;
+            }
+
+            userDeps.reverse().forEach(k => {
+                let d = deposits[k];
+                let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${d.method}</td>
+                        <td class="fw-bold text-success">৳${d.amount}</td>
+                        <td class="text-info font-monospace">${d.trx}</td>
+                        <td><span class="badge ${badgeClass}">${d.status}</span></td>
+                    </tr>
+                `;
+            });
+        });
+    }
+</script>
+
+</body>
+</html>
