@@ -114,6 +114,7 @@
             transition: margin-left 0.3s ease;
         }
 
+        /* Fixed Mobile Top Bar & Hamburger Layout */
         .mobile-top-bar {
             display: none;
             background-color: var(--card-bg);
@@ -220,7 +221,7 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
-        /* Responsive Breakpoints for Mobile & Tablet */
+        /* Responsive Breakpoints & Mobile Balance Box Fixes */
         @media (max-width: 991px) {
             .admin-sidebar {
                 transform: translateX(-100%);
@@ -234,6 +235,12 @@
             }
             .mobile-top-bar {
                 display: flex;
+            }
+            /* Fix for User Balance Container on mobile screen */
+            .table-responsive {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
             }
         }
     </style>
@@ -409,7 +416,6 @@
                     <input type="number" id="stock-unit-price" class="form-control" placeholder="25">
                 </div>
                 
-                <!-- File Upload Option for .txt / .csv -->
                 <div class="mb-3">
                     <label class="small text-sub mb-1 fw-semibold">Upload from File (.txt / .csv)</label>
                     <input type="file" id="stock-file-input" class="form-control" accept=".txt,.csv" onchange="handleStockFileUpload(event)">
@@ -590,7 +596,6 @@
         document.getElementById(`section-${tab}`).classList.add('active');
         document.getElementById(`menu-${tab}`).classList.add('active');
 
-        // Close mobile sidebar if open
         document.getElementById('admin-sidebar-menu').classList.remove('mobile-show');
 
         if(tab === 'dashboard') loadDashboardStats();
@@ -604,12 +609,13 @@
         if(tab === 'payments') loadAdminPayments();
     }
 
+    // 1 & 2. REAL-TIME STOCK & STATS FIX
     function loadDashboardStats() {
-        db.ref('users').once('value', (uSnap) => {
+        db.ref('users').on('value', (uSnap) => {
             let users = uSnap.val() || {};
-            db.ref('stocks').once('value', (sSnap) => {
+            db.ref('stocks').on('value', (sSnap) => {
                 let stocks = sSnap.val() || {};
-                db.ref('deposits').once('value', (dSnap) => {
+                db.ref('deposits').on('value', (dSnap) => {
                     let deposits = dSnap.val() || {};
 
                     let availableStocks = Object.values(stocks).filter(s => s.status === 'available').length;
@@ -711,7 +717,6 @@
         });
     }
 
-    // Handle .txt or .csv file reading automatically
     function handleStockFileUpload(event) {
         let file = event.target.files[0];
         if(!file) return;
@@ -720,7 +725,6 @@
         reader.onload = function(e) {
             let content = e.target.result;
             let textarea = document.getElementById('stock-accounts-textarea');
-            // Append or replace content in textarea
             textarea.value = content.trim();
             showCustomAlert('File loaded successfully into textarea! You can now upload.');
         };
@@ -772,160 +776,159 @@
             keys.reverse().forEach(key => {
                 let d = depositsData[key];
                 let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
-                
-                let actionButtons = d.status === 'Pending' ? `
-                    <div class="d-flex gap-1">
-                        <button onclick="approveDeposit('${key}')" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">Approve</button>
-                        <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold">Reject</button>
-                    </div>
-                ` : `<span class="text-sub small">${d.reason ? 'Reason: ' + d.reason : ''}</span>`;
+                let actionBtns = d.status === 'Pending' ? `
+                    <button onclick="approveDeposit('${key}', '${d.userEmail}', ${d.amount})" class="btn btn-sm btn-success rounded-pill px-3 me-1 mb-1">Approve</button>
+                    <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 mb-1">Reject</button>
+                ` : `<span class="text-sub small">Processed</span>`;
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${d.email}</td>
-                        <td>${d.method}</td>
-                        <td class="fw-bold text-success">৳${d.amount}</td>
-                        <td class="text-info font-monospace">${d.trx}</td>
-                        <td><span class="badge ${badgeClass} px-2.5 py-1.5">${d.status}</span></td>
-                        <td>${actionButtons}</td>
+                        <td class="fw-semibold">${d.userEmail}</td>
+                        <td>${d.methodName}</td>
+                        <td class="text-info fw-bold">৳${d.amount}</td>
+                        <td class="font-monospace">${d.trxId}</td>
+                        <td><span class="badge ${badgeClass}">${d.status}</span></td>
+                        <td>${actionBtns}</td>
                     </tr>
                 `;
             });
         });
     }
 
-    function approveDeposit(key) {
-        db.ref(`deposits/${key}`).once('value', (snap) => {
-            let dep = snap.val();
-            if(!dep || dep.status !== 'Pending') return;
+    function approveDeposit(key, userEmail, amount) {
+        db.ref(`deposits/${key}/status`).set('Approved').then(() => {
+            db.ref('users').once('value', (snapshot) => {
+                let users = snapshot.val() || {};
+                let targetUserKey = null;
+                let currentBal = 0;
 
-            let safeKey = dep.email.replace(/[@.]/g, '_');
-            db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
-                let currentBal = balSnap.val() || 0;
-                db.ref(`balances/${safeKey}`).set(currentBal + parseFloat(dep.amount));
-                db.ref(`deposits/${key}/status`).set('Approved');
-                showCustomAlert('Deposit Approved & Balance Added Successfully!');
+                Object.keys(users).forEach(uKey => {
+                    if(users[uKey].email === userEmail) {
+                        targetUserKey = uKey;
+                        currentBal = parseFloat(users[uKey].balance || 0);
+                    }
+                });
+
+                if(targetUserKey) {
+                    let newBalance = currentBal + parseFloat(amount);
+                    db.ref(`users/${targetUserKey}/balance`).set(newBalance);
+                }
             });
+            showCustomAlert('Deposit approved and balance added successfully!');
         });
     }
 
     function openRejectModal(key) {
         document.getElementById('reject-deposit-key').value = key;
         document.getElementById('reject-reason-text').value = '';
-        new bootstrap.Modal(document.getElementById('rejectModal')).show();
+        let myModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+        myModal.show();
     }
 
     function confirmRejectDeposit() {
         let key = document.getElementById('reject-deposit-key').value;
         let reason = document.getElementById('reject-reason-text').value.trim();
 
-        if(!reason) return showCustomAlert('Please provide a rejection reason!');
+        if(!reason) return showCustomAlert('Please enter rejection reason!');
 
         db.ref(`deposits/${key}`).update({
             status: 'Rejected',
-            reason: reason
+            rejectReason: reason
+        }).then(() => {
+            let modalEl = document.getElementById('rejectModal');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            showCustomAlert('Deposit rejected successfully.');
         });
-
-        bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
-        showCustomAlert('Deposit Rejected.');
     }
 
     function loadAdminUsers() {
-        db.ref('users').once('value', (uSnap) => {
-            let usersData = uSnap.val() || {};
-            db.ref('balances').once('value', (bSnap) => {
-                let balancesData = bSnap.val() || {};
-                let tbody = document.getElementById('admin-users-table-body');
-                tbody.innerHTML = '';
+        db.ref('users').on('value', (snapshot) => {
+            let usersData = snapshot.val() || {};
+            let tbody = document.getElementById('admin-users-table-body');
+            tbody.innerHTML = '';
 
-                let emails = Object.keys(usersData);
-                if(emails.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No registered users.</td></tr>`;
-                    return;
-                }
+            let keys = Object.keys(usersData);
+            if(keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No users registered yet.</td></tr>`;
+                return;
+            }
 
-                emails.forEach(key => {
-                    let u = usersData[key];
-                    let safeKey = u.email.replace(/[@.]/g, '_');
-                    let bal = balancesData[safeKey] || 0;
-
-                    tbody.innerHTML += `
-                        <tr>
-                            <td class="fw-semibold">${u.email}</td>
-                            <td class="fw-bold text-info">৳${bal}</td>
-                            <td>
-                                <div class="input-group input-group-sm" style="max-width: 250px;">
-                                    <input type="number" id="bal-input-${safeKey}" class="form-control" placeholder="Amount">
-                                    <button onclick="updateUserBalance('${u.email}', 'add')" class="btn btn-success fw-bold px-2">+</button>
-                                    <button onclick="updateUserBalance('${u.email}', 'sub')" class="btn btn-danger fw-bold px-2">-</button>
-                                </div>
-                            </td>
-                        </tr>
-                    `;
-                });
+            keys.forEach(key => {
+                let u = usersData[key];
+                let userBal = u.balance !== undefined ? parseFloat(u.balance) : 0;
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-semibold text-break">${u.email}</td>
+                        <td class="fw-bold text-success fs-5">৳${userBal}</td>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <button onclick="modifyUserBalance('${key}', ${userBal}, 'add')" class="btn btn-sm btn-success px-2 py-1"><i class="fa-solid fa-plus"></i></button>
+                                <button onclick="modifyUserBalance('${key}', ${userBal}, 'sub')" class="btn btn-sm btn-danger px-2 py-1"><i class="fa-solid fa-minus"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
             });
         });
     }
 
-    function updateUserBalance(email, action) {
-        let safeKey = email.replace(/[@.]/g, '_');
-        let valInput = document.getElementById(`bal-input-${safeKey}`);
-        let amount = parseFloat(valInput.value);
+    function modifyUserBalance(userKey, currentBal, type) {
+        let actionWord = type === 'add' ? 'Add' : 'Subtract/Deduct';
+        let amountStr = prompt(`Enter amount to ${actionWord} (BDT):`);
+        if(!amountStr) return;
 
-        if(isNaN(amount) || amount <= 0) return showCustomAlert('Please enter a valid amount!');
+        let amount = parseFloat(amountStr);
+        if(isNaN(amount) || amount <= 0) return showCustomAlert('Please enter a valid numeric amount!');
 
-        db.ref(`balances/${safeKey}`).once('value', (snap) => {
-            let currentBal = snap.val() || 0;
-            let newBal = action === 'add' ? currentBal + amount : currentBal - amount;
-            if(newBal < 0) newBal = 0;
+        let newBal = type === 'add' ? currentBal + amount : currentBal - amount;
+        if(newBal < 0) newBal = 0;
 
-            db.ref(`balances/${safeKey}`).set(newBal);
-            valInput.value = '';
+        db.ref(`users/${userKey}/balance`).set(newBal).then(() => {
             showCustomAlert('User balance updated successfully!');
-            loadAdminUsers();
         });
     }
 
+    // 3. PAYMENT METHODS FIX (Fixed database path mapping & rendering)
     function addPaymentMethod() {
         let name = document.getElementById('pay-name').value.trim();
         let type = document.getElementById('pay-type-select').value;
-        let num = document.getElementById('pay-num.value').trim(); // Fixed reference typo check inside code if any
-        let numInput = document.getElementById('pay-num').value.trim();
+        let num = document.getElementById('pay-num').value.trim();
 
-        if(!name || !numInput) return showCustomAlert('Please fill in all payment method fields!');
+        if(!name || !num) return showCustomAlert('Please fill in both method name and account number!');
 
         db.ref('paymentMethods').push({
-            name: name,
-            type: type,
-            number: numInput
+            methodName: name,
+            accountType: type,
+            accountNumber: num
+        }).then(() => {
+            document.getElementById('pay-name').value = '';
+            document.getElementById('pay-num').value = '';
+            showCustomAlert('Payment method added successfully!');
+        }).catch((error) => {
+            showCustomAlert('Error: ' + error.message);
         });
-
-        document.getElementById('pay-name').value = '';
-        document.getElementById('pay-num').value = '';
-        showCustomAgentAlert('Payment method added successfully!'); // standard alert
-        showCustomAlert('Payment method added successfully!');
-        loadAdminPayments();
     }
 
     function loadAdminPayments() {
         db.ref('paymentMethods').on('value', (snapshot) => {
-            let payData = snapshot.val() || {};
+            let methodsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-payments-table-body');
             tbody.innerHTML = '';
 
-            let keys = Object.keys(payData);
+            let keys = Object.keys(methodsData);
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No payment methods configured.</td></tr>`;
                 return;
             }
 
             keys.forEach(key => {
-                let p = payData[key];
+                let m = methodsData[key];
                 tbody.innerHTML += `
                     <tr>
-                        <td class="fw-semibold">${p.name}</td>
-                        <td><span class="badge bg-secondary">${p.type}</span></td>
-                        <td class="font-monospace text-info">${p.number}</td>
+                        <td class="fw-semibold">${m.methodName}</td>
+                        <td><span class="badge bg-info text-dark">${m.accountType}</span></td>
+                        <td class="font-monospace">${m.accountNumber}</td>
                         <td>
                             <button onclick="deletePaymentMethod('${key}')" class="btn btn-sm btn-outline-danger rounded-pill px-2.5"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -936,10 +939,10 @@
     }
 
     function deletePaymentMethod(key) {
-        db.ref(`paymentMethods/${key}`).remove();
-        showCustomAlert('Payment method deleted.');
+        db.ref(`paymentMethods/${key}`).remove().then(() => {
+            showCustomAlert('Payment method deleted successfully!');
+        });
     }
 </script>
-
 </body>
 </html>
