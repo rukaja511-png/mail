@@ -751,7 +751,7 @@
         showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
     }
 
-   function loadAdminDeposits() {
+  function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
             let depositsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-deposits-table-body');
@@ -767,8 +767,16 @@
                 let d = depositsData[key];
                 let statusBadge = '';
                 
-                // এখানে ডাটাবেজের সব সম্ভাব্য ট্রানজেকশন আইডি ফিল্ড চেক করা হচ্ছে
-                let trxDisplay = d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || 'N/A';
+                // ১. সরাসরি ট্রানজেকশন আইডির সম্ভাব্য নামগুলো চেক করবে
+                let trxDisplay = d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || d.transactionID;
+
+                // ২. যদি উপর্যুক্ত নামে না পায়, তবে অবজেক্টের ভেতর থেকে যেকোনো একটি মান (যerc/value) খুঁজে বের করে দেখাবে
+                if(!trxDisplay) {
+                    let values = Object.values(d);
+                    // এখানে আইডি, স্ট্যাটাস, অ্যামাউন্ট, মেথড, ইমেইল বা রিজন বাদে অন্য কোনো টেক্সট পেলে সেটিই TrxID ধরে নেবে
+                    let foundVal = values.find(val => typeof val === 'string' && val !== d.status && val !== d.method && val !== d.userEmail && val !== d.email && val !== d.rejectReason && !val.includes('BDT') && !val.includes('@'));
+                    trxDisplay = foundVal || 'N/A';
+                }
 
                 if(d.status === 'Pending' || d.status === 'pending') {
                     statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
