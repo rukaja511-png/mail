@@ -797,8 +797,8 @@
             }
 
             let trxDisplay = d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || 'N/A';
-            let userEmail = d.userEmail || d.email || 'N/A';
-            let amount = parseFloat(d.amount) || 0;
+            let userEmail = d.userEmail || d.email || d.userId || 'N/A';
+            let amount = parseFloat(d.amount) || parseFloat(d.depositAmount) || 0;
 
             let actionButtons = st === 'pending' ? `
                 <button onclick="approveDeposit('${key}', '${userEmail}', ${amount})" class="btn btn-sm btn-success rounded-pill me-1 mb-1"><i class="fa-solid fa-check"></i> Accept</button>
@@ -808,7 +808,7 @@
             tbody.innerHTML += `
                 <tr>
                     <td>${userEmail}</td>
-                    <td>${d.method || 'N/A'}</td>
+                    <td>${d.method || d.paymentMethod || 'N/A'}</td>
                     <td class="fw-bold text-success">${amount} BDT</td>
                     <td class="font-monospace">${trxDisplay}</td>
                     <td>${statusBadge}</td>
@@ -824,7 +824,7 @@
         Object.keys(allDepositsCache).forEach(key => {
             let d = allDepositsCache[key];
             let trx = (d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || '').toLowerCase();
-            let email = (d.userEmail || d.email || '').toLowerCase();
+            let email = (d.userEmail || d.email || d.userId || '').toLowerCase();
             if (trx.includes(query) || email.includes(query)) {
                 filteredData[key] = d;
             }
@@ -832,43 +832,47 @@
         renderDepositsTable(filteredData);
     }
 
-    function approveDeposit(depositKey, userEmail, amount) {
+    function approveDeposit(depositKey, userEmailOrKey, amount) {
         let depositAmount = parseFloat(amount);
         if (isNaN(depositAmount) || depositAmount <= 0) {
             showCustomAlert('Error: Invalid deposit amount!');
             return;
         }
 
-        if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmail}?`)) return;
+        if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmailOrKey}?`)) return;
 
         db.ref('users').once('value', (snapshot) => {
             let users = snapshot.val() || {};
             let targetKey = null;
             let currentBalance = 0;
 
+            // Find matching user node by key, email, or userEmail property
             Object.keys(users).forEach(uKey => {
                 let uData = users[uKey];
                 let uMail = uData.email || uData.userEmail || '';
                 
-                if (uMail.toLowerCase() === userEmail.toLowerCase() || uKey.toLowerCase() === userEmail.toLowerCase()) {
+                if (uKey === userEmailOrKey || uMail.toLowerCase() === userEmailOrKey.toLowerCase()) {
                     targetKey = uKey;
                     currentBalance = parseFloat(uData.balance) || 0;
                 }
             });
 
+            // If user node doesn't exist explicitly in 'users', fallback to sanitizing email as key
             if (!targetKey) {
-                targetKey = userEmail.replace(/[.#$\/\[\]]/g, '_');
+                targetKey = userEmailOrKey.replace(/[.#$\/\[\]]/g, '_');
             }
 
             let newBalance = currentBalance + depositAmount;
 
             let updates = {};
             updates[`users/${targetKey}/balance`] = newBalance;
-            updates[`users/${targetKey}/email`] = userEmail;
+            if (!users[targetKey] || (!users[targetKey].email && !users[targetKey].userEmail)) {
+                updates[`users/${targetKey}/email`] = userEmailOrKey;
+            }
             updates[`deposits/${depositKey}/status`] = 'Approved';
 
             db.ref().update(updates).then(() => {
-                showCustomAlert(`Success! Added ${depositAmount} BDT to ${userEmail}. New Balance: ${newBalance} BDT`);
+                showCustomAlert(`Success! Added ${depositAmount} BDT. User New Balance: ${newBalance} BDT`);
             }).catch((error) => {
                 showCustomAlert('Error updating database: ' + error.message);
             });
