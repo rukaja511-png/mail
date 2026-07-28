@@ -424,7 +424,6 @@
         <div id="section-deposits" class="admin-section">
             <h3 class="fw-bold mb-4 text-white">Deposit Requests Approval</h3>
             
-            <!-- সার্চ ইনপুট বক্স -->
             <div class="card-box mb-3 py-3">
                 <div class="input-group">
                     <span class="input-group-text bg-transparent border-0 text-sub"><i class="fa-solid fa-magnifying-glass"></i></span>
@@ -538,7 +537,7 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let allDepositsCache = {}; // ডিপোজিট ডেটা ক্যাশ রাখার জন্য
+    let allDepositsCache = {};
 
     function showCustomAlert(msg) {
         document.getElementById('custom-alert-message').innerText = msg;
@@ -611,6 +610,9 @@
         if(tab === 'payments') loadAdminPayments();
     }
 
+    // ==========================================
+    //  ফিক্সড: স্টক কাউন্ট ও ইউজার ব্যালেন্স লজিক
+    // ==========================================
     function loadDashboardStats() {
         db.ref('users').on('value', (uSnap) => {
             let users = uSnap.val() || {};
@@ -619,14 +621,19 @@
                 db.ref('deposits').on('value', (dSnap) => {
                     let deposits = dSnap.val() || {};
 
+                    // রিয়েল টাইম স্টক ফিক্স: যেগুলোর status 'available' বা স্ট্যাটাস ফিল্ড নেই, অথবা soldTo নেই সেগুলোই শুধু গুনবে
                     let availableStocks = 0;
                     Object.values(stocks).forEach(s => {
-                        if (!s.status || s.status === 'available' || s.status === 'Available') {
+                        let status = s.status ? s.status.toLowerCase() : 'available';
+                        if (status === 'available' && !s.soldTo) {
                             availableStocks++;
                         }
                     });
 
-                    let pendingDeposits = Object.values(deposits).filter(d => d.status === 'Pending' || d.status === 'pending').length;
+                    let pendingDeposits = Object.values(deposits).filter(d => {
+                        let st = d.status ? d.status.toLowerCase() : '';
+                        return st === 'pending';
+                    }).length;
 
                     document.getElementById('stat-total-users').innerText = Object.keys(users).length;
                     document.getElementById('stat-total-stocks').innerText = availableStocks;
@@ -768,10 +775,6 @@
         showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
     }
 
-    // =========================================
-    //    DEPOSIT MANAGEMENT WITH SEARCH FIX
-    // =========================================
-
     function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
             allDepositsCache = snapshot.val() || {};
@@ -792,10 +795,11 @@
         keys.reverse().forEach(key => {
             let d = depositsData[key];
             let statusBadge = '';
+            let st = d.status ? d.status.toLowerCase() : 'pending';
             
-            if (d.status === 'Approved') {
+            if (st === 'approved') {
                 statusBadge = '<span class="badge bg-success">Approved</span>';
-            } else if (d.status === 'Rejected') {
+            } else if (st === 'rejected') {
                 statusBadge = `<span class="badge bg-danger">Rejected</span><br><small class="text-danger" style="font-size: 11px;">Reason: ${d.rejectReason || 'N/A'}</small>`;
             } else {
                 statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
@@ -806,7 +810,7 @@
             let amount = parseFloat(d.amount) || 0;
 
             let actionButtons = '';
-            if(d.status === 'Pending' || d.status === 'pending') {
+            if(st === 'pending') {
                 actionButtons = `
                     <button onclick="approveDeposit('${key}', '${userEmail}', ${amount})" class="btn btn-sm btn-success rounded-pill me-1 mb-1"><i class="fa-solid fa-check"></i> Accept</button>
                     <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill mb-1"><i class="fa-solid fa-xmark"></i> Reject</button>
@@ -845,6 +849,9 @@
         renderDepositsTable(filteredData);
     }
 
+    // ==========================================
+    //  ফিক্সড: ডিপোজিট অ্যাপ্রুভ এবং ব্যালেন্স আপডেট
+    // ==========================================
     function approveDeposit(depositKey, userEmail, amount) {
         if (!confirm(`Are you sure you want to approve ${amount} BDT for ${userEmail}?`)) return;
 
@@ -853,23 +860,32 @@
             let userFoundKey = null;
             let currentBalance = 0;
 
+            // ইমেইল বা ইউজার অবজেক্টের কী (Key) দিয়ে সঠিকভাবে ইউজার খোঁজা
             Object.keys(users).forEach(uKey => {
-                if (users[uKey].email === userEmail) {
+                let uData = users[uKey];
+                // ইউজার ডেটা যেকোনো ফরম্যাটে (email বা username হিসেবে) থাকতে পারে তা হ্যান্ডেল করা হলো
+                let uMail = uData.email || uData.userEmail || '';
+                if (uMail.toLowerCase() === userEmail.toLowerCase()) {
                     userFoundKey = uKey;
-                    currentBalance = parseFloat(users[uKey].balance) || 0;
+                    currentBalance = parseFloat(uData.balance) || 0;
                 }
             });
 
             if (userFoundKey) {
                 let newBalance = currentBalance + parseFloat(amount);
                 
-                db.ref(`users/${userFoundKey}/balance`).set(newBalance).then(() => {
-                    db.ref(`deposits/${depositKey}/status`).set('Approved').then(() => {
-                        showCustomAlert(`Success! Added ${amount} BDT to ${userEmail}. New Balance: ${newBalance} BDT`);
-                    });
+                // ফায়ারবেসের সঠিক পাথে ব্যালেন্স ও স্ট্যাটাস আপডেট
+                let updates = {};
+                updates[`users/${userFoundKey}/balance`] = newBalance;
+                updates[`deposits/${depositKey}/status`] = 'Approved';
+
+                db.ref().update(updates).then(() => {
+                    showCustomAlert(`Success! Added ${amount} BDT to ${userEmail}. New Balance: ${newBalance} BDT`);
+                }).catch((error) => {
+                    showCustomAlert('Error updating database: ' + error.message);
                 });
             } else {
-                showCustomAlert('Error: User not found in database!');
+                showCustomAlert('Error: User not found in database matching email: ' + userEmail);
             }
         });
     }
@@ -914,13 +930,14 @@
             keys.forEach(key => {
                 let u = usersData[key];
                 let balance = parseFloat(u.balance) || 0;
+                let uEmail = u.email || u.userEmail || 'N/A';
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${u.email}</td>
+                        <td>${uEmail}</td>
                         <td class="fw-bold text-info">${balance} BDT</td>
                         <td>
-                            <button onclick="directEditBalance('${key}', '${u.email}', ${balance})" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="fa-solid fa-pen"></i> Edit Balance</button>
+                            <button onclick="directEditBalance('${key}', '${uEmail}', ${balance})" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="fa-solid fa-pen"></i> Edit Balance</button>
                         </td>
                     </tr>
                 `;
@@ -975,7 +992,7 @@
         db.ref('payments').push({ name: name, type: type, number: num });
         document.getElementById('pay-name').value = '';
         document.getElementById('pay-num').value = '';
-        showCustomAlert('Payment method added successfully!');
+        showCustom_Alert('Payment method added successfully!');
     }
 
     function deletePaymentMethod(key) {
