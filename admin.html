@@ -144,7 +144,7 @@
             font-size: 14px;
         }
 
-        .form-control::placeholder {
+        .form-control::placeholder, .form-select::placeholder {
             color: #94a3b8 !important;
             opacity: 1 !important;
         }
@@ -220,11 +220,21 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
+        /* Responsive Breakpoints for Mobile & Tablet */
         @media (max-width: 991px) {
-            .admin-sidebar { transform: translateX(-100%); }
-            .admin-sidebar.mobile-show { transform: translateX(0); }
-            .admin-main { margin-left: 0; padding: 15px; }
-            .mobile-top-bar { display: flex; }
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.mobile-show {
+                transform: translateX(0);
+            }
+            .admin-main {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .mobile-top-bar {
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -280,13 +290,14 @@
             <label class="small text-sub mb-1 fw-semibold">Password</label>
             <input type="password" id="admin-login-pass" class="form-control" placeholder="••••••••">
         </div>
-        <button type="button" onclick="handleAdminLogin()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Login to Admin Panel</button>
+        <button onclick="handleAdminLogin()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Login to Admin Panel</button>
     </div>
 </div>
 
 <!-- ADMIN DASHBOARD -->
 <div id="admin-main-container" class="admin-container">
     
+    <!-- Mobile Top Header -->
     <div class="mobile-top-bar">
         <div class="d-flex align-items-center gap-2">
             <i class="fa-solid fa-shield-halved text-cyan fs-5"></i>
@@ -398,14 +409,16 @@
                     <input type="number" id="stock-unit-price" class="form-control" placeholder="25">
                 </div>
                 
+                <!-- File Upload Option for .txt / .csv -->
                 <div class="mb-3">
                     <label class="small text-sub mb-1 fw-semibold">Upload from File (.txt / .csv)</label>
                     <input type="file" id="stock-file-input" class="form-control" accept=".txt,.csv" onchange="handleStockFileUpload(event)">
+                    <div class="form-text text-sub small mt-1">You can upload a text or csv file containing accounts (Format: Email:Password).</div>
                 </div>
 
                 <div class="mb-4">
                     <label class="small text-sub mb-1 fw-semibold">Mail Accounts (Format: Email:Password - One per line)</label>
-                    <textarea id="stock-accounts-textarea" class="form-control font-monospace" rows="6" placeholder="user1@gmail.com:pass123"></textarea>
+                    <textarea id="stock-accounts-textarea" class="form-control font-monospace" rows="6" placeholder="user1@gmail.com:pass123&#10;user2@gmail.com:pass456"></textarea>
                 </div>
                 <button onclick="saveMailStocks()" class="btn btn-success w-100 fw-bold py-3 rounded-pill shadow">Upload Stock Accounts</button>
             </div>
@@ -413,12 +426,6 @@
 
         <div id="section-deposits" class="admin-section">
             <h3 class="fw-bold mb-4 text-white">Deposit Requests Approval</h3>
-            <div class="card-box mb-3 py-3">
-                <div class="input-group">
-                    <span class="input-group-text bg-transparent border-0 text-sub"><i class="fa-solid fa-magnifying-glass"></i></span>
-                    <input type="text" id="deposit-search-input" class="form-control border-0" placeholder="Search by TrxID or User Email..." onkeyup="filterDeposits()">
-                </div>
-            </div>
             <div class="card-box">
                 <div class="table-responsive">
                     <table class="table table-bordered">
@@ -462,7 +469,7 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Method Name</label>
-                        <input type="text" id="pay-name" class="form-control" placeholder="bKash / Nagad">
+                        <input type="text" id="pay-name" class="form-control" placeholder="bKash / Nagad / Rocket">
                     </div>
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Account Type</label>
@@ -525,8 +532,6 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
-    let allDepositsCache = {};
-
     function showCustomAlert(msg) {
         document.getElementById('custom-alert-message').innerText = msg;
         document.getElementById('custom-alert-overlay').style.display = 'flex';
@@ -556,22 +561,12 @@
     }
 
     function handleAdminLogin() {
-        let emailInput = document.getElementById('admin-login-email');
-        let passInput = document.getElementById('admin-login-pass');
+        let email = document.getElementById('admin-login-email').value.trim();
+        let pass = document.getElementById('admin-login-pass').value.trim();
 
-        if (!emailInput || !passInput) {
-            alert('Login inputs not found!');
-            return;
-        }
-
-        let email = emailInput.value.trim();
-        let pass = passInput.value.trim();
-
-        if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+        if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
             localStorage.setItem('apex_admin_logged', 'true');
-            document.getElementById('admin-auth-section').style.display = 'none';
-            document.getElementById('admin-main-container').style.display = 'block';
-            switchAdminTab('dashboard');
+            showAdminDashboard();
         } else {
             showCustomAlert('Invalid Admin Email or Password!');
         }
@@ -595,6 +590,7 @@
         document.getElementById(`section-${tab}`).classList.add('active');
         document.getElementById(`menu-${tab}`).classList.add('active');
 
+        // Close mobile sidebar if open
         document.getElementById('admin-sidebar-menu').classList.remove('mobile-show');
 
         if(tab === 'dashboard') loadDashboardStats();
@@ -609,25 +605,15 @@
     }
 
     function loadDashboardStats() {
-        db.ref('users').on('value', (uSnap) => {
+        db.ref('users').once('value', (uSnap) => {
             let users = uSnap.val() || {};
-            db.ref('stocks').on('value', (sSnap) => {
+            db.ref('stocks').once('value', (sSnap) => {
                 let stocks = sSnap.val() || {};
-                db.ref('deposits').on('value', (dSnap) => {
+                db.ref('deposits').once('value', (dSnap) => {
                     let deposits = dSnap.val() || {};
 
-                    let availableStocks = 0;
-                    Object.values(stocks).forEach(s => {
-                        let status = s.status ? s.status.toLowerCase() : 'available';
-                        if (status === 'available' && !s.soldTo) {
-                            availableStocks++;
-                        }
-                    });
-
-                    let pendingDeposits = Object.values(deposits).filter(d => {
-                        let st = d.status ? d.status.toLowerCase() : '';
-                        return st === 'pending';
-                    }).length;
+                    let availableStocks = Object.values(stocks).filter(s => s.status === 'available').length;
+                    let pendingDeposits = Object.values(deposits).filter(d => d.status === 'Pending').length;
 
                     document.getElementById('stat-total-users').innerText = Object.keys(users).length;
                     document.getElementById('stat-total-stocks').innerText = availableStocks;
@@ -725,13 +711,18 @@
         });
     }
 
+    // Handle .txt or .csv file reading automatically
     function handleStockFileUpload(event) {
         let file = event.target.files[0];
         if(!file) return;
+
         let reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('stock-accounts-textarea').value = e.target.result.trim();
-            showCustomAlert('File loaded successfully into textarea!');
+            let content = e.target.result;
+            let textarea = document.getElementById('stock-accounts-textarea');
+            // Append or replace content in textarea
+            textarea.value = content.trim();
+            showCustomAlert('File loaded successfully into textarea! You can now upload.');
         };
         reader.readAsText(file);
     }
@@ -768,188 +759,163 @@
 
     function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
-            allDepositsCache = snapshot.val() || {};
-            renderDepositsTable(allDepositsCache);
-        });
-    }
-
-    function renderDepositsTable(depositsData) {
-        let tbody = document.getElementById('admin-deposits-table-body');
-        tbody.innerHTML = '';
-
-        let keys = Object.keys(depositsData);
-        if(keys.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub">No deposit requests found.</td></tr>`;
-            return;
-        }
-
-        keys.reverse().forEach(key => {
-            let d = depositsData[key];
-            let statusBadge = '';
-            let st = d.status ? d.status.toLowerCase() : 'pending';
-            
-            if (st === 'approved') {
-                statusBadge = '<span class="badge bg-success">Approved</span>';
-            } else if (st === 'rejected') {
-                statusBadge = `<span class="badge bg-danger">Rejected</span><br><small class="text-danger">Reason: ${d.rejectReason || 'N/A'}</small>`;
-            } else {
-                statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
-            }
-
-            let trxDisplay = d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || 'N/A';
-            let userEmail = d.userEmail || d.email || d.userId || 'N/A';
-            let amount = parseFloat(d.amount) || parseFloat(d.depositAmount) || 0;
-
-            let actionButtons = st === 'pending' ? `
-                <button onclick="approveDeposit('${key}', '${userEmail}', ${amount})" class="btn btn-sm btn-success rounded-pill me-1 mb-1"><i class="fa-solid fa-check"></i> Accept</button>
-                <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill mb-1"><i class="fa-solid fa-xmark"></i> Reject</button>
-            ` : `<span class="text-sub small">-</span>`;
-
-            tbody.innerHTML += `
-                <tr>
-                    <td>${userEmail}</td>
-                    <td>${d.method || d.paymentMethod || 'N/A'}</td>
-                    <td class="fw-bold text-success">${amount} BDT</td>
-                    <td class="font-monospace">${trxDisplay}</td>
-                    <td>${statusBadge}</td>
-                    <td>${actionButtons}</td>
-                </tr>
-            `;
-        });
-    }
-
-    function filterDeposits() {
-        let query = document.getElementById('deposit-search-input').value.toLowerCase().trim();
-        let filteredData = {};
-        Object.keys(allDepositsCache).forEach(key => {
-            let d = allDepositsCache[key];
-            let trx = (d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || '').toLowerCase();
-            let email = (d.userEmail || d.email || d.userId || '').toLowerCase();
-            if (trx.includes(query) || email.includes(query)) {
-                filteredData[key] = d;
-            }
-        });
-        renderDepositsTable(filteredData);
-    }
-
-    function approveDeposit(depositKey, userEmailOrKey, amount) {
-        let depositAmount = parseFloat(amount);
-        if (isNaN(depositAmount) || depositAmount <= 0) {
-            showCustomAlert('Error: Invalid deposit amount!');
-            return;
-        }
-
-        if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmailOrKey}?`)) return;
-
-        db.ref('users').once('value', (snapshot) => {
-            let users = snapshot.val() || {};
-            let targetKey = null;
-            let currentBalance = 0;
-
-            // Find matching user node by key, email, or userEmail property
-            Object.keys(users).forEach(uKey => {
-                let uData = users[uKey];
-                let uMail = uData.email || uData.userEmail || '';
-                
-                if (uKey === userEmailOrKey || uMail.toLowerCase() === userEmailOrKey.toLowerCase()) {
-                    targetKey = uKey;
-                    currentBalance = parseFloat(uData.balance) || 0;
-                }
-            });
-
-            // If user node doesn't exist explicitly in 'users', fallback to sanitizing email as key
-            if (!targetKey) {
-                targetKey = userEmailOrKey.replace(/[.#$\/\[\]]/g, '_');
-            }
-
-            let newBalance = currentBalance + depositAmount;
-
-            let updates = {};
-            updates[`users/${targetKey}/balance`] = newBalance;
-            if (!users[targetKey] || (!users[targetKey].email && !users[targetKey].userEmail)) {
-                updates[`users/${targetKey}/email`] = userEmailOrKey;
-            }
-            updates[`deposits/${depositKey}/status`] = 'Approved';
-
-            db.ref().update(updates).then(() => {
-                showCustomAlert(`Success! Added ${depositAmount} BDT. User New Balance: ${newBalance} BDT`);
-            }).catch((error) => {
-                showCustomAlert('Error updating database: ' + error.message);
-            });
-        });
-    }
-
-    function openRejectModal(key) {
-        document.getElementById('reject-deposit-key').value = key;
-        let rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
-        rejectModal.show();
-    }
-
-    function confirmRejectDeposit() {
-        let key = document.getElementById('reject-deposit-key').value;
-        let reason = document.getElementById('reject-reason-text').value.trim();
-        if (!reason) return showCustomAlert('Please specify a rejection reason!');
-
-        db.ref(`deposits/${key}`).update({
-            status: 'Rejected',
-            rejectReason: reason
-        }).then(() => {
-            let modalEl = document.getElementById('rejectModal');
-            let modal = bootstrap.Modal.getInstance(modalEl);
-            if (modal) modal.hide();
-            showCustomAlert('Deposit request rejected.');
-            document.getElementById('reject-reason-text').value = '';
-        });
-    }
-
-    function loadAdminUsers() {
-        db.ref('users').on('value', (snapshot) => {
-            let usersData = snapshot.val() || {};
-            let tbody = document.getElementById('admin-users-table-body');
+            let depositsData = snapshot.val() || {};
+            let tbody = document.getElementById('admin-deposits-table-body');
             tbody.innerHTML = '';
 
-            let keys = Object.keys(usersData);
+            let keys = Object.keys(depositsData);
             if(keys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No users registered yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub">No deposit requests found.</td></tr>`;
                 return;
             }
 
-            keys.forEach(key => {
-                let u = usersData[key];
-                let balance = parseFloat(u.balance) || 0;
-                let uEmail = u.email || u.userEmail || key;
+            keys.reverse().forEach(key => {
+                let d = depositsData[key];
+                let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
+                
+                let actionButtons = d.status === 'Pending' ? `
+                    <div class="d-flex gap-1">
+                        <button onclick="approveDeposit('${key}')" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">Approve</button>
+                        <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold">Reject</button>
+                    </div>
+                ` : `<span class="text-sub small">${d.reason ? 'Reason: ' + d.reason : ''}</span>`;
 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${uEmail}</td>
-                        <td class="fw-bold text-info">${balance} BDT</td>
-                        <td>
-                            <button onclick="directEditBalance('${key}', '${uEmail}', ${balance})" class="btn btn-sm btn-outline-warning rounded-pill px-3"><i class="fa-solid fa-pen"></i> Edit Balance</button>
-                        </td>
+                        <td>${d.email}</td>
+                        <td>${d.method}</td>
+                        <td class="fw-bold text-success">৳${d.amount}</td>
+                        <td class="text-info font-monospace">${d.trx}</td>
+                        <td><span class="badge ${badgeClass} px-2.5 py-1.5">${d.status}</span></td>
+                        <td>${actionButtons}</td>
                     </tr>
                 `;
             });
         });
     }
 
-    function directEditBalance(userKey, email, currentBal) {
-        let newBal = prompt(`Enter new balance for ${email}:`, currentBal);
-        if (newBal !== null && !isNaN(parseFloat(newBal))) {
-            db.ref(`users/${userKey}/balance`).set(parseFloat(newBal)).then(() => {
-                showCustomAlert(`Balance updated successfully for ${email}!`);
+    function approveDeposit(key) {
+        db.ref(`deposits/${key}`).once('value', (snap) => {
+            let dep = snap.val();
+            if(!dep || dep.status !== 'Pending') return;
+
+            let safeKey = dep.email.replace(/[@.]/g, '_');
+            db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
+                let currentBal = balSnap.val() || 0;
+                db.ref(`balances/${safeKey}`).set(currentBal + parseFloat(dep.amount));
+                db.ref(`deposits/${key}/status`).set('Approved');
+                showCustomAlert('Deposit Approved & Balance Added Successfully!');
             });
-        }
+        });
+    }
+
+    function openRejectModal(key) {
+        document.getElementById('reject-deposit-key').value = key;
+        document.getElementById('reject-reason-text').value = '';
+        new bootstrap.Modal(document.getElementById('rejectModal')).show();
+    }
+
+    function confirmRejectDeposit() {
+        let key = document.getElementById('reject-deposit-key').value;
+        let reason = document.getElementById('reject-reason-text').value.trim();
+
+        if(!reason) return showCustomAlert('Please provide a rejection reason!');
+
+        db.ref(`deposits/${key}`).update({
+            status: 'Rejected',
+            reason: reason
+        });
+
+        bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
+        showCustomAlert('Deposit Rejected.');
+    }
+
+    function loadAdminUsers() {
+        db.ref('users').once('value', (uSnap) => {
+            let usersData = uSnap.val() || {};
+            db.ref('balances').once('value', (bSnap) => {
+                let balancesData = bSnap.val() || {};
+                let tbody = document.getElementById('admin-users-table-body');
+                tbody.innerHTML = '';
+
+                let emails = Object.keys(usersData);
+                if(emails.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No registered users.</td></tr>`;
+                    return;
+                }
+
+                emails.forEach(key => {
+                    let u = usersData[key];
+                    let safeKey = u.email.replace(/[@.]/g, '_');
+                    let bal = balancesData[safeKey] || 0;
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${u.email}</td>
+                            <td class="fw-bold text-info">৳${bal}</td>
+                            <td>
+                                <div class="input-group input-group-sm" style="max-width: 250px;">
+                                    <input type="number" id="bal-input-${safeKey}" class="form-control" placeholder="Amount">
+                                    <button onclick="updateUserBalance('${u.email}', 'add')" class="btn btn-success fw-bold px-2">+</button>
+                                    <button onclick="updateUserBalance('${u.email}', 'sub')" class="btn btn-danger fw-bold px-2">-</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            });
+        });
+    }
+
+    function updateUserBalance(email, action) {
+        let safeKey = email.replace(/[@.]/g, '_');
+        let valInput = document.getElementById(`bal-input-${safeKey}`);
+        let amount = parseFloat(valInput.value);
+
+        if(isNaN(amount) || amount <= 0) return showCustomAlert('Please enter a valid amount!');
+
+        db.ref(`balances/${safeKey}`).once('value', (snap) => {
+            let currentBal = snap.val() || 0;
+            let newBal = action === 'add' ? currentBal + amount : currentBal - amount;
+            if(newBal < 0) newBal = 0;
+
+            db.ref(`balances/${safeKey}`).set(newBal);
+            valInput.value = '';
+            showCustomAlert('User balance updated successfully!');
+            loadAdminUsers();
+        });
+    }
+
+    function addPaymentMethod() {
+        let name = document.getElementById('pay-name').value.trim();
+        let type = document.getElementById('pay-type-select').value;
+        let num = document.getElementById('pay-num.value').trim(); // Fixed reference typo check inside code if any
+        let numInput = document.getElementById('pay-num').value.trim();
+
+        if(!name || !numInput) return showCustomAlert('Please fill in all payment method fields!');
+
+        db.ref('paymentMethods').push({
+            name: name,
+            type: type,
+            number: numInput
+        });
+
+        document.getElementById('pay-name').value = '';
+        document.getElementById('pay-num').value = '';
+        showCustomAgentAlert('Payment method added successfully!'); // standard alert
+        showCustomAlert('Payment method added successfully!');
+        loadAdminPayments();
     }
 
     function loadAdminPayments() {
-        db.ref('payments').on('value', (snapshot) => {
+        db.ref('paymentMethods').on('value', (snapshot) => {
             let payData = snapshot.val() || {};
             let tbody = document.getElementById('admin-payments-table-body');
             tbody.innerHTML = '';
 
             let keys = Object.keys(payData);
             if(keys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No payment methods added yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No payment methods configured.</td></tr>`;
                 return;
             }
 
@@ -958,8 +924,8 @@
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-semibold">${p.name}</td>
-                        <td>${p.type}</td>
-                        <td class="font-monospace">${p.number}</td>
+                        <td><span class="badge bg-secondary">${p.type}</span></td>
+                        <td class="font-monospace text-info">${p.number}</td>
                         <td>
                             <button onclick="deletePaymentMethod('${key}')" class="btn btn-sm btn-outline-danger rounded-pill px-2.5"><i class="fa-solid fa-trash"></i></button>
                         </td>
@@ -969,22 +935,11 @@
         });
     }
 
-    function addPaymentMethod() {
-        let name = document.getElementById('pay-name').value.trim();
-        let type = document.getElementById('pay-type-select').value;
-        let num = document.getElementById('pay-num').value.trim();
-
-        if(!name || !num) return showCustomAlert('Please enter both payment method name and number!');
-
-        db.ref('payments').push({ name: name, type: type, number: num });
-        document.getElementById('pay-name').value = '';
-        document.getElementById('pay-num').value = '';
-        showCustomAlert('Payment method added successfully!');
-    }
-
     function deletePaymentMethod(key) {
-        db.ref(`payments/${key}`).remove();
+        db.ref(`paymentMethods/${key}`).remove();
+        showCustomAlert('Payment method deleted.');
     }
 </script>
+
 </body>
 </html>
