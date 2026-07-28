@@ -28,6 +28,7 @@
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
             margin: 0;
+            overflow-x: hidden;
         }
 
         .admin-auth-container {
@@ -51,6 +52,7 @@
         .admin-container {
             display: none;
             min-height: 100vh;
+            position: relative;
         }
 
         .admin-sidebar {
@@ -59,9 +61,10 @@
             border-right: 1px solid var(--border-color);
             position: fixed;
             top: 0; bottom: 0; left: 0;
-            z-index: 100;
+            z-index: 1050;
             display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease;
         }
 
         .sidebar-brand {
@@ -72,7 +75,7 @@
             border-bottom: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 12px;
+            justify-content: space-between;
         }
 
         .sidebar-menu {
@@ -80,6 +83,7 @@
             padding: 15px 12px;
             margin: 0;
             flex: 1;
+            overflow-y: auto;
         }
 
         .sidebar-menu li { margin-bottom: 6px; }
@@ -107,6 +111,19 @@
             flex: 1;
             margin-left: 260px;
             padding: 30px;
+            transition: margin-left 0.3s ease;
+        }
+
+        .mobile-top-bar {
+            display: none;
+            background-color: var(--card-bg);
+            border-bottom: 1px solid var(--border-color);
+            padding: 12px 20px;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 1040;
         }
 
         .card-box {
@@ -118,11 +135,11 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .form-control, .form-select {
+        .form-control, .form-select, .input-group {
             background-color: var(--input-bg) !important;
             color: #ffffff !important;
             border: 1px solid var(--border-color) !important;
-            border-radius: 12px;
+            border-radius: 12px !important;
             padding: 12px 16px;
             font-size: 14px;
         }
@@ -186,7 +203,7 @@
             top: 0; left: 0; width: 100vw; height: 100vh;
             background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(4px);
-            z-index: 9999;
+            z-index: 99999;
             display: none;
             justify-content: center;
             align-items: center;
@@ -203,10 +220,21 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
-        @media (max-width: 768px) {
-            .admin-sidebar { width: 75px; }
-            .admin-sidebar .sidebar-brand span, .admin-sidebar .sidebar-menu span { display: none; }
-            .admin-main { margin-left: 75px; padding: 15px; }
+        /* Responsive Breakpoints for Mobile & Tablet */
+        @media (max-width: 991px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            .admin-sidebar.mobile-show {
+                transform: translateX(0);
+            }
+            .admin-main {
+                margin-left: 0;
+                padding: 15px;
+            }
+            .mobile-top-bar {
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -268,10 +296,23 @@
 
 <!-- ADMIN DASHBOARD -->
 <div id="admin-main-container" class="admin-container">
-    <div class="admin-sidebar">
+    
+    <!-- Mobile Top Header -->
+    <div class="mobile-top-bar">
+        <div class="d-flex align-items-center gap-2">
+            <i class="fa-solid fa-shield-halved text-cyan fs-5"></i>
+            <span class="fw-bold text-white">Admin Panel</span>
+        </div>
+        <button onclick="toggleMobileSidebar()" class="btn btn-dark border-secondary text-white py-1 px-2.5"><i class="fa-solid fa-bars fs-5"></i></button>
+    </div>
+
+    <div class="admin-sidebar" id="admin-sidebar-menu">
         <div class="sidebar-brand">
-            <i class="fa-solid fa-shield-halved text-cyan fs-4"></i>
-            <span>Admin Control</span>
+            <div class="d-flex align-items-center gap-2">
+                <i class="fa-solid fa-shield-halved text-cyan fs-4"></i>
+                <span>Admin Control</span>
+            </div>
+            <button onclick="toggleMobileSidebar()" class="btn-close btn-close-white d-lg-none"></button>
         </div>
         <ul class="sidebar-menu">
             <li><a href="#" onclick="switchAdminTab('dashboard')" class="active" id="menu-dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></a></li>
@@ -289,7 +330,7 @@
         <div id="section-dashboard" class="admin-section active">
             <h3 class="fw-bold mb-4 text-white">Dashboard Overview</h3>
             <div class="row g-4 mb-4">
-                <div class="col-md-4">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card">
                         <div class="stat-icon bg-primary bg-opacity-15 text-primary"><i class="fa-solid fa-users"></i></div>
                         <div>
@@ -298,7 +339,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card">
                         <div class="stat-icon bg-success bg-opacity-15 text-success"><i class="fa-solid fa-box"></i></div>
                         <div>
@@ -307,7 +348,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-xl-4 col-md-6">
                     <div class="stat-card">
                         <div class="stat-icon bg-warning bg-opacity-15 text-warning"><i class="fa-solid fa-clock"></i></div>
                         <div>
@@ -325,7 +366,8 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Main Category Name</label>
-                        <input type="text" id="cat-main-name" class="form-control" placeholder="e.g. Gmail Accounts">
+                        <input type="text" id="cat-main-name" class="form-control" list="existing-main-cats" placeholder="Select or type new">
+                        <datalist id="existing-main-cats"></datalist>
                     </div>
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Sub-Category Name</label>
@@ -366,6 +408,14 @@
                     <label class="small text-sub mb-1 fw-semibold">Price Per Unit (BDT)</label>
                     <input type="number" id="stock-unit-price" class="form-control" placeholder="25">
                 </div>
+                
+                <!-- File Upload Option for .txt / .csv -->
+                <div class="mb-3">
+                    <label class="small text-sub mb-1 fw-semibold">Upload from File (.txt / .csv)</label>
+                    <input type="file" id="stock-file-input" class="form-control" accept=".txt,.csv" onchange="handleStockFileUpload(event)">
+                    <div class="form-text text-sub small mt-1">You can upload a text or csv file containing accounts (Format: Email:Password).</div>
+                </div>
+
                 <div class="mb-4">
                     <label class="small text-sub mb-1 fw-semibold">Mail Accounts (Format: Email:Password - One per line)</label>
                     <textarea id="stock-accounts-textarea" class="form-control font-monospace" rows="6" placeholder="user1@gmail.com:pass123&#10;user2@gmail.com:pass456"></textarea>
@@ -491,6 +541,11 @@
         document.getElementById('custom-alert-overlay').style.display = 'none';
     }
 
+    function toggleMobileSidebar() {
+        let sidebar = document.getElementById('admin-sidebar-menu');
+        sidebar.classList.toggle('mobile-show');
+    }
+
     window.onload = function() {
         let loggedInAdmin = localStorage.getItem('apex_admin_logged');
         if(loggedInAdmin === 'true') {
@@ -519,7 +574,7 @@
 
     function showAdminDashboard() {
         document.getElementById('admin-auth-section').style.display = 'none';
-        document.getElementById('admin-main-container').style.display = 'flex';
+        document.getElementById('admin-main-container').style.display = 'block';
         switchAdminTab('dashboard');
     }
 
@@ -535,8 +590,14 @@
         document.getElementById(`section-${tab}`).classList.add('active');
         document.getElementById(`menu-${tab}`).classList.add('active');
 
+        // Close mobile sidebar if open
+        document.getElementById('admin-sidebar-menu').classList.remove('mobile-show');
+
         if(tab === 'dashboard') loadDashboardStats();
-        if(tab === 'categories') loadAdminCategories();
+        if(tab === 'categories') {
+            loadAdminCategories();
+            loadMainCategoryDatalist();
+        }
         if(tab === 'stocks') loadStockCategoryDropdown();
         if(tab === 'deposits') loadAdminDeposits();
         if(tab === 'users') loadAdminUsers();
@@ -562,6 +623,21 @@
         });
     }
 
+    function loadMainCategoryDatalist() {
+        db.ref('categories').once('value', (snapshot) => {
+            let catsData = snapshot.val() || {};
+            let datalist = document.getElementById('existing-main-cats');
+            datalist.innerHTML = '';
+            let uniqueMains = new Set();
+            Object.values(catsData).forEach(c => {
+                if(c.cat) uniqueMains.add(c.cat);
+            });
+            uniqueMains.forEach(mainName => {
+                datalist.innerHTML += `<option value="${mainName}">`;
+            });
+        });
+    }
+
     function addNewCategory() {
         let main = document.getElementById('cat-main-name').value.trim();
         let sub = document.getElementById('cat-sub-name').value.trim();
@@ -573,6 +649,7 @@
         document.getElementById('cat-sub-name').value = '';
         showCustomAlert('Category added successfully!');
         loadAdminCategories();
+        loadMainCategoryDatalist();
     }
 
     function loadAdminCategories() {
@@ -597,8 +674,8 @@
                         <td>${c.subCat}</td>
                         <td>${statusBadge}</td>
                         <td>
-                            <button onclick="toggleCategoryStatus('${key}', '${c.status}')" class="btn btn-sm btn-outline-info rounded-pill px-3 me-1">${toggleText}</button>
-                            <button onclick="deleteCategory('${key}')" class="btn btn-sm btn-outline-danger rounded-pill px-2.5"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="toggleCategoryStatus('${key}', '${c.status}')" class="btn btn-sm btn-outline-info rounded-pill px-3 me-1 mb-1">${toggleText}</button>
+                            <button onclick="deleteCategory('${key}')" class="btn btn-sm btn-outline-danger rounded-pill px-2.5 mb-1"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -621,10 +698,33 @@
             let select = document.getElementById('stock-category-select');
             select.innerHTML = '';
 
+            let count = 0;
             Object.values(catsData).forEach(c => {
-                select.innerHTML += `<option value="${c.cat} - ${c.subCat}">${c.cat} -> ${c.subCat}</option>`;
+                if(c.status === 'ON') {
+                    select.innerHTML += `<option value="${c.cat} - ${c.subCat}">${c.cat} -> ${c.subCat}</option>`;
+                    count++;
+                }
             });
+            if(count === 0) {
+                select.innerHTML = `<option value="">No active categories available</option>`;
+            }
         });
+    }
+
+    // Handle .txt or .csv file reading automatically
+    function handleStockFileUpload(event) {
+        let file = event.target.files[0];
+        if(!file) return;
+
+        let reader = new FileReader();
+        reader.onload = function(e) {
+            let content = e.target.result;
+            let textarea = document.getElementById('stock-accounts-textarea');
+            // Append or replace content in textarea
+            textarea.value = content.trim();
+            showCustomAlert('File loaded successfully into textarea! You can now upload.');
+        };
+        reader.readAsText(file);
     }
 
     function saveMailStocks() {
@@ -632,11 +732,12 @@
         let price = parseFloat(document.getElementById('stock-unit-price').value);
         let rawText = document.getElementById('stock-accounts-textarea').value.trim();
 
-        if(!catKey) return showCustomAlert('Please select a sub-category!');
+        if(!catKey) return showCustomAlert('Please select a valid sub-category!');
         if(isNaN(price) || price <= 0) return showCustomAlert('Please enter a valid unit price!');
-        if(!rawText) return showCustomAlert('Please paste mail accounts!');
+        if(!rawText) return showCustomAlert('Please paste or upload mail accounts!');
 
         let lines = rawText.split('\n');
+        let uploadCount = 0;
         lines.forEach(line => {
             let cleanLine = line.trim();
             if(cleanLine) {
@@ -647,11 +748,13 @@
                     status: 'available',
                     soldTo: null
                 });
+                uploadCount++;
             }
         });
 
         document.getElementById('stock-accounts-textarea').value = '';
-        showCustomAlert('Mail stocks uploaded successfully!');
+        document.getElementById('stock-file-input').value = '';
+        showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
     }
 
     function loadAdminDeposits() {
@@ -671,8 +774,10 @@
                 let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
                 
                 let actionButtons = d.status === 'Pending' ? `
-                    <button onclick="approveDeposit('${key}')" class="btn btn-sm btn-success rounded-pill px-3 me-1 fw-bold">Approve</button>
-                    <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold">Reject</button>
+                    <div class="d-flex gap-1">
+                        <button onclick="approveDeposit('${key}')" class="btn btn-sm btn-success rounded-pill px-3 fw-bold">Approve</button>
+                        <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 fw-bold">Reject</button>
+                    </div>
                 ` : `<span class="text-sub small">${d.reason ? 'Reason: ' + d.reason : ''}</span>`;
 
                 tbody.innerHTML += `
@@ -692,7 +797,7 @@
     function approveDeposit(key) {
         db.ref(`deposits/${key}`).once('value', (snap) => {
             let dep = snap.val();
-            if(dep.status !== 'Pending') return;
+            if(!dep || dep.status !== 'Pending') return;
 
             let safeKey = dep.email.replace(/[@.]/g, '_');
             db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
@@ -751,8 +856,8 @@
                             <td>
                                 <div class="input-group input-group-sm" style="max-width: 250px;">
                                     <input type="number" id="bal-input-${safeKey}" class="form-control" placeholder="Amount">
-                                    <button onclick="updateUserBalance('${u.email}', 'add')" class="btn btn-success fw-bold">+</button>
-                                    <button onclick="updateUserBalance('${u.email}', 'sub')" class="btn btn-danger fw-bold">-</button>
+                                    <button onclick="updateUserBalance('${u.email}', 'add')" class="btn btn-success fw-bold px-2">+</button>
+                                    <button onclick="updateUserBalance('${u.email}', 'sub')" class="btn btn-danger fw-bold px-2">-</button>
                                 </div>
                             </td>
                         </tr>
@@ -784,18 +889,20 @@
     function addPaymentMethod() {
         let name = document.getElementById('pay-name').value.trim();
         let type = document.getElementById('pay-type-select').value;
-        let num = document.getElementById('pay-num').value.trim();
+        let num = document.getElementById('pay-num.value').trim(); // Fixed reference typo check inside code if any
+        let numInput = document.getElementById('pay-num').value.trim();
 
-        if(!name || !num) return showCustomAlert('Please fill in all payment method fields!');
+        if(!name || !numInput) return showCustomAlert('Please fill in all payment method fields!');
 
         db.ref('paymentMethods').push({
             name: name,
             type: type,
-            number: num
+            number: numInput
         });
 
         document.getElementById('pay-name').value = '';
         document.getElementById('pay-num').value = '';
+        showCustomAgentAlert('Payment method added successfully!'); // standard alert
         showCustomAlert('Payment method added successfully!');
         loadAdminPayments();
     }
