@@ -752,7 +752,7 @@
     }
 
     // --- REALTIME DEPOSIT REQUESTS & APPROVAL (FIXED) ---
-    function loadAdminDeposits() {
+   function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
             let depositsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-deposits-table-body');
@@ -767,15 +767,18 @@
             keys.reverse().forEach(key => {
                 let d = depositsData[key];
                 let statusBadge = '';
+                
+                let trxDisplay = d.trxId || d.TrxID || d.trx_id || 'N/A';
+
                 if(d.status === 'Pending' || d.status === 'pending') {
                     statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
                 } else if(d.status === 'Approved' || d.status === 'approved') {
                     statusBadge = '<span class="badge bg-success">Approved</span>';
                 } else {
-                    statusBadge = '<span class="badge bg-danger">Rejected</span>';
+                    let reasonText = d.rejectReason ? `<br><small class="text-danger">Reason: ${d.rejectReason}</small>` : '';
+                    statusBadge = `<span class="badge bg-danger">Rejected</span>${reasonText}`;
                 }
 
-                let trxDisplay = d.trxId || d.TrxID || 'N/A';
                 let actionBtn = (d.status === 'Pending' || d.status === 'pending') ? `
                     <button onclick="approveDeposit('${key}')" class="btn btn-sm btn-success rounded-pill px-3 me-1 mb-1 fw-bold">Approve</button>
                     <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 mb-1 fw-bold">Reject</button>
@@ -786,7 +789,7 @@
                         <td class="fw-semibold">${d.userEmail || d.email || 'Unknown'}</td>
                         <td>${d.method || 'N/A'}</td>
                         <td class="fw-bold text-info">${d.amount} BDT</td>
-                        <td class="font-monospace">${trxDisplay}</td>
+                        <td class="font-monospace text-warning">${trxDisplay}</td>
                         <td>${statusBadge}</td>
                         <td>${actionBtn}</td>
                     </tr>
@@ -794,7 +797,6 @@
             });
         });
     }
-
     function approveDeposit(depositKey) {
         db.ref(`deposits/${depositKey}`).once('value', (snapshot) => {
             let deposit = snapshot.val();
