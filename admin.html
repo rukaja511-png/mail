@@ -114,7 +114,6 @@
             transition: margin-left 0.3s ease;
         }
 
-        /* Fixed Mobile Top Bar & Hamburger Layout */
         .mobile-top-bar {
             display: none;
             background-color: var(--card-bg);
@@ -136,7 +135,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
-        .form-control, .form-select, .input-group {
+        .form-control, .form-select {
             background-color: var(--input-bg) !important;
             color: #ffffff !important;
             border: 1px solid var(--border-color) !important;
@@ -145,16 +144,7 @@
             font-size: 14px;
         }
 
-        .form-control::placeholder, .form-select::placeholder {
-            color: #94a3b8 !important;
-            opacity: 1 !important;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--accent-blue) !important;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-            color: #ffffff !important;
-        }
+        .form-control::placeholder { color: #94a3b8 !important; }
 
         .table {
             color: #ffffff !important;
@@ -221,27 +211,12 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.7);
         }
 
-        /* Responsive Breakpoints & Mobile Balance Box Fixes */
         @media (max-width: 991px) {
-            .admin-sidebar {
-                transform: translateX(-100%);
-            }
-            .admin-sidebar.mobile-show {
-                transform: translateX(0);
-            }
-            .admin-main {
-                margin-left: 0;
-                padding: 15px;
-            }
-            .mobile-top-bar {
-                display: flex;
-            }
-            /* Fix for User Balance Container on mobile screen */
-            .table-responsive {
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-            }
+            .admin-sidebar { transform: translateX(-100%); }
+            .admin-sidebar.mobile-show { transform: translateX(0); }
+            .admin-main { margin-left: 0; padding: 15px; }
+            .mobile-top-bar { display: flex; }
+            .table-responsive { width: 100%; overflow-x: auto; }
         }
     </style>
 </head>
@@ -303,8 +278,6 @@
 
 <!-- ADMIN DASHBOARD -->
 <div id="admin-main-container" class="admin-container">
-    
-    <!-- Mobile Top Header -->
     <div class="mobile-top-bar">
         <div class="d-flex align-items-center gap-2">
             <i class="fa-solid fa-shield-halved text-cyan fs-5"></i>
@@ -333,7 +306,6 @@
     </div>
 
     <div class="admin-main">
-        
         <div id="section-dashboard" class="admin-section active">
             <h3 class="fw-bold mb-4 text-white">Dashboard Overview</h3>
             <div class="row g-4 mb-4">
@@ -385,19 +357,11 @@
                     </div>
                 </div>
             </div>
-
             <div class="card-box">
                 <h5 class="fw-bold mb-3 text-white">Existing Categories List</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Sub-Category</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Category</th><th>Sub-Category</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="admin-category-table-body"></tbody>
                     </table>
                 </div>
@@ -415,16 +379,13 @@
                     <label class="small text-sub mb-1 fw-semibold">Price Per Unit (BDT)</label>
                     <input type="number" id="stock-unit-price" class="form-control" placeholder="25">
                 </div>
-                
                 <div class="mb-3">
                     <label class="small text-sub mb-1 fw-semibold">Upload from File (.txt / .csv)</label>
                     <input type="file" id="stock-file-input" class="form-control" accept=".txt,.csv" onchange="handleStockFileUpload(event)">
-                    <div class="form-text text-sub small mt-1">You can upload a text or csv file containing accounts (Format: Email:Password).</div>
                 </div>
-
                 <div class="mb-4">
                     <label class="small text-sub mb-1 fw-semibold">Mail Accounts (Format: Email:Password - One per line)</label>
-                    <textarea id="stock-accounts-textarea" class="form-control font-monospace" rows="6" placeholder="user1@gmail.com:pass123&#10;user2@gmail.com:pass456"></textarea>
+                    <textarea id="stock-accounts-textarea" class="form-control font-monospace text-white" rows="6" placeholder="user1@gmail.com:pass123"></textarea>
                 </div>
                 <button onclick="saveMailStocks()" class="btn btn-success w-100 fw-bold py-3 rounded-pill shadow">Upload Stock Accounts</button>
             </div>
@@ -435,16 +396,7 @@
             <div class="card-box">
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>User Email</th>
-                                <th>Method</th>
-                                <th>Amount</th>
-                                <th>TrxID</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>User Email</th><th>Method</th><th>Amount</th><th>TrxID</th><th>Status</th><th>Action</th></tr></thead>
                         <tbody id="admin-deposits-table-body"></tbody>
                     </table>
                 </div>
@@ -456,13 +408,7 @@
             <div class="card-box">
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>User Email</th>
-                                <th>Current Balance (BDT)</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>User Email</th><th>Current Balance (BDT)</th><th>Action</th></tr></thead>
                         <tbody id="admin-users-table-body"></tbody>
                     </table>
                 </div>
@@ -475,7 +421,7 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Method Name</label>
-                        <input type="text" id="pay-name" class="form-control" placeholder="bKash / Nagad / Rocket">
+                        <input type="text" id="pay-name" class="form-control" placeholder="bKash / Nagad">
                     </div>
                     <div class="col-md-4">
                         <label class="small text-sub mb-1 fw-semibold">Account Type</label>
@@ -493,29 +439,19 @@
                 </div>
                 <button onclick="addPaymentMethod()" class="btn btn-primary w-100 fw-bold py-2.5 rounded-pill shadow mt-2">Add Payment Method</button>
             </div>
-
             <div class="card-box">
                 <h5 class="fw-bold mb-3 text-white">Active Payment Methods List</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Method Name</th>
-                                <th>Type</th>
-                                <th>Number</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                        <thead><tr><th>Method Name</th><th>Type</th><th>Number</th><th>Action</th></tr></thead>
                         <tbody id="admin-payments-table-body"></tbody>
                     </table>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 
-<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -542,19 +478,15 @@
         document.getElementById('custom-alert-message').innerText = msg;
         document.getElementById('custom-alert-overlay').style.display = 'flex';
     }
-
     function closeCustomAlert() {
         document.getElementById('custom-alert-overlay').style.display = 'none';
     }
-
     function toggleMobileSidebar() {
-        let sidebar = document.getElementById('admin-sidebar-menu');
-        sidebar.classList.toggle('mobile-show');
+        document.getElementById('admin-sidebar-menu').classList.toggle('mobile-show');
     }
 
     window.onload = function() {
-        let loggedInAdmin = localStorage.getItem('apex_admin_logged');
-        if(loggedInAdmin === 'true') {
+        if(localStorage.getItem('apex_admin_logged') === 'true') {
             showAdminDashboard();
         } else {
             showAdminLogin();
@@ -569,7 +501,6 @@
     function handleAdminLogin() {
         let email = document.getElementById('admin-login-email').value.trim();
         let pass = document.getElementById('admin-login-pass').value.trim();
-
         if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
             localStorage.setItem('apex_admin_logged', 'true');
             showAdminDashboard();
@@ -592,24 +523,18 @@
     function switchAdminTab(tab) {
         document.querySelectorAll('.admin-section').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.admin-sidebar .sidebar-menu a').forEach(el => el.classList.remove('active'));
-
         document.getElementById(`section-${tab}`).classList.add('active');
         document.getElementById(`menu-${tab}`).classList.add('active');
-
         document.getElementById('admin-sidebar-menu').classList.remove('mobile-show');
 
         if(tab === 'dashboard') loadDashboardStats();
-        if(tab === 'categories') {
-            loadAdminCategories();
-            loadMainCategoryDatalist();
-        }
+        if(tab === 'categories') { loadAdminCategories(); loadMainCategoryDatalist(); }
         if(tab === 'stocks') loadStockCategoryDropdown();
         if(tab === 'deposits') loadAdminDeposits();
         if(tab === 'users') loadAdminUsers();
         if(tab === 'payments') loadAdminPayments();
     }
 
-    // 1 & 2. REAL-TIME STOCK & STATS FIX
     function loadDashboardStats() {
         db.ref('users').on('value', (uSnap) => {
             let users = uSnap.val() || {};
@@ -617,7 +542,6 @@
                 let stocks = sSnap.val() || {};
                 db.ref('deposits').on('value', (dSnap) => {
                     let deposits = dSnap.val() || {};
-
                     let availableStocks = Object.values(stocks).filter(s => s.status === 'available').length;
                     let pendingDeposits = Object.values(deposits).filter(d => d.status === 'Pending').length;
 
@@ -635,21 +559,15 @@
             let datalist = document.getElementById('existing-main-cats');
             datalist.innerHTML = '';
             let uniqueMains = new Set();
-            Object.values(catsData).forEach(c => {
-                if(c.cat) uniqueMains.add(c.cat);
-            });
-            uniqueMains.forEach(mainName => {
-                datalist.innerHTML += `<option value="${mainName}">`;
-            });
+            Object.values(catsData).forEach(c => { if(c.cat) uniqueMains.add(c.cat); });
+            uniqueMains.forEach(mainName => { datalist.innerHTML += `<option value="${mainName}">`; });
         });
     }
 
     function addNewCategory() {
         let main = document.getElementById('cat-main-name').value.trim();
         let sub = document.getElementById('cat-sub-name').value.trim();
-
         if(!main || !sub) return showCustomAlert('Please enter both main and sub-category names!');
-
         db.ref('categories').push({ cat: main, subCat: sub, status: 'ON' });
         document.getElementById('cat-main-name').value = '';
         document.getElementById('cat-sub-name').value = '';
@@ -663,13 +581,11 @@
             let catsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-category-table-body');
             tbody.innerHTML = '';
-
             let keys = Object.keys(catsData);
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No categories added yet.</td></tr>`;
                 return;
             }
-
             keys.forEach(key => {
                 let c = catsData[key];
                 let statusBadge = c.status === 'ON' ? '<span class="badge bg-success">ON</span>' : '<span class="badge bg-danger">OFF</span>';
@@ -690,20 +606,15 @@
     }
 
     function toggleCategoryStatus(key, currentStatus) {
-        let newStatus = currentStatus === 'ON' ? 'OFF' : 'ON';
-        db.ref(`categories/${key}/status`).set(newStatus);
+        db.ref(`categories/${key}/status`).set(currentStatus === 'ON' ? 'OFF' : 'ON');
     }
-
-    function deleteCategory(key) {
-        db.ref(`categories/${key}`).remove();
-    }
+    function deleteCategory(key) { db.ref(`categories/${key}`).remove(); }
 
     function loadStockCategoryDropdown() {
         db.ref('categories').once('value', (snapshot) => {
             let catsData = snapshot.val() || {};
             let select = document.getElementById('stock-category-select');
             select.innerHTML = '';
-
             let count = 0;
             Object.values(catsData).forEach(c => {
                 if(c.status === 'ON') {
@@ -711,22 +622,17 @@
                     count++;
                 }
             });
-            if(count === 0) {
-                select.innerHTML = `<option value="">No active categories available</option>`;
-            }
+            if(count === 0) select.innerHTML = `<option value="">No active categories available</option>`;
         });
     }
 
     function handleStockFileUpload(event) {
         let file = event.target.files[0];
         if(!file) return;
-
         let reader = new FileReader();
         reader.onload = function(e) {
-            let content = e.target.result;
-            let textarea = document.getElementById('stock-accounts-textarea');
-            textarea.value = content.trim();
-            showCustomAlert('File loaded successfully into textarea! You can now upload.');
+            document.getElementById('stock-accounts-textarea').value = e.target.result.trim();
+            showCustomAlert('File loaded successfully into textarea!');
         };
         reader.readAsText(file);
     }
@@ -755,7 +661,6 @@
                 uploadCount++;
             }
         });
-
         document.getElementById('stock-accounts-textarea').value = '';
         document.getElementById('stock-file-input').value = '';
         showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
@@ -766,13 +671,11 @@
             let depositsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-deposits-table-body');
             tbody.innerHTML = '';
-
             let keys = Object.keys(depositsData);
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub">No deposit requests found.</td></tr>`;
                 return;
             }
-
             keys.reverse().forEach(key => {
                 let d = depositsData[key];
                 let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
@@ -799,20 +702,12 @@
         db.ref(`deposits/${key}/status`).set('Approved').then(() => {
             db.ref('users').once('value', (snapshot) => {
                 let users = snapshot.val() || {};
-                let targetUserKey = null;
-                let currentBal = 0;
-
                 Object.keys(users).forEach(uKey => {
                     if(users[uKey].email === userEmail) {
-                        targetUserKey = uKey;
-                        currentBal = parseFloat(users[uKey].balance || 0);
+                        let currentBal = parseFloat(users[uKey].balance || 0);
+                        db.ref(`users/${uKey}/balance`).set(currentBal + parseFloat(amount));
                     }
                 });
-
-                if(targetUserKey) {
-                    let newBalance = currentBal + parseFloat(amount);
-                    db.ref(`users/${targetUserKey}/balance`).set(newBalance);
-                }
             });
             showCustomAlert('Deposit approved and balance added successfully!');
         });
@@ -821,23 +716,15 @@
     function openRejectModal(key) {
         document.getElementById('reject-deposit-key').value = key;
         document.getElementById('reject-reason-text').value = '';
-        let myModal = new bootstrap.Modal(document.getElementById('rejectModal'));
-        myModal.show();
+        new bootstrap.Modal(document.getElementById('rejectModal')).show();
     }
 
     function confirmRejectDeposit() {
         let key = document.getElementById('reject-deposit-key').value;
         let reason = document.getElementById('reject-reason-text').value.trim();
-
         if(!reason) return showCustomAlert('Please enter rejection reason!');
-
-        db.ref(`deposits/${key}`).update({
-            status: 'Rejected',
-            rejectReason: reason
-        }).then(() => {
-            let modalEl = document.getElementById('rejectModal');
-            let modal = bootstrap.Modal.getInstance(modalEl);
-            modal.hide();
+        db.ref(`deposits/${key}`).update({ status: 'Rejected', rejectReason: reason }).then(() => {
+            bootstrap.Modal.getInstance(document.getElementById('rejectModal')).hide();
             showCustomAlert('Deposit rejected successfully.');
         });
     }
@@ -847,13 +734,11 @@
             let usersData = snapshot.val() || {};
             let tbody = document.getElementById('admin-users-table-body');
             tbody.innerHTML = '';
-
             let keys = Object.keys(usersData);
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No users registered yet.</td></tr>`;
                 return;
             }
-
             keys.forEach(key => {
                 let u = usersData[key];
                 let userBal = u.balance !== undefined ? parseFloat(u.balance) : 0;
@@ -877,36 +762,24 @@
         let actionWord = type === 'add' ? 'Add' : 'Subtract/Deduct';
         let amountStr = prompt(`Enter amount to ${actionWord} (BDT):`);
         if(!amountStr) return;
-
         let amount = parseFloat(amountStr);
         if(isNaN(amount) || amount <= 0) return showCustomAlert('Please enter a valid numeric amount!');
-
         let newBal = type === 'add' ? currentBal + amount : currentBal - amount;
         if(newBal < 0) newBal = 0;
-
         db.ref(`users/${userKey}/balance`).set(newBal).then(() => {
             showCustomAlert('User balance updated successfully!');
         });
     }
 
-    // 3. PAYMENT METHODS FIX (Fixed database path mapping & rendering)
     function addPaymentMethod() {
         let name = document.getElementById('pay-name').value.trim();
         let type = document.getElementById('pay-type-select').value;
         let num = document.getElementById('pay-num').value.trim();
-
         if(!name || !num) return showCustomAlert('Please fill in both method name and account number!');
-
-        db.ref('paymentMethods').push({
-            methodName: name,
-            accountType: type,
-            accountNumber: num
-        }).then(() => {
+        db.ref('paymentMethods').push({ methodName: name, accountType: type, accountNumber: num }).then(() => {
             document.getElementById('pay-name').value = '';
             document.getElementById('pay-num').value = '';
             showCustomAlert('Payment method added successfully!');
-        }).catch((error) => {
-            showCustomAlert('Error: ' + error.message);
         });
     }
 
@@ -915,13 +788,11 @@
             let methodsData = snapshot.val() || {};
             let tbody = document.getElementById('admin-payments-table-body');
             tbody.innerHTML = '';
-
             let keys = Object.keys(methodsData);
             if(keys.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No payment methods configured.</td></tr>`;
                 return;
             }
-
             keys.forEach(key => {
                 let m = methodsData[key];
                 tbody.innerHTML += `
