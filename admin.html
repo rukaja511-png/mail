@@ -822,35 +822,42 @@
         renderDepositsTable(filteredData);
     }
 
-function approveDeposit(depositKey, userEmail, amount) {
-    let depositAmount = parseFloat(amount);
-    if (isNaN(depositAmount) || depositAmount <= 0) {
-        showCustomAlert('Error: Invalid deposit amount!');
-        return;
-    }
+    // ফিক্সড এপ্রুভ ডিপোজিট ফাংশন যা ইউজার ইমেইলের সাথে পারফেক্টলি ব্যালেন্স সিঙ্ক করবে
+    function approveDeposit(depositKey, userEmail, amount) {
+        let depositAmount = parseFloat(amount);
+        if (isNaN(depositAmount) || depositAmount <= 0) {
+            showCustomAlert('Error: Invalid deposit amount!');
+            return;
+        }
 
-    if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmail}?`)) return;
+        if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmail}?`)) return;
 
-    db.ref('users').once('value', (snapshot) => {
-        let users = snapshot.val() || {};
-        let userFoundKey = null;
-        let currentBalance = 0;
+        db.ref('users').once('value', (snapshot) => {
+            let users = snapshot.val() || {};
+            let targetKey = null;
+            let currentBalance = 0;
 
-        Object.keys(users).forEach(uKey => {
-            let uData = users[uKey];
-            let uMail = uData.email || uData.userEmail || uKey;
-            
-            if (uMail.toLowerCase() === userEmail.toLowerCase() || uKey.toLowerCase() === userEmail.toLowerCase()) {
-                userFoundKey = uKey;
-                currentBalance = parseFloat(uData.balance) || 0;
+            // ইউজারের ইমেইল দিয়ে সঠিক নোড বা কী খুঁজে বের করা
+            Object.keys(users).forEach(uKey => {
+                let uData = users[uKey];
+                let uMail = uData.email || uData.userEmail || '';
+                
+                if (uMail.toLowerCase() === userEmail.toLowerCase() || uKey.toLowerCase() === userEmail.toLowerCase()) {
+                    targetKey = uKey;
+                    currentBalance = parseFloat(uData.balance) || 0;
+                }
+            });
+
+            // যদি ইউজার ডেটাবেসে না পাওয়া যায়, তবে ইমেইল দিয়ে নতুন নোড বানিয়ে ব্যালেন্স যুক্ত হবে
+            if (!targetKey) {
+                targetKey = userEmail.replace(/[.#$\/\[\]]/g, '_');
             }
-        });
 
-        if (userFoundKey) {
             let newBalance = currentBalance + depositAmount;
-            
+
             let updates = {};
-            updates[`users/${userFoundKey}/balance`] = newBalance;
+            updates[`users/${targetKey}/balance`] = newBalance;
+            updates[`users/${targetKey}/email`] = userEmail;
             updates[`deposits/${depositKey}/status`] = 'Approved';
 
             db.ref().update(updates).then(() => {
@@ -858,26 +865,6 @@ function approveDeposit(depositKey, userEmail, amount) {
             }).catch((error) => {
                 showCustomAlert('Error updating database: ' + error.message);
             });
-        } else {
-            showCustomAlert('Error: User not found in database matching email: ' + userEmail);
-        }
-    });
-}
-
-            if (userFoundKey) {
-                let newBalance = currentBalance + parseFloat(amount);
-                let updates = {};
-                updates[`users/${userFoundKey}/balance`] = newBalance;
-                updates[`deposits/${depositKey}/status`] = 'Approved';
-
-                db.ref().update(updates).then(() => {
-                    showCustomAlert(`Success! Added ${amount} BDT to ${userEmail}. New Balance: ${newBalance} BDT`);
-                }).catch((error) => {
-                    showCustomAlert('Error updating database: ' + error.message);
-                });
-            } else {
-                showCustomAlert('Error: User not found in database matching email: ' + userEmail);
-            }
         });
     }
 
@@ -919,7 +906,7 @@ function approveDeposit(depositKey, userEmail, amount) {
             keys.forEach(key => {
                 let u = usersData[key];
                 let balance = parseFloat(u.balance) || 0;
-                let uEmail = u.email || u.userEmail || 'N/A';
+                let uEmail = u.email || u.userEmail || key;
 
                 tbody.innerHTML += `
                     <tr>
