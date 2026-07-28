@@ -822,22 +822,47 @@
         renderDepositsTable(filteredData);
     }
 
-    function approveDeposit(depositKey, userEmail, amount) {
-        if (!confirm(`Are you sure you want to approve ${amount} BDT for ${userEmail}?`)) return;
+function approveDeposit(depositKey, userEmail, amount) {
+    let depositAmount = parseFloat(amount);
+    if (isNaN(depositAmount) || depositAmount <= 0) {
+        showCustomAlert('Error: Invalid deposit amount!');
+        return;
+    }
 
-        db.ref('users').once('value', (snapshot) => {
-            let users = snapshot.val() || {};
-            let userFoundKey = null;
-            let currentBalance = 0;
+    if (!confirm(`Are you sure you want to approve ${depositAmount} BDT for ${userEmail}?`)) return;
 
-            Object.keys(users).forEach(uKey => {
-                let uData = users[uKey];
-                let uMail = uData.email || uData.userEmail || uKey;
-                if (uMail.toLowerCase() === userEmail.toLowerCase() || uKey.toLowerCase() === userEmail.toLowerCase()) {
-                    userFoundKey = uKey;
-                    currentBalance = parseFloat(uData.balance) || 0;
-                }
+    db.ref('users').once('value', (snapshot) => {
+        let users = snapshot.val() || {};
+        let userFoundKey = null;
+        let currentBalance = 0;
+
+        Object.keys(users).forEach(uKey => {
+            let uData = users[uKey];
+            let uMail = uData.email || uData.userEmail || uKey;
+            
+            if (uMail.toLowerCase() === userEmail.toLowerCase() || uKey.toLowerCase() === userEmail.toLowerCase()) {
+                userFoundKey = uKey;
+                currentBalance = parseFloat(uData.balance) || 0;
+            }
+        });
+
+        if (userFoundKey) {
+            let newBalance = currentBalance + depositAmount;
+            
+            let updates = {};
+            updates[`users/${userFoundKey}/balance`] = newBalance;
+            updates[`deposits/${depositKey}/status`] = 'Approved';
+
+            db.ref().update(updates).then(() => {
+                showCustomAlert(`Success! Added ${depositAmount} BDT to ${userEmail}. New Balance: ${newBalance} BDT`);
+            }).catch((error) => {
+                showCustomAlert('Error updating database: ' + error.message);
             });
+        } else {
+            showCustomAlert('Error: User not found in database matching email: ' + userEmail);
+        }
+    });
+}
 
             if (userFoundKey) {
                 let newBalance = currentBalance + parseFloat(amount);
