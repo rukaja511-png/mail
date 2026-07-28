@@ -751,7 +751,6 @@
         showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
     }
 
-    // --- REALTIME DEPOSIT REQUESTS & APPROVAL (FIXED) ---
    function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
             let depositsData = snapshot.val() || {};
@@ -768,7 +767,8 @@
                 let d = depositsData[key];
                 let statusBadge = '';
                 
-                let trxDisplay = d.trxId || d.TrxID || d.trx_id || 'N/A';
+                // এখানে ডাটাবেজের সব সম্ভাব্য ট্রানজেকশন আইডি ফিল্ড চেক করা হচ্ছে
+                let trxDisplay = d.trxId || d.TrxID || d.trx_id || d.trx || d.transactionId || 'N/A';
 
                 if(d.status === 'Pending' || d.status === 'pending') {
                     statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
