@@ -601,15 +601,15 @@
     }
 
     function loadDashboardStats() {
-        db.ref('users').once('value', (uSnap) => {
+        db.ref('users').on('value', (uSnap) => {
             let users = uSnap.val() || {};
-            db.ref('stocks').once('value', (sSnap) => {
+            db.ref('stocks').on('value', (sSnap) => {
                 let stocks = sSnap.val() || {};
-                db.ref('deposits').once('value', (dSnap) => {
+                db.ref('deposits').on('value', (dSnap) => {
                     let deposits = dSnap.val() || {};
 
-                    let availableStocks = Object.values(stocks).filter(s => s.status === 'available').length;
-                    let pendingDeposits = Object.values(deposits).filter(d => d.status === 'Pending').length;
+                    let availableStocks = Object.values(stocks).filter(s => s.status === 'available' || !s.status).length;
+                    let pendingDeposits = Object.values(deposits).filter(d => d.status === 'Pending' || d.status === 'pending').length;
 
                     document.getElementById('stat-total-users').innerText = Object.keys(users).length;
                     document.getElementById('stat-total-stocks').innerText = availableStocks;
@@ -751,6 +751,7 @@
         showCustomAlert(`Successfully uploaded ${uploadCount} mail accounts!`);
     }
 
+    // --- REALTIME DEPOSIT REQUESTS & APPROVAL ---
     function loadAdminDeposits() {
         db.ref('deposits').on('value', (snapshot) => {
             let depositsData = snapshot.val() || {};
@@ -765,12 +766,127 @@
 
             keys.reverse().forEach(key => {
                 let d = depositsData[key];
-                // এখানে ডিপোজিট বা অন্যান্য রেন্ডারিং ঠিক রাখা হয়েছে
+                let statusBadge = '';
+                if(d.status === 'Pending' || d.status === 'pending') {
+                    statusBadge = '<span class="badge bg-warning text-dark">Pending</span>';
+                } else if(d.status === 'Approved' || d.status === 'approved') {
+                    statusBadge = '<span class="badge bg-success">Approved</span>';
+                } else {
+                    statusBadge = '<span class="badge bg-danger">Rejected</span>';
+                }
+
+                let actionButtons = '-';
+                if(d.status === 'Pending' || d.status === 'pending') {
+                    actionButtons = `
+                        <button onclick="approveDeposit('${key}', '${d.userUid || d.userId || ''}', ${d.amount || 0})" class="btn btn-sm btn-success rounded-pill px-3 me-1 mb-1">Approve</button>
+                        <button onclick="openRejectModal('${key}')" class="btn btn-sm btn-danger rounded-pill px-3 mb-1">Reject</button>
+                    `;
+                }
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-semibold">${d.userEmail || d.email || 'N/A'}</td>
+                        <td>${d.method || 'N/A'}</td>
+                        <td class="fw-bold text-success">${d.amount || 0} BDT</td>
+                        <td class="font-monospace text-cyan">${d.trxId || d.trxid || 'N/A'}</td>
+                        <td>${statusBadge}</td>
+                        <td>${actionButtons}</td>
+                    </tr>
+                `;
             });
         });
     }
 
-    // -- FIXED PAYMENT METHODS FUNCTIONS --
+    function approveDeposit(depositKey, userUid, amount) {
+        if(!userUid) {
+            showCustomAlert('Error: User UID not found for this deposit request!');
+            return;
+        }
+        
+        db.ref(`deposits/${depositKey}/status`).set('Approved').then(() => {
+            db.ref(`users/${userUid}/balance`).once('value', (snap) => {
+                let currentBalance = parseFloat(snap.val()) || 0;
+                let newBalance = currentBalance + parseFloat(amount);
+                
+                db.ref(`users/${userUid}/balance`).set(newBalance).then(() => {
+                    showCustomAlert('Deposit approved and user balance updated successfully!');
+                });
+            });
+        }).catch(err => {
+            showCustomAlert('Failed to approve: ' + err.message);
+        });
+    }
+
+    function openRejectModal(key) {
+        document.getElementById('reject-deposit-key').value = key;
+        document.getElementById('reject-reason-text').value = '';
+        let modal = new bootstrap.Modal(document.getElementById('rejectModal'));
+        modal.show();
+    }
+
+    function confirmRejectDeposit() {
+        let key = document.getElementById('reject-deposit-key').value;
+        let reason = document.getElementById('reject-reason-text').value.trim() || 'Invalid request';
+        
+        db.ref(`deposits/${key}`).update({
+            status: 'Rejected',
+            rejectReason: reason
+        }).then(() => {
+            let modalEl = document.getElementById('rejectModal');
+            let modal = bootstrap.Modal.getInstance(modalEl);
+            modal.hide();
+            showCustomAlert('Deposit request rejected.');
+        });
+    }
+
+    // --- REALTIME USERS & BALANCE (Showing ONLY actual registered users with active accounts) ---
+    function loadAdminUsers() {
+        db.ref('users').on('value', (snapshot) => {
+            let usersData = snapshot.val() || {};
+            let tbody = document.getElementById('admin-users-table-body');
+            tbody.innerHTML = '';
+            let keys = Object.keys(usersData);
+            
+            if(keys.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No registered users found.</td></tr>`;
+                return;
+            }
+            
+            keys.forEach(key => {
+                let u = usersData[key];
+                // Ensuring we only render valid registered user objects that exist in database
+                if (u && u.email) {
+                    let userBalance = u.balance !== undefined ? parseFloat(u.balance) : 0;
+                    
+                    tbody.innerHTML += `
+                        <tr>
+                            <td class="fw-semibold">${u.email}</td>
+                            <td class="fw-bold text-success">${userBalance} BDT</td>
+                            <td>
+                                <button onclick="promptUpdateBalance('${key}', '${u.email}', ${userBalance})" class="btn btn-sm btn-outline-info rounded-pill px-3">Edit Balance</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            });
+        });
+    }
+
+    function promptUpdateBalance(userUid, userEmail, currentBalance) {
+        let newBalStr = prompt(`Enter new balance for ${userEmail}:`, currentBalance);
+        if(newBalStr !== null) {
+            let newBal = parseFloat(newBalStr);
+            if(!isNaN(newBal)) {
+                db.ref(`users/${userUid}/balance`).set(newBal).then(() => {
+                    showCustomAlert('User balance updated successfully!');
+                });
+            } else {
+                showCustomAlert('Please enter a valid number!');
+            }
+        }
+    }
+
+    // --- PAYMENT METHODS ---
     function addPaymentMethod() {
         let name = document.getElementById('pay-name').value.trim();
         let type = document.getElementById('pay-type-select').value;
@@ -826,29 +942,6 @@
     function deletePaymentMethod(key) {
         db.ref(`paymentMethods/${key}`).remove().then(() => {
             showCustomAlert('Payment method deleted successfully!');
-        });
-    }
-
-    function loadAdminUsers() {
-        db.ref('users').on('value', (snapshot) => {
-            let usersData = snapshot.val() || {};
-            let tbody = document.getElementById('admin-users-table-body');
-            tbody.innerHTML = '';
-            let keys = Object.keys(usersData);
-            if(keys.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="3" class="text-center text-sub">No users registered yet.</td></tr>`;
-                return;
-            }
-            keys.forEach(key => {
-                let u = usersData[key];
-                tbody.innerHTML += `
-                    <tr>
-                        <td>${u.email || 'N/A'}</td>
-                        <td>${u.balance || 0} BDT</td>
-                        <td>-</td>
-                    </tr>
-                `;
-            });
         });
     }
 </script>
