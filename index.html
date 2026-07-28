@@ -97,7 +97,7 @@
 
         .main-content {
             padding: 20px;
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -247,12 +247,14 @@
             color: #ffffff !important;
             border-color: var(--border-color) !important;
             font-weight: 600;
+            padding: 14px 12px;
         }
 
         .table td {
             background-color: transparent !important;
             border-color: var(--border-color) !important;
             color: #cbd5e1 !important;
+            padding: 14px 12px;
         }
 
         .section-pane { display: none; }
@@ -275,7 +277,7 @@
             border: 1px solid var(--border-color);
             border-radius: 10px;
             overflow: hidden;
-            width: 140px;
+            width: 160px;
         }
 
         .qty-btn {
@@ -296,13 +298,12 @@
             background: transparent;
             border: none;
             color: white;
-            width: 50px;
+            width: 60px;
             text-align: center;
             font-weight: bold;
             font-size: 15px;
         }
 
-        /* Fixed High Z-Index Modal Overlays - Positioned Centered on Top */
         .custom-alert-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -322,7 +323,7 @@
             border: 1px solid var(--border-color);
             border-radius: 20px;
             width: 100%;
-            max-width: 420px;
+            max-width: 450px;
             max-height: 90vh;
             overflow-y: auto;
             padding: 25px;
@@ -355,7 +356,9 @@
 
 <!-- PURCHASE CONFIRMATION MODAL -->
 <div id="purchase-modal-overlay" class="custom-alert-overlay">
-    <div class="custom-alert-box">
+    <div class="custom-alert-box position-relative">
+        <div id="modal-error-banner" class="alert alert-danger py-2 px-3 mb-3 text-center fw-bold shadow-sm" style="display: none; font-size: 13px; border-radius: 10px; border-left: 4px solid #ef4444;"></div>
+
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold text-white fs-5"><i class="fa-solid fa-cart-shopping me-2 text-primary"></i>Confirm Purchase</span>
             <button onclick="closePurchaseModal()" class="btn-close btn-close-white"></button>
@@ -379,8 +382,8 @@
             <div class="d-flex justify-content-center">
                 <div class="qty-box">
                     <button onclick="changeModalQty(-1)" class="qty-btn">-</button>
-                    <input type="text" id="modal-qty-input" class="qty-input" value="1" readonly>
-                    <button onclick="changeModalQty(1)" class="qty-btn">-</button>
+                    <input type="number" id="modal-qty-input" class="qty-input" value="1" min="1" oninput="onModalQtyTyped(this)">
+                    <button onclick="changeModalQty(1)" class="qty-btn">+</button>
                 </div>
             </div>
         </div>
@@ -395,6 +398,23 @@
     </div>
 </div>
 
+<!-- ORDER DETAILS VIEW MODAL (HISTORY VIEW POPUP) -->
+<div id="order-view-modal" class="custom-alert-overlay">
+    <div class="custom-alert-box">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <span class="fw-bold text-info fs-5" id="order-view-title-head"><i class="fa-solid fa-eye me-2"></i>Order Accounts Details</span>
+            <button onclick="closeOrderViewModal()" class="btn-close btn-close-white"></button>
+        </div>
+        <div class="mb-2 text-sub small" id="order-view-meta"></div>
+        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-50 mb-3 font-monospace text-warning user-select-all" id="order-view-accounts-box" style="font-size: 13px; max-height: 250px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;"></div>
+        
+        <div class="d-flex gap-2">
+            <button onclick="copyOrderViewAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
+            <button onclick="closeOrderViewModal()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Close</button>
+        </div>
+    </div>
+</div>
+
 <!-- SUCCESSFUL PURCHASE RESULT MODAL -->
 <div id="success-result-modal" class="custom-alert-overlay">
     <div class="custom-alert-box">
@@ -403,10 +423,10 @@
             <button onclick="closeSuccessModal()" class="btn-close btn-close-white"></button>
         </div>
         <p class="text-sub small mb-2">Here are your purchased account details:</p>
-        <div class="p-3 rounded-3 bg-dark border border-success border-opacity-50 mb-3 font-monospace text-info user-select-all" id="success-accounts-text" style="font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap;"></div>
+        <div class="p-3 rounded-3 bg-dark border border-success border-opacity-50 mb-3 font-monospace text-warning user-select-all" id="success-accounts-container" style="font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;"></div>
         
         <div class="d-flex gap-2">
-            <button onclick="copySuccessAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
+            <button onclick="copyAllSuccessAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
             <button onclick="closeSuccessModal()" class="btn btn-success w-50 rounded-pill fw-bold py-2">Done</button>
         </div>
     </div>
@@ -553,13 +573,27 @@
                     <h5 class="fw-bold m-0 text-white"><i class="fa-solid fa-bag-shopping text-primary me-2"></i>Purchased Accounts History</h5>
                     <button onclick="copyAllOrders()" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
                 </div>
-                <div id="user-orders-cards-container" class="d-flex flex-column gap-3"></div>
+                <div class="table-responsive">
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-orders-table-tbody"></tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="card-box">
                 <h5 class="fw-bold mb-3 text-white"><i class="fa-solid fa-wallet text-success me-2"></i>Deposit History</h5>
                 <div class="table-responsive">
-                    <table class="table table-bordered">
+                    <table class="table table-bordered mb-0">
                         <thead>
                             <tr>
                                 <th>Method</th>
@@ -577,6 +611,11 @@
         <!-- Profile Tab -->
         <div id="user-section-profile" class="section-pane">
             <div class="card-box">
+                <div class="text-center mb-4">
+                    <img id="profile-avatar-img" src="" alt="Avatar" class="rounded-circle border border-primary border-opacity-50 shadow-sm mb-3" style="width: 80px; height: 80px; background: #090f1d; object-fit: cover;">
+                    <h5 class="fw-bold text-white m-0" id="profile-username-title">User Profile</h5>
+                </div>
+
                 <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>Account Details</h5>
                 
                 <div class="d-flex flex-column gap-3 mb-4" style="font-size: 14px;">
@@ -679,14 +718,35 @@
         document.getElementById('custom-alert-overlay').style.display = 'none';
     }
 
+    function showModalError(msg) {
+        let errBanner = document.getElementById('modal-error-banner');
+        errBanner.innerText = msg;
+        errBanner.style.display = 'block';
+        setTimeout(() => {
+            errBanner.style.display = 'none';
+        }, 5000);
+    }
+
     function closeSuccessModal() {
         document.getElementById('success-result-modal').style.display = 'none';
     }
 
-    function copySuccessAccounts() {
-        let text = document.getElementById('success-accounts-text').innerText;
+    function copyAllSuccessAccounts() {
+        let container = document.getElementById('success-accounts-container');
+        let text = container.innerText;
         navigator.clipboard.writeText(text).then(() => {
-            showCustomAlert('Accounts copied to clipboard successfully!');
+            showCustomAlert('All accounts copied to clipboard successfully!');
+        });
+    }
+
+    function closeOrderViewModal() {
+        document.getElementById('order-view-modal').style.display = 'none';
+    }
+
+    function copyOrderViewAccounts() {
+        let box = document.getElementById('order-view-accounts-box');
+        navigator.clipboard.writeText(box.innerText).then(() => {
+            showCustomAlert('Order details copied to clipboard!');
         });
     }
 
@@ -776,12 +836,17 @@
         document.getElementById('user-panel-container').style.display = 'block';
         
         let safeKey = email.replace(/[@.]/g, '_');
+        let avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`;
+        document.getElementById('profile-avatar-img').src = avatarUrl;
+        let uname = email.split('@')[0];
+        document.getElementById('profile-username-title').innerText = uname.charAt(0).toUpperCase() + uname.slice(1);
+
         db.ref(`users/${safeKey}`).once('value', (snap) => {
             if(snap.exists()) {
                 let u = snap.val();
                 document.getElementById('profile-email-text').innerText = u.email;
                 actualUserPassword = u.pass;
-                document.getElementById('profile-member-since').innerText = u.memberSince || 'May 15, 2025';
+                document.getElementById('profile-member-since').innerText = u.memberSince || new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
             }
         });
 
@@ -934,6 +999,7 @@
         document.getElementById('modal-stock-count').innerText = stockCount;
         document.getElementById('modal-qty-input').value = 1;
         document.getElementById('modal-total-price').innerText = `৳${price}`;
+        document.getElementById('modal-error-banner').style.display = 'none';
         document.getElementById('purchase-modal-overlay').style.display = 'flex';
     }
 
@@ -943,7 +1009,8 @@
 
     function changeModalQty(delta) {
         let input = document.getElementById('modal-qty-input');
-        let val = parseInt(input.value) + delta;
+        let val = parseInt(input.value) || 1;
+        val += delta;
         if(val < 1) val = 1;
         if(val > currentModalData.stockCount) val = currentModalData.stockCount;
         input.value = val;
@@ -951,14 +1018,25 @@
         document.getElementById('modal-total-price').innerText = `৳${total}`;
     }
 
+    function onModalQtyTyped(input) {
+        let val = parseInt(input.value);
+        if(isNaN(val) || val < 1) return;
+        if(val > currentModalData.stockCount) {
+            val = currentModalData.stockCount;
+            input.value = val;
+        }
+        let total = val * currentModalData.price;
+        document.getElementById('modal-total-price').innerText = `৳${total}`;
+    }
+
     function confirmAndBuy() {
-        let buyQty = parseInt(document.getElementById('modal-qty-input').value);
+        let buyQty = parseInt(document.getElementById('modal-qty-input').value) || 1;
         let categoryName = currentModalData.categoryName;
         let price = currentModalData.price;
         let stockCount = currentModalData.stockCount;
 
-        if(stockCount <= 0) return showCustomAlert('Stock out for this category!');
-        if(buyQty > stockCount) return showCustomAlert('Requested quantity exceeds available stock!');
+        if(stockCount <= 0) return showModalError('Stock out for this category!');
+        if(buyQty > stockCount) return showModalError('Requested quantity exceeds available stock!');
 
         let email = localStorage.getItem('apex_logged_user');
         let safeKey = email.replace(/[@.]/g, '_');
@@ -966,7 +1044,9 @@
 
         db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
             let bal = balSnap.val() || 0;
-            if(bal < totalCost) return showCustomAlert('Insufficient balance! Please add balance first.');
+            if(bal < totalCost) {
+                return showModalError('Insufficient balance! Please deposit money first.');
+            }
 
             db.ref('stocks').once('value', (stockSnap) => {
                 let stocks = stockSnap.val() || {};
@@ -979,7 +1059,7 @@
                     }
                 }
 
-                if(targetStockKeys.length < buyQty) return showCustomAlert('Not enough stock available.');
+                if(targetStockKeys.length < buyQty) return showModalError('Not enough stock available.');
 
                 db.ref(`balances/${safeKey}`).set(bal - totalCost);
 
@@ -993,20 +1073,27 @@
                     });
 
                     purchasedDetailsList.push(stockData.accountDetails);
+                });
 
-                    db.ref('orders').push({
-                        user: email,
-                        category: categoryName,
-                        accountDetails: stockData.accountDetails,
-                        date: new Date().toLocaleString()
-                    });
+                // Generate a unique Order ID like #934158
+                let randomOrderId = '#' + Math.floor(100000 + Math.random() * 900000);
+
+                // FIXED: Save everything as a single order entry with the full accounts array
+                db.ref('orders').push({
+                    orderId: randomOrderId,
+                    user: email,
+                    category: categoryName,
+                    accounts: purchasedDetailsList,
+                    quantity: buyQty,
+                    totalPrice: totalCost,
+                    date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
                 });
 
                 closePurchaseModal();
                 
-                document.getElementById('success-accounts-text').innerText = purchasedDetailsList.join('\n');
+                let combinedText = purchasedDetailsList.join('\n');
+                document.getElementById('success-accounts-container').innerText = combinedText;
                 document.getElementById('success-result-modal').style.display = 'flex';
-
                 loadUserShop();
             });
         });
@@ -1016,45 +1103,58 @@
         let email = localStorage.getItem('apex_logged_user');
         db.ref('orders').on('value', (snap) => {
             let orders = snap.val() || {};
-            let container = document.getElementById('user-orders-cards-container');
-            container.innerHTML = '';
+            let tbody = document.getElementById('user-orders-table-tbody');
+            tbody.innerHTML = '';
 
             let keys = Object.keys(orders);
             let userOrders = keys.filter(k => orders[k].user === email);
 
             if(userOrders.length === 0) {
-                container.innerHTML = `<div class="text-center text-sub py-3">No purchased orders found.</div>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub py-4">No purchased orders found.</td></tr>`;
                 return;
             }
 
             userOrders.reverse().forEach(k => {
                 let o = orders[k];
-                let singleAccountText = o.accountDetails;
+                let orderId = o.orderId || ('#' + k.substring(0, 6));
+                let accountsList = o.accounts || (o.accountDetails ? [o.accountDetails] : []);
+                let qtyVal = o.quantity || accountsList.length;
+                let qtyText = `${qtyVal} accounts`;
+                let totalCost = o.totalPrice || 0;
+                let combinedText = accountsList.join('\n');
 
-                container.innerHTML += `
-                    <div class="p-3 rounded-3" style="background: #090f1d; border: 1px solid var(--border-color);">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="fw-bold text-info" style="font-size: 14px;"><i class="fa-solid fa-folder-open me-1"></i> ${o.category}</span>
-                            <span class="text-sub" style="font-size: 12px;"><i class="fa-regular fa-clock me-1"></i> ${o.date}</span>
-                        </div>
-                        <div class="p-2 rounded bg-dark border border-secondary border-opacity-25 font-monospace text-warning mb-2 user-select-all" style="font-size: 13px; word-break: break-all;">
-                            ${singleAccountText}
-                        </div>
-                        <div class="text-end">
-                            <button onclick='copySingleOrderText(${JSON.stringify(singleAccountText)})' class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" style="font-size: 12px;">
-                                <i class="fa-solid fa-copy me-1"></i> Copy Details
+                let parts = o.category ? o.category.split(' - ') : ['Product', ''];
+                let mainCat = parts[0] || 'Product';
+                let subCat = parts[1] || o.category || '';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="fw-bold text-white">${orderId}</td>
+                        <td class="text-sub" style="font-size: 12px;">${o.date || ''}</td>
+                        <td>
+                            <div class="d-flex flex-column">
+                                <span class="badge bg-secondary bg-opacity-25 text-info mb-1" style="width: fit-content; font-size: 11px;">${mainCat}</span>
+                                <span class="text-white fw-semibold" style="font-size: 13px;">${subCat}</span>
+                            </div>
+                        </td>
+                        <td>${qtyText}</td>
+                        <td class="fw-bold text-info">৳${totalCost}</td>
+                        <td>
+                            <button onclick='openOrderViewModal(${JSON.stringify(orderId)}, ${JSON.stringify(o.date || "")}, ${JSON.stringify(o.category || "")}, ${JSON.stringify(combinedText)})' class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" style="font-size: 12px;">
+                                <i class="fa-solid fa-eye me-1"></i> View
                             </button>
-                        </div>
-                    </div>
+                        </td>
+                    </tr>
                 `;
             });
         });
     }
 
-    function copySingleOrderText(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            showCustomAlert('Account details copied to clipboard!');
-        });
+    function openOrderViewModal(orderId, date, category, combinedText) {
+        document.getElementById('order-view-title-head').innerHTML = `<i class="fa-solid fa-eye me-2"></i>Order ${orderId} Accounts`;
+        document.getElementById('order-view-meta').innerHTML = `<strong>Order:</strong> ${orderId} &nbsp;|&nbsp; <strong>Product:</strong> ${category} &nbsp;|&nbsp; <strong>Date:</strong> ${date}`;
+        document.getElementById('order-view-accounts-box').innerText = combinedText;
+        document.getElementById('order-view-modal').style.display = 'flex';
     }
 
     function copyAllOrders() {
@@ -1066,9 +1166,16 @@
 
             if(userOrders.length === 0) return showCustomAlert('No orders to copy!');
 
-            let allText = userOrders.map(k => orders[k].accountDetails).join('\n');
-            navigator.clipboard.writeText(allText).then(() => {
-                showCustomAlert('All account details copied to clipboard!');
+            let allTexts = [];
+            userOrders.forEach(k => {
+                let o = orders[k];
+                let accs = o.accounts || (o.accountDetails ? [o.accountDetails] : []);
+                allTexts.push(...accs);
+            });
+
+            let finalStr = allTexts.join('\n');
+            navigator.clipboard.writeText(finalStr).then(() => {
+                showCustomAlert('All purchased accounts copied to clipboard!');
             });
         });
     }
@@ -1221,7 +1328,7 @@
             let userDeps = keys.filter(k => deposits[k].email === email);
 
             if(userDeps.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub">No deposit history found.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub py-4">No deposit history found.</td></tr>`;
                 return;
             }
 
