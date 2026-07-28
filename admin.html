@@ -613,22 +613,35 @@
     // ==========================================
     //  ফিক্সড: স্টক কাউন্ট ও ইউজার ব্যালেন্স লজিক
     // ==========================================
-    function loadDashboardStats() {
-        db.ref('users').on('value', (uSnap) => {
-            let users = uSnap.val() || {};
-            db.ref('stocks').on('value', (sSnap) => {
-                let stocks = sSnap.val() || {};
-                db.ref('deposits').on('value', (dSnap) => {
-                    let deposits = dSnap.val() || {};
+   function loadDashboardStats() {
+    db.ref('users').on('value', (uSnap) => {
+        let users = uSnap.val() || {};
+        db.ref('stocks').on('value', (sSnap) => {
+            let stocks = sSnap.val() || {};
+            db.ref('deposits').on('value', (dSnap) => {
+                let deposits = dSnap.val() || {};
 
-                    // রিয়েল টাইম স্টক ফিক্স: যেগুলোর status 'available' বা স্ট্যাটাস ফিল্ড নেই, অথবা soldTo নেই সেগুলোই শুধু গুনবে
-                    let availableStocks = 0;
-                    Object.values(stocks).forEach(s => {
-                        let status = s.status ? s.status.toLowerCase() : 'available';
-                        if (status === 'available' && !s.soldTo) {
-                            availableStocks++;
-                        }
-                    });
+                // রিয়েল টাইম স্টক ফিল্টার
+                let availableStocks = 0;
+                Object.values(stocks).forEach(s => {
+                    let status = s.status ? s.status.toLowerCase() : 'available';
+                    if (status === 'available' && !s.soldTo) {
+                        availableStocks++;
+                    }
+                });
+
+                let pendingDeposits = Object.values(deposits).filter(d => {
+                    let st = d.status ? d.status.toLowerCase() : '';
+                    return st === 'pending';
+                }).length;
+
+                document.getElementById('stat-total-users').innerText = Object.keys(users).length;
+                document.getElementById('stat-total-stocks').innerText = availableStocks;
+                document.getElementById('stat-pending-deposits').innerText = pendingDeposits;
+            });
+        });
+    });
+}
 
                     let pendingDeposits = Object.values(deposits).filter(d => {
                         let st = d.status ? d.status.toLowerCase() : '';
