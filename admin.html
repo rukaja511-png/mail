@@ -280,7 +280,7 @@
             <label class="small text-sub mb-1 fw-semibold">Password</label>
             <input type="password" id="admin-login-pass" class="form-control" placeholder="••••••••">
         </div>
-        <button onclick="handleAdminLogin()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Login to Admin Panel</button>
+        <button type="button" onclick="handleAdminLogin()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">Login to Admin Panel</button>
     </div>
 </div>
 
@@ -556,12 +556,22 @@
     }
 
     function handleAdminLogin() {
-        let email = document.getElementById('admin-login-email').value.trim();
-        let pass = document.getElementById('admin-login-pass').value.trim();
+        let emailInput = document.getElementById('admin-login-email');
+        let passInput = document.getElementById('admin-login-pass');
 
-        if(email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+        if (!emailInput || !passInput) {
+            alert('Login inputs not found!');
+            return;
+        }
+
+        let email = emailInput.value.trim();
+        let pass = passInput.value.trim();
+
+        if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
             localStorage.setItem('apex_admin_logged', 'true');
-            showAdminDashboard();
+            document.getElementById('admin-auth-section').style.display = 'none';
+            document.getElementById('admin-main-container').style.display = 'block';
+            switchAdminTab('dashboard');
         } else {
             showCustomAlert('Invalid Admin Email or Password!');
         }
@@ -822,7 +832,6 @@
         renderDepositsTable(filteredData);
     }
 
-    // ফিক্সড এপ্রুভ ডিপোজিট ফাংশন যা ইউজার ইমেইলের সাথে পারফেক্টলি ব্যালেন্স সিঙ্ক করবে
     function approveDeposit(depositKey, userEmail, amount) {
         let depositAmount = parseFloat(amount);
         if (isNaN(depositAmount) || depositAmount <= 0) {
@@ -837,7 +846,6 @@
             let targetKey = null;
             let currentBalance = 0;
 
-            // ইউজারের ইমেইল দিয়ে সঠিক নোড বা কী খুঁজে বের করা
             Object.keys(users).forEach(uKey => {
                 let uData = users[uKey];
                 let uMail = uData.email || uData.userEmail || '';
@@ -848,7 +856,6 @@
                 }
             });
 
-            // যদি ইউজার ডেটাবেসে না পাওয়া যায়, তবে ইমেইল দিয়ে নতুন নোড বানিয়ে ব্যালেন্স যুক্ত হবে
             if (!targetKey) {
                 targetKey = userEmail.replace(/[.#$\/\[\]]/g, '_');
             }
