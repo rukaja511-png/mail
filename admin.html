@@ -558,7 +558,7 @@
         document.getElementById('admin-main-container').style.display = 'none';
     }
 
-   <!-- Firebase SDKs (HTML er vitor script tag) -->
+   <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
@@ -576,7 +576,10 @@
             measurementId: "G-4LE965PQLF"
         };
 
-        firebase.initializeApp(firebaseConfig);
+        // Firebase initialize safe check
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
         const db = firebase.database();
 
         function showCustomAlert(msg) {
@@ -607,7 +610,7 @@
             document.getElementById('admin-main-container').style.display = 'none';
         }
 
-        // Apnar caowa function-ti ekshathe set kora holo
+        // Fixed handleAdminLogin function to prevent freezing
         function handleAdminLogin() {
             let email = document.getElementById('admin-login-email').value.trim();
             let pass = document.getElementById('admin-login-pass').value.trim();
@@ -617,16 +620,39 @@
                 return;
             }
 
-            // Firebase Authentication diye login check
+            // Visual indicator that login is processing
+            let loginBtn = document.querySelector('#admin-auth-section button');
+            let originalText = loginBtn.innerText;
+            loginBtn.innerText = "Logging in...";
+            loginBtn.disabled = true;
+
             firebase.auth().signInWithEmailAndPassword(email, pass)
                 .then((userCredential) => {
                     localStorage.setItem('apex_admin_logged', 'true');
                     showAdminDashboard();
                 })
                 .catch((error) => {
-                    showCustomAlert('Invalid Admin Email or Password! Error: ' + error.message);
+                    loginBtn.innerText = originalText;
+                    loginBtn.disabled = false;
+                    showCustomAlert('Login Failed: ' + error.message);
                 });
         }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-auth-section').style.display = 'none';
+            document.getElementById('admin-main-container').style.display = 'block';
+            if(typeof switchAdminTab === 'function') {
+                switchAdminTab('dashboard');
+            }
+        }
+
+        function adminLogout() {
+            firebase.auth().signOut().then(() => {
+                localStorage.removeItem('apex_admin_logged');
+                location.reload();
+            });
+        }
+    </script>
 
         function showAdminDashboard() {
             document.getElementById('admin-auth-section').style.display = 'none';
