@@ -515,62 +515,25 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  function handleAdminLogin() {
-    let email = document.getElementById('admin-login-email').value.trim();
-    let pass = document.getElementById('admin-login-pass').value.trim();
+ function handleAdminLogin() {
+        let email = document.getElementById('admin-login-email').value.trim();
+        let pass = document.getElementById('admin-login-pass').value.trim();
 
-    if(!email || !pass) {
-        showCustomAlert('Please enter email and password!');
-        return;
-    }
-
-    // Firebase Authentication diye login check
-    firebase.auth().signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
-            localStorage.setItem('apex_admin_logged', 'true');
-            showAdminDashboard();
-        })
-        .catch((error) => {
-            showCustomAlert('Invalid Admin Email or Password! Error: ' + error.message);
-        });
-}
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDCIMosLNehv92LBKawC-53ErJ13QhnJy0",
-        authDomain: "mywebsite-709e3.firebaseapp.com",
-        databaseURL: "https://mywebsite-709e3-default-rtdb.firebaseio.com",
-        projectId: "mywebsite-709e3",
-        storageBucket: "mywebsite-709e3.firebasestorage.app",
-        messagingSenderId: "218299688364",
-        appId: "1:218299688364:web:98aafc682ba92bf102c609",
-        measurementId: "G-4LE965PQLF"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function showCustomAlert(msg) {
-        document.getElementById('custom-alert-message').innerText = msg;
-        document.getElementById('custom-alert-overlay').style.display = 'flex';
-    }
-
-    function closeCustomAlert() {
-        document.getElementById('custom-alert-overlay').style.display = 'none';
-    }
-
-    function toggleMobileSidebar() {
-        let sidebar = document.getElementById('admin-sidebar-menu');
-        sidebar.classList.toggle('mobile-show');
-    }
-
-    window.onload = function() {
-        let loggedInAdmin = localStorage.getItem('apex_admin_logged');
-        if(loggedInAdmin === 'true') {
-            showAdminDashboard();
-        } else {
-            showAdminLogin();
+        if(!email || !pass) {
+            showCustomAlert('Please enter email and password!');
+            return;
         }
-    };
+
+        // Firebase Authentication diye login check
+        firebase.auth().signInWithEmailAndPassword(email, pass)
+            .then((userCredential) => {
+                localStorage.setItem('apex_admin_logged', 'true');
+                showAdminDashboard();
+            })
+            .catch((error) => {
+                showCustomAlert('Invalid Admin Email or Password! Error: ' + error.message);
+            });
+    }
 
     function showAdminLogin() {
         document.getElementById('admin-auth-section').style.display = 'flex';
