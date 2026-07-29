@@ -558,24 +558,89 @@
         document.getElementById('admin-main-container').style.display = 'none';
     }
 
-   function handleAdminLogin() {
-    let email = document.getElementById('admin-login-email').value.trim();
-    let pass = document.getElementById('admin-login-pass').value.trim();
+   <!-- Firebase SDKs (HTML er vitor script tag) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    if(!email || !pass) {
-        showCustomAlert('Please enter email and password!');
-        return;
-    }
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyDCIMosLNehv92LBKawC-53ErJ13QhnJy0",
+            authDomain: "mywebsite-709e3.firebaseapp.com",
+            databaseURL: "https://mywebsite-709e3-default-rtdb.firebaseio.com",
+            projectId: "mywebsite-709e3",
+            storageBucket: "mywebsite-709e3.firebasestorage.app",
+            messagingSenderId: "218299688364",
+            appId: "1:218299688364:web:98aafc682ba92bf102c609",
+            measurementId: "G-4LE965PQLF"
+        };
 
-    firebase.auth().signInWithEmailAndPassword(email, pass)
-        .then((userCredential) => {
-            localStorage.setItem('apex_admin_logged', 'true');
-            showAdminDashboard();
-        })
-        .catch((error) => {
-            showCustomAlert('Invalid Admin Email or Password! Error: ' + error.message);
-        });
-}
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function showCustomAlert(msg) {
+            document.getElementById('custom-alert-message').innerText = msg;
+            document.getElementById('custom-alert-overlay').style.display = 'flex';
+        }
+
+        function closeCustomAlert() {
+            document.getElementById('custom-alert-overlay').style.display = 'none';
+        }
+
+        function toggleMobileSidebar() {
+            let sidebar = document.getElementById('admin-sidebar-menu');
+            sidebar.classList.toggle('mobile-show');
+        }
+
+        window.onload = function() {
+            let loggedInAdmin = localStorage.getItem('apex_admin_logged');
+            if(loggedInAdmin === 'true') {
+                showAdminDashboard();
+            } else {
+                showAdminLogin();
+            }
+        };
+
+        function showAdminLogin() {
+            document.getElementById('admin-auth-section').style.display = 'flex';
+            document.getElementById('admin-main-container').style.display = 'none';
+        }
+
+        // Apnar caowa function-ti ekshathe set kora holo
+        function handleAdminLogin() {
+            let email = document.getElementById('admin-login-email').value.trim();
+            let pass = document.getElementById('admin-login-pass').value.trim();
+
+            if(!email || !pass) {
+                showCustomAlert('Please enter email and password!');
+                return;
+            }
+
+            // Firebase Authentication diye login check
+            firebase.auth().signInWithEmailAndPassword(email, pass)
+                .then((userCredential) => {
+                    localStorage.setItem('apex_admin_logged', 'true');
+                    showAdminDashboard();
+                })
+                .catch((error) => {
+                    showCustomAlert('Invalid Admin Email or Password! Error: ' + error.message);
+                });
+        }
+
+        function showAdminDashboard() {
+            document.getElementById('admin-auth-section').style.display = 'none';
+            document.getElementById('admin-main-container').style.display = 'block';
+            switchAdminTab('dashboard');
+        }
+
+        function adminLogout() {
+            firebase.auth().signOut().then(() => {
+                localStorage.removeItem('apex_admin_logged');
+                location.reload();
+            });
+        }
+    </script>
 
     function showAdminDashboard() {
         document.getElementById('admin-auth-section').style.display = 'none';
