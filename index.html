@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mail Market - User Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+    <!-- Modern & Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        /* Modern CSS Variables for Dark & Light Themes */
         :root {
             --bg-body: #070d1b;
             --card-bg: #111c38;
@@ -17,18 +19,73 @@
             --border-color: #233554;
             --input-bg: #090f1d;
             --accent-blue: #3b82f6;
+            --accent-hover: #2563eb;
             --accent-green: #10b981;
             --accent-red: #ef4444;
             --accent-cyan: #06b6d4;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+        }
+
+        /* Light Mode Overrides */
+        [data-theme="light"] {
+            --bg-body: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-sub: #64748b;
+            --border-color: #e2e8f0;
+            --input-bg: #f1f5f9;
+            --accent-blue: #2563eb;
+            --accent-hover: #1d4ed8;
+            --shadow-color: rgba(149, 157, 165, 0.15);
         }
 
         body {
             background-color: var(--bg-body);
             color: var(--text-main);
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
             min-height: 100vh;
             margin: 0;
             padding-bottom: 70px;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .brand-logo-img {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 12px;
+        }
+
+        .brand-logo-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--accent-blue), #1d4ed8);
+            color: #ffffff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .theme-toggle-btn {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        .theme-toggle-btn:hover {
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
         }
 
         .auth-container {
@@ -42,11 +99,12 @@
         .auth-card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 24px;
             padding: 40px 30px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            box-shadow: 0 20px 40px var(--shadow-color);
+            transition: all 0.3s ease;
         }
 
         .user-container {
@@ -71,6 +129,7 @@
             flex-direction: column;
             align-items: center;
             font-size: 11px;
+            font-weight: 600;
             gap: 4px;
             transition: 0.2s;
         }
@@ -102,12 +161,12 @@
         }
 
         .card-box {
-            background: linear-gradient(145deg, #132247, #0e1732);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 22px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 30px var(--shadow-color);
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -116,75 +175,179 @@
 
         .shop-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
+        /* ===================================================
+           UPDATED CLICK-TO-GLOW PRODUCT CARD DESIGN
+           =================================================== */
         .shop-item-card {
-            background: #111c38;
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 22px;
+            padding: 22px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: 0.25s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            
+            /* ১. ডিফল্ট অবস্থায় হালকা বর্ডার ও হালকা আভা (Dim Glow) */
+            border: 1.5px solid var(--neon-color-dim, rgba(59, 130, 246, 0.3));
+            box-shadow: 0 0 12px var(--neon-glow-dim, rgba(59, 130, 246, 0.1));
         }
 
+        .shop-item-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--neon-color, var(--accent-blue));
+            opacity: 0.3;
+            transition: all 0.3s ease;
+        }
+
+        /* ২. মাউস ওভার বা হোভার করলে কিছুটা উজ্জল হবে */
         .shop-item-card:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--neon-color, var(--accent-blue));
+            box-shadow: 0 0 18px var(--neon-glow-dim, rgba(59, 130, 246, 0.25));
+        }
+
+        /* ৩. কার্ডে ক্লিক করলে (is-glowing) তীব্র উজ্জ্বল আলো জ্বলবে (Bright Glow) */
+        .shop-item-card.is-glowing {
+            border-color: var(--neon-color, var(--accent-blue)) !important;
+            box-shadow: 0 0 25px var(--neon-glow, rgba(59, 130, 246, 0.85)), 
+                        0 0 45px var(--neon-glow, rgba(59, 130, 246, 0.45)) !important;
             transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .shop-item-card.is-glowing::before {
+            background: var(--neon-color, linear-gradient(90deg, #3b82f6, #06b6d4));
+            box-shadow: 0 0 12px var(--neon-color);
+            opacity: 1;
+        }
+
+        .product-badge {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--neon-color, var(--accent-blue));
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--neon-color, rgba(59, 130, 246, 0.2));
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .buy-now-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 12px 20px;
+            width: 100%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 15px;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .buy-now-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: scale(1.02);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.45);
+            color: #ffffff;
+        }
+
+        .buy-now-btn i {
+            font-size: 16px;
+        }
+
+        .stock-tag {
+            font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stock-tag.available {
+            color: var(--accent-green);
+        }
+
+        .stock-tag.out {
+            color: var(--accent-red);
+        }
+
+        .pay-method-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
         }
 
         .pay-method-card {
-            background: #090f1d;
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 14px 16px;
+            background: var(--input-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 18px 12px;
             cursor: pointer;
             transition: all 0.25s ease;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            text-align: center;
+            gap: 10px;
+            position: relative;
         }
 
         .pay-method-card:hover {
             border-color: var(--accent-blue);
-            background: #0d1730;
+            background: var(--card-bg);
+            transform: translateY(-2px);
         }
 
         .pay-method-card.selected {
             border-color: var(--accent-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
-            background: #101c38;
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
         }
 
         .pay-logo {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 13px;
             color: #ffffff;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            letter-spacing: -0.5px;
         }
 
-        .logo-bkash { background: #e2136e; }
-        .logo-nagad { background: #ec1c24; }
-        .logo-rocket { background: #8c359d; }
-        .logo-upay { background: #f36c21; }
-        .logo-default { background: #3b82f6; }
+        .logo-bkash { background: linear-gradient(135deg, #e2136e, #b80c54); font-style: italic; }
+        .logo-nagad { background: linear-gradient(135deg, #ec1c24, #b51218); font-weight: 800; }
+        .logo-rocket { background: linear-gradient(135deg, #8c359d, #62216e); font-weight: 700; }
+        .logo-binance { background: linear-gradient(135deg, #fcd535, #e0b810); color: #181a20 !important; font-weight: 900; }
+        .logo-upay { background: linear-gradient(135deg, #f36c21, #c45112); font-weight: 800; color: #ffffff !important; }
+        .logo-default { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
 
         .main-categories-wrapper {
             display: flex;
             gap: 12px;
             overflow-x: auto;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             margin-bottom: 25px;
             scrollbar-width: thin;
         }
@@ -206,20 +369,20 @@
         }
 
         .main-category-pill:hover {
-            color: #ffffff;
+            color: var(--text-main);
             border-color: var(--accent-blue);
         }
 
         .main-category-pill.active {
-            background: linear-gradient(135deg, #1e3a8a, #2563eb);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: #ffffff;
             border-color: var(--accent-blue);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
 
         .form-control, .form-select {
             background-color: var(--input-bg) !important;
-            color: #ffffff !important;
+            color: var(--text-main) !important;
             border: 1px solid var(--border-color) !important;
             border-radius: 12px;
             padding: 12px 16px;
@@ -227,24 +390,24 @@
         }
 
         .form-control::placeholder, .form-select::placeholder {
-            color: #64748b !important;
+            color: var(--text-sub) !important;
         }
 
         .form-control:focus, .form-select:focus {
             border-color: var(--accent-blue) !important;
             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
-            color: #ffffff !important;
+            color: var(--text-main) !important;
         }
 
         .table {
-            color: #ffffff !important;
+            color: var(--text-main) !important;
             vertical-align: middle;
             font-size: 13px;
         }
 
         .table th {
             background-color: var(--input-bg) !important;
-            color: #ffffff !important;
+            color: var(--text-main) !important;
             border-color: var(--border-color) !important;
             font-weight: 600;
             padding: 14px 12px;
@@ -253,21 +416,12 @@
         .table td {
             background-color: transparent !important;
             border-color: var(--border-color) !important;
-            color: #cbd5e1 !important;
+            color: var(--text-sub) !important;
             padding: 14px 12px;
         }
 
         .section-pane { display: none; }
         .section-pane.active { display: block; }
-
-        .stat-icon {
-            width: 55px; height: 55px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
 
         .qty-box {
             display: flex;
@@ -275,7 +429,7 @@
             justify-content: center;
             background: var(--input-bg);
             border: 1px solid var(--border-color);
-            border-radius: 10px;
+            border-radius: 12px;
             overflow: hidden;
             width: 160px;
         }
@@ -283,11 +437,12 @@
         .qty-btn {
             background: transparent;
             border: none;
-            color: white;
+            color: var(--text-main);
             padding: 8px 16px;
             font-weight: bold;
             cursor: pointer;
             font-size: 16px;
+            transition: 0.2s;
         }
 
         .qty-btn:hover {
@@ -297,18 +452,28 @@
         .qty-input {
             background: transparent;
             border: none;
-            color: white;
+            color: var(--text-main);
             width: 60px;
             text-align: center;
             font-weight: bold;
             font-size: 15px;
+            outline: none;
+        }
+
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
         }
 
         .custom-alert-overlay {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
-            background: rgba(4, 8, 18, 0.85);
-            backdrop-filter: blur(6px);
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(8px);
             z-index: 999999;
             display: none;
             justify-content: center;
@@ -321,20 +486,99 @@
         .custom-alert-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 24px;
             width: 100%;
             max-width: 450px;
             max-height: 90vh;
             overflow-y: auto;
-            padding: 25px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.9);
+            padding: 28px;
+            box-shadow: 0 25px 50px var(--shadow-color);
             animation: modalScaleUp 0.3s ease;
             margin: auto;
         }
 
         @keyframes modalScaleUp {
-            from { transform: scale(0.9); opacity: 0; }
+            from { transform: scale(0.92); opacity: 0; }
             to { transform: scale(1); opacity: 1; }
+        }
+
+        /* PREMIUM DISPLAY BOXES FOR MODALS */
+        .modal-display-box {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            color: var(--text-main);
+        }
+
+        .modal-account-data-box {
+            background-color: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 16px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            color: #f59e0b;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 220px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .item-description {
+            color: var(--text-sub);
+            font-size: 13px;
+            margin-bottom: 16px;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .telegram-float {
+            position: fixed;
+            bottom: 75px;
+            right: 20px;
+            background-color: #229ed9;
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 15px rgba(34, 158, 217, 0.4);
+            z-index: 1001;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+        .telegram-float:hover {
+            background-color: #1b85b8;
+            color: white;
+            transform: scale(1.08);
+        }
+
+        .profile-info-card {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 14px 18px;
+            transition: 0.25s;
+        }
+        .profile-info-card:hover {
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-close-custom {
+            background: transparent;
+            border: none;
+            color: var(--text-sub);
+            font-size: 18px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-close-custom:hover {
+            color: var(--text-main);
         }
     </style>
 </head>
@@ -345,9 +589,9 @@
     <div class="custom-alert-box">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold text-info fs-5"><i class="fa-solid fa-circle-info me-2"></i>Notice</span>
-            <button onclick="closeCustomAlert()" class="btn-close btn-close-white"></button>
+            <button onclick="closeCustomAlert()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div id="custom-alert-message" class="text-white py-3 mb-3" style="font-size: 15px; word-break: break-all;"></div>
+        <div id="custom-alert-message" class="py-3 mb-3 text-sub" style="font-size: 15px; word-break: break-all;"></div>
         <div class="text-end">
             <button onclick="closeCustomAlert()" class="btn btn-primary rounded-pill px-4 fw-bold">OK</button>
         </div>
@@ -357,28 +601,31 @@
 <!-- PURCHASE CONFIRMATION MODAL -->
 <div id="purchase-modal-overlay" class="custom-alert-overlay">
     <div class="custom-alert-box position-relative">
-        <div id="modal-error-banner" class="alert alert-danger py-2 px-3 mb-3 text-center fw-bold shadow-sm" style="display: none; font-size: 13px; border-radius: 10px; border-left: 4px solid #ef4444;"></div>
+        <div id="modal-error-banner" class="alert alert-danger py-2 px-3 mb-3 text-center fw-bold shadow-sm" style="display: none; font-size: 13px; border-radius: 12px; border-left: 4px solid #ef4444;"></div>
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold text-white fs-5"><i class="fa-solid fa-cart-shopping me-2 text-primary"></i>Confirm Purchase</span>
-            <button onclick="closePurchaseModal()" class="btn-close btn-close-white"></button>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <span class="fw-bold fs-5 text-main"><i class="fa-solid fa-cart-shopping me-2 text-primary"></i>Confirm Purchase</span>
+            <button onclick="closePurchaseModal()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
         </div>
+        
         <div class="mb-3">
-            <div class="text-sub small mb-1">Category</div>
-            <div id="modal-cat-name" class="fw-bold text-info fs-6"></div>
+            <div class="text-sub small mb-1 fw-semibold">Category</div>
+            <div id="modal-cat-name" class="fw-bold text-cyan fs-6"></div>
         </div>
-        <div class="d-flex justify-content-between align-items-center mb-3">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <div class="text-sub small">Price Per Unit</div>
-                <div class="fw-bold text-white" id="modal-unit-price">৳0</div>
+                <div class="text-sub small fw-semibold">Price Per Unit</div>
+                <div class="fw-bold fs-6 text-main" id="modal-unit-price">৳0</div>
             </div>
-            <div>
-                <div class="text-sub small">Available Stock</div>
-                <div class="fw-bold text-success" id="modal-stock-count">0</div>
+            <div class="text-end">
+                <div class="text-sub small fw-semibold">Available Stock</div>
+                <div class="fw-bold text-success fs-6" id="modal-stock-count">0</div>
             </div>
         </div>
-        <div class="mb-3">
-            <div class="text-sub small mb-1">Select Quantity</div>
+        
+        <div class="mb-4">
+            <div class="text-sub small mb-2 text-center fw-semibold">Select Quantity</div>
             <div class="d-flex justify-content-center">
                 <div class="qty-box">
                     <button onclick="changeModalQty(-1)" class="qty-btn">-</button>
@@ -387,30 +634,33 @@
                 </div>
             </div>
         </div>
-        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-25 mb-4 d-flex justify-content-between align-items-center">
-            <span class="text-sub">Total Cost:</span>
-            <span class="fw-bold text-info fs-5" id="modal-total-price">৳0</span>
+        
+        <div class="modal-display-box mb-4 d-flex justify-content-between align-items-center">
+            <span class="text-sub fw-semibold">Total Cost:</span>
+            <span class="fw-bold text-cyan fs-4" id="modal-total-price">৳0.00</span>
         </div>
+        
         <div class="d-flex gap-2">
-            <button onclick="closePurchaseModal()" class="btn btn-outline-secondary w-50 rounded-pill fw-bold py-2">Cancel</button>
-            <button onclick="confirmAndBuy()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Confirm Buy</button>
+            <button onclick="closePurchaseModal()" class="btn btn-outline-secondary w-50 rounded-pill fw-bold py-2.5">Cancel</button>
+            <button onclick="confirmAndBuy()" class="btn btn-primary w-50 rounded-pill fw-bold py-2.5">Confirm Buy</button>
         </div>
     </div>
 </div>
 
-<!-- ORDER DETAILS VIEW MODAL (HISTORY VIEW POPUP) -->
+<!-- ORDER DETAILS VIEW MODAL -->
 <div id="order-view-modal" class="custom-alert-overlay">
     <div class="custom-alert-box">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold text-info fs-5" id="order-view-title-head"><i class="fa-solid fa-eye me-2"></i>Order Accounts Details</span>
-            <button onclick="closeOrderViewModal()" class="btn-close btn-close-white"></button>
+            <span class="fw-bold text-cyan fs-5" id="order-view-title-head"><i class="fa-solid fa-eye me-2"></i>Order Accounts Details</span>
+            <button onclick="closeOrderViewModal()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <div class="mb-2 text-sub small" id="order-view-meta"></div>
-        <div class="p-3 rounded-3 bg-dark border border-secondary border-opacity-50 mb-3 font-monospace text-warning user-select-all" id="order-view-accounts-box" style="font-size: 13px; max-height: 250px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;"></div>
+        <div class="mb-3 text-sub small fw-semibold" id="order-view-meta"></div>
+        
+        <div class="modal-account-data-box mb-4 user-select-all" id="order-view-accounts-box"></div>
         
         <div class="d-flex gap-2">
-            <button onclick="copyOrderViewAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
-            <button onclick="closeOrderViewModal()" class="btn btn-primary w-50 rounded-pill fw-bold py-2">Close</button>
+            <button onclick="copyOrderViewAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2.5"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
+            <button onclick="closeOrderViewModal()" class="btn btn-primary w-50 rounded-pill fw-bold py-2.5">Close</button>
         </div>
     </div>
 </div>
@@ -420,14 +670,15 @@
     <div class="custom-alert-box">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-bold text-success fs-5"><i class="fa-solid fa-circle-check me-2"></i>Purchase Successful!</span>
-            <button onclick="closeSuccessModal()" class="btn-close btn-close-white"></button>
+            <button onclick="closeSuccessModal()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
         </div>
-        <p class="text-sub small mb-2">Here are your purchased account details:</p>
-        <div class="p-3 rounded-3 bg-dark border border-success border-opacity-50 mb-3 font-monospace text-warning user-select-all" id="success-accounts-container" style="font-size: 13px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; word-break: break-all;"></div>
+        <p class="text-sub small mb-3">Here are your purchased account details:</p>
+        
+        <div class="modal-account-data-box mb-4 user-select-all" id="success-accounts-container"></div>
         
         <div class="d-flex gap-2">
-            <button onclick="copyAllSuccessAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
-            <button onclick="closeSuccessModal()" class="btn btn-success w-50 rounded-pill fw-bold py-2">Done</button>
+            <button onclick="copyAllSuccessAccounts()" class="btn btn-outline-info w-50 rounded-pill fw-bold py-2.5"><i class="fa-solid fa-copy me-1"></i> Copy Details</button>
+            <button onclick="closeSuccessModal()" class="btn btn-success w-50 rounded-pill fw-bold py-2.5">Done</button>
         </div>
     </div>
 </div>
@@ -436,10 +687,12 @@
 <div id="auth-section" class="auth-container">
     <div class="auth-card">
         <div class="text-center mb-4">
-            <div class="stat-icon bg-primary bg-opacity-15 text-primary mx-auto mb-3" style="width: 65px; height: 65px; font-size: 28px;">
-                <i class="fa-solid fa-envelope-circle-check"></i>
+            <div class="d-flex justify-content-center mb-3">
+                <div class="brand-logo-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                </div>
             </div>
-            <h4 class="fw-bold text-white" id="auth-title">Account Login</h4>
+            <h4 class="fw-bold" id="auth-title">Account Login</h4>
             <p class="text-sub small" id="auth-subtitle">Access your Mail Market account</p>
         </div>
 
@@ -447,9 +700,25 @@
             <label class="small text-sub mb-1 fw-semibold">Gmail Address</label>
             <input type="email" id="auth-email" class="form-control" placeholder="example@gmail.com">
         </div>
-        <div class="mb-4">
+        
+        <div class="mb-3">
             <label class="small text-sub mb-1 fw-semibold">Password</label>
-            <input type="password" id="auth-pass" class="form-control" placeholder="••••••••">
+            <div class="position-relative">
+                <input type="password" id="auth-pass" class="form-control pe-5" placeholder="••••••••">
+                <span onclick="toggleAuthPasswordVisibility('auth-pass', 'auth-pass-icon')" class="position-absolute end-0 top-50 translate-middle-y pe-3 text-sub" style="cursor: pointer; z-index: 5;">
+                    <i class="fa-solid fa-eye" id="auth-pass-icon"></i>
+                </span>
+            </div>
+        </div>
+        
+        <div class="mb-4" id="confirm-pass-container" style="display: none;">
+            <label class="small text-sub mb-1 fw-semibold">Confirm Password</label>
+            <div class="position-relative">
+                <input type="password" id="auth-pass-confirm" class="form-control pe-5" placeholder="••••••••">
+                <span onclick="toggleAuthPasswordVisibility('auth-pass-confirm', 'auth-pass-confirm-icon')" class="position-absolute end-0 top-50 translate-middle-y pe-3 text-sub" style="cursor: pointer; z-index: 5;">
+                    <i class="fa-solid fa-eye" id="auth-pass-confirm-icon"></i>
+                </span>
+            </div>
         </div>
 
         <button onclick="handleAuthSubmit()" id="auth-btn" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow mb-3">Login to Account</button>
@@ -464,13 +733,20 @@
 <div id="user-panel-container" class="user-container">
     <div class="top-header">
         <div class="d-flex align-items-center gap-2">
-            <div class="bg-primary p-2 rounded-3 text-white d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <div class="brand-logo-icon" style="width: 34px; height: 34px; font-size: 16px; border-radius: 8px;">
                 <i class="fa-solid fa-envelope"></i>
             </div>
-            <span class="fw-bold fs-6 text-white">Mail Market</span>
+            <span class="fw-bold fs-6">Mail Market</span>
         </div>
-        <div class="bg-primary bg-opacity-10 border border-primary border-opacity-25 px-3 py-1.5 rounded-pill">
-            <span class="fw-bold text-info" id="user-top-balance">৳0.00</span>
+
+        <div class="d-flex align-items-center gap-3">
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-toggle-btn" title="Toggle Mode">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+
+            <div class="bg-primary bg-opacity-10 border border-primary border-opacity-25 px-3 py-1.5 rounded-pill">
+                <span class="fw-bold text-info" id="user-top-balance">৳0.00</span>
+            </div>
         </div>
     </div>
 
@@ -487,7 +763,7 @@
                 <div class="p-3 rounded-3 bg-input border border-primary border-opacity-25 mb-4 d-flex justify-content-between align-items-center">
                     <div>
                         <div class="text-sub" style="font-size: 11px; font-weight: 700; letter-spacing: 0.5px;">MINIMUM DEPOSIT</div>
-                        <div class="fw-bold text-primary fs-5">৳20</div>
+                        <div class="fw-bold text-primary fs-5" id="min-deposit-text">0.20 USDT</div>
                     </div>
                     <div class="text-primary bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center" style="width: 30px; height: 30px; font-size: 14px;">
                         <i class="fa-solid fa-info"></i>
@@ -495,16 +771,17 @@
                 </div>
 
                 <div class="mb-3">
-                    <label class="small text-sub mb-1 fw-semibold">Amount (BDT)</label>
+                    <label class="small text-sub mb-1 fw-semibold" id="deposit-amount-label">Amount (USDT)</label>
                     <div class="position-relative">
-                        <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-sub fw-bold" style="z-index: 5;">৳</span>
-                        <input type="number" id="deposit-input-amount" class="form-control ps-5" placeholder="0.00">
+                        <span class="position-absolute start-0 top-50 translate-middle-y ps-3 text-sub fw-bold" id="deposit-currency-symbol" style="z-index: 5;">$</span>
+                        <input type="number" step="0.01" id="deposit-input-amount" class="form-control ps-5" placeholder="0.20" oninput="calculateBdtAmount()">
                     </div>
+                    <div id="auto-bdt-show" class="text-info small fw-bold mt-2" style="display:none;"></div>
                 </div>
 
                 <div class="mb-4">
-                    <label class="small text-sub mb-2 fw-semibold">Payment Method</label>
-                    <div id="user-payment-methods-list" class="d-flex flex-column gap-2"></div>
+                    <label class="small text-sub mb-2 fw-semibold">Select Payment Method</label>
+                    <div id="user-payment-methods-list" class="pay-method-grid"></div>
                 </div>
 
                 <button onclick="proceedToPaymentInstruction()" class="btn btn-primary w-100 fw-bold py-3 rounded-pill shadow">
@@ -514,48 +791,21 @@
 
             <div id="deposit-step-2" class="card-box" style="display: none;">
                 <div class="text-center mb-4">
-                    <div id="instruction-method-logo" class="pay-logo logo-default mx-auto mb-2" style="width: 50px; height: 50px; font-size: 16px;">BK</div>
-                    <h5 class="fw-bold text-white m-0" id="instruction-method-title">bKash Payment</h5>
+                    <div id="instruction-method-logo" class="pay-logo logo-default mx-auto mb-2" style="width: 60px; height: 60px; font-size: 18px;">BK</div>
+                    <h5 class="fw-bold m-0" id="instruction-method-title">Payment Instruction</h5>
                 </div>
 
                 <div class="p-3 rounded-3 bg-input border border-secondary border-opacity-25 mb-4">
                     <div class="d-flex justify-content-between align-items-center">
-                        <span class="text-sub small">Deposit Amount:</span>
+                        <span class="text-sub small">Equivalent Amount:</span>
                         <span class="fw-bold text-success fs-5" id="instruction-amount-display">৳0.00 BDT</span>
                     </div>
                 </div>
 
-                <div class="d-flex flex-column gap-3 mb-4" style="font-size: 14px;">
-                    <div class="d-flex align-items-start gap-3">
-                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">1</span>
-                        <div>Dial <span class="text-info fw-bold" id="instruction-dial-code">*247#</span> or open your <span id="instruction-app-name" class="fw-bold text-white">bKash</span> app.</div>
-                    </div>
-                    <div class="d-flex align-items-start gap-3">
-                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">2</span>
-                        <div>Choose: <span class="text-success fw-bold">Send Money</span></div>
-                    </div>
-                    <div class="d-flex align-items-start gap-3 align-items-center">
-                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">3</span>
-                        <div class="flex-grow-1">
-                            Enter the Number: <span class="text-info fw-bold font-monospace" id="instruction-agent-number">01XXXXXXXXX</span>
-                        </div>
-                        <button onclick="copyInstructionNumber()" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
-                    </div>
-                    <div class="d-flex align-items-start gap-3 align-items-center">
-                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">4</span>
-                        <div class="flex-grow-1">
-                            Enter the Amount: <span class="text-info fw-bold" id="instruction-amount-text">0 BDT</span>
-                        </div>
-                        <button onclick="copyInstructionAmount()" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
-                    </div>
-                    <div class="d-flex align-items-start gap-3">
-                        <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">5</span>
-                        <div>Now enter your <span id="instruction-method-name-pin" class="fw-bold text-white">bKash</span> PIN to confirm.</div>
-                    </div>
-                </div>
+                <div class="d-flex flex-column gap-3 mb-4" id="instruction-steps-box" style="font-size: 14px;"></div>
 
                 <div class="mb-4">
-                    <label class="small text-sub mb-1 fw-semibold">Enter Transaction ID (TrxID)</label>
+                    <label class="small text-sub mb-1 fw-semibold">Enter Transaction ID (TrxID) / Hash</label>
                     <input type="text" id="deposit-trx-input" class="form-control" placeholder="e.g. 9N78XYZ123">
                 </div>
 
@@ -568,9 +818,16 @@
 
         <!-- History Tab -->
         <div id="user-section-history" class="section-pane">
+            <div class="alert alert-info bg-body border border-info border-opacity-50 d-flex align-items-center gap-3 mb-4 rounded-3 p-3 shadow-sm" role="alert">
+                <i class="fa-solid fa-circle-info text-info fs-4 flex-shrink-0"></i>
+                <div style="font-size: 13px;">
+                    <strong>Notice:</strong> Purchased accounts are auto-removed after <strong>7 days</strong> and Deposit history after <strong>30 days</strong>. Make sure to copy details beforehand!
+                </div>
+            </div>
+
             <div class="card-box mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold m-0 text-white"><i class="fa-solid fa-bag-shopping text-primary me-2"></i>Purchased Accounts History</h5>
+                    <h5 class="fw-bold m-0"><i class="fa-solid fa-bag-shopping text-primary me-2"></i>Purchased Accounts History</h5>
                     <button onclick="copyAllOrders()" class="btn btn-sm btn-outline-info rounded-pill px-3"><i class="fa-solid fa-copy me-1"></i> Copy All</button>
                 </div>
                 <div class="table-responsive">
@@ -591,7 +848,7 @@
             </div>
 
             <div class="card-box">
-                <h5 class="fw-bold mb-3 text-white"><i class="fa-solid fa-wallet text-success me-2"></i>Deposit History</h5>
+                <h5 class="fw-bold mb-3"><i class="fa-solid fa-wallet text-success me-2"></i>Deposit History</h5>
                 <div class="table-responsive">
                     <table class="table table-bordered mb-0">
                         <thead>
@@ -612,51 +869,74 @@
         <div id="user-section-profile" class="section-pane">
             <div class="card-box">
                 <div class="text-center mb-4">
-                    <img id="profile-avatar-img" src="" alt="Avatar" class="rounded-circle border border-primary border-opacity-50 shadow-sm mb-3" style="width: 80px; height: 80px; background: #090f1d; object-fit: cover;">
-                    <h5 class="fw-bold text-white m-0" id="profile-username-title">User Profile</h5>
+                    <div class="position-relative d-inline-block mb-3">
+                        <img id="profile-avatar-img" src="" alt="Avatar" class="rounded-circle border border-2 border-primary shadow" style="width: 90px; height: 90px; background: var(--input-bg); object-fit: cover;">
+                        <span class="position-absolute bottom-0 end-0 bg-success border border-dark rounded-circle" style="width: 18px; height: 18px;" title="Active Status"></span>
+                    </div>
+                    <h5 class="fw-bold mb-1" id="profile-username-title">User Profile</h5>
+                    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-1 rounded-pill" style="font-size: 11px;">Customer Account</span>
                 </div>
 
-                <h5 class="fw-bold text-white mb-4"><i class="fa-solid fa-user-gear text-primary me-2"></i>Account Details</h5>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <span class="fw-bold fs-6"><i class="fa-solid fa-user-gear text-primary me-2"></i>Account Details</span>
+                </div>
                 
-                <div class="d-flex flex-column gap-3 mb-4" style="font-size: 14px;">
-                    <div>
-                        <div class="text-sub small">Email Address</div>
-                        <div class="fw-bold text-white fs-6" id="profile-email-text">-</div>
-                    </div>
-                    
-                    <div style="cursor: pointer;" onclick="toggleProfilePassword()" title="Click to show/hide password">
-                        <div class="text-sub small d-flex justify-content-between align-items-center">
-                            <span>Password</span>
-                            <span class="text-primary" style="font-size: 12px;"><i class="fa-solid fa-eye me-1" id="pass-eye-icon"></i><span id="pass-toggle-label">Click to view</span></span>
+                <div class="d-flex flex-column gap-2 mb-4" style="font-size: 13px;">
+                    <div class="profile-info-card d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-sub" style="font-size: 11px;">Email Address</div>
+                            <div class="fw-bold" id="profile-email-text">-</div>
                         </div>
-                        <div class="fw-bold text-info font-monospace fs-6" id="profile-pass-display">••••••••</div>
+                        <i class="fa-solid fa-envelope text-primary opacity-50"></i>
                     </div>
 
-                    <div>
-                        <div class="text-sub small">Account Balance</div>
-                        <div class="fw-bold text-success fs-6" id="profile-balance-text">৳0.00</div>
+                    <div class="profile-info-card d-flex justify-content-between align-items-center" style="cursor: pointer;" onclick="toggleProfilePassword()" title="Click to show/hide password">
+                        <div>
+                            <div class="text-sub" style="font-size: 11px;">Password</div>
+                            <div class="fw-bold text-info font-monospace" id="profile-pass-display">••••••••</div>
+                        </div>
+                        <div class="text-primary d-flex align-items-center gap-1" style="font-size: 12px;">
+                            <i class="fa-solid fa-eye" id="pass-eye-icon"></i>
+                            <span id="pass-toggle-label">View</span>
+                        </div>
                     </div>
 
-                    <div>
-                        <div class="text-sub small">Account Type</div>
-                        <div class="fw-bold text-white">Customer</div>
+                    <div class="profile-info-card d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="text-sub" style="font-size: 11px;">Account Balance</div>
+                            <div class="fw-bold text-success fs-6" id="profile-balance-text">৳0.00</div>
+                        </div>
+                        <i class="fa-solid fa-wallet text-success opacity-50"></i>
                     </div>
 
-                    <div>
-                        <div class="text-sub small">Member Since</div>
-                        <div class="fw-bold text-white" id="profile-member-since">-</div>
-                    </div>
-
-                    <div>
-                        <div class="text-sub small">Account Status</div>
-                        <div class="fw-bold text-success">Active</div>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <div class="profile-info-card h-100">
+                                <div class="text-sub" style="font-size: 11px;">Member Since</div>
+                                <div class="fw-bold mt-1" id="profile-member-since" style="font-size: 12px;">-</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="profile-info-card h-100">
+                                <div class="text-sub" style="font-size: 11px;">Account Status</div>
+                                <div class="fw-bold text-success mt-1" style="font-size: 12px;"><i class="fa-solid fa-circle text-success me-1" style="font-size: 8px;"></i>Active</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <button onclick="userLogout()" class="btn btn-danger w-100 fw-bold py-3 rounded-pill shadow"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout Account</button>
+                <div class="text-center">
+                    <button onclick="userLogout()" class="btn btn-outline-danger px-4 py-2 rounded-pill fw-bold shadow-sm" style="font-size: 13px; transition: 0.2s;">
+                        <i class="fa-solid fa-right-from-bracket me-2"></i>Logout Account
+                    </button>
+                </div>
             </div>
         </div>
     </div>
+
+    <a href="#" id="telegram-support-btn" target="_blank" class="telegram-float" title="Contact Support" style="display: none;">
+        <i class="fa-brands fa-telegram"></i>
+    </a>
 
     <div class="bottom-nav">
         <a href="#" onclick="switchUserTab('home')" class="active" id="user-menu-home">
@@ -684,24 +964,102 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyDCIMosLNehv92LBKawC-53ErJ13QhnJy0",
-        authDomain: "mywebsite-709e3.firebaseapp.com",
-        databaseURL: "https://mywebsite-709e3-default-rtdb.firebaseio.com",
-        projectId: "mywebsite-709e3",
-        storageBucket: "mywebsite-709e3.firebasestorage.app",
-        messagingSenderId: "218299688364",
-        appId: "1:218299688364:web:98aafc682ba92bf102c609",
-        measurementId: "G-4LE965PQLF"
+        apiKey: "AIzaSyChUTpxogXSTeQF53HGUzrjbb8b0ctho58",
+        authDomain: "perfectmailsite-3633f.firebaseapp.com",
+        databaseURL: "https://perfectmailsite-3633f-default-rtdb.firebaseio.com",
+        projectId: "perfectmailsite-3633f",
+        storageBucket: "perfectmailsite-3633f.firebasestorage.app",
+        messagingSenderId: "744199660533",
+        appId: "1:744199660533:web:f8dcdd566b0ad5b19076bc",
+        measurementId: "G-Y0LRJPS680"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
+
+    // Theme Toggle Script
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        localStorage.setItem('mail_market_theme', newTheme);
+        
+        const btnIcon = document.querySelector('#theme-toggle-btn i');
+        if (newTheme === 'light') {
+            btnIcon.className = 'fa-solid fa-sun';
+        } else {
+            btnIcon.className = 'fa-solid fa-moon';
+        }
+    }
+
+    // Apply Saved Theme
+    (function initTheme() {
+        const savedTheme = localStorage.getItem('mail_market_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        window.addEventListener('DOMContentLoaded', () => {
+            const btnIcon = document.querySelector('#theme-toggle-btn i');
+            if (btnIcon) {
+                btnIcon.className = savedTheme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            }
+        });
+    })();
+
+    function escapeHtml(str) {
+        if (str === null || str === undefined) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function getCategoryIcon(catName) {
+        let name = (catName || '').toLowerCase();
+        if (name.includes('hotmail') || name.includes('outlook') || name.includes('gmail') || name.includes('mail')) {
+            return '<i class="fa-solid fa-envelope"></i>';
+        } else if (name.includes('vpn') || name.includes('proxy') || name.includes('security')) {
+            return '<i class="fa-solid fa-shield-halved"></i>';
+        } else if (name.includes('telegram') || name.includes('chat') || name.includes('social')) {
+            return '<i class="fa-brands fa-telegram"></i>';
+        } else if (name.includes('netflix') || name.includes('prime') || name.includes('ott') || name.includes('streaming')) {
+            return '<i class="fa-solid fa-tv"></i>';
+        } else {
+            return '<i class="fa-solid fa-folder-open"></i>';
+        }
+    }
+
+    // CATEGORY DYNAMIC NEON COLOR MAPPER WITH LIGHT & HEAVY GLOW
+    function getCategoryNeonColor(catName) {
+        let name = (catName || '').toLowerCase();
+        if (name.includes('hotmail')) {
+            return { color: '#ff9900', glow: 'rgba(255, 153, 0, 0.85)', colorDim: 'rgba(255, 153, 0, 0.4)', glowDim: 'rgba(255, 153, 0, 0.15)' }; // Orange
+        } else if (name.includes('outlook')) {
+            return { color: '#00d2ff', glow: 'rgba(0, 210, 255, 0.85)', colorDim: 'rgba(0, 210, 255, 0.4)', glowDim: 'rgba(0, 210, 255, 0.15)' }; // Cyan
+        } else if (name.includes('gmail')) {
+            return { color: '#ff4d4d', glow: 'rgba(255, 77, 77, 0.85)', colorDim: 'rgba(255, 77, 77, 0.4)', glowDim: 'rgba(255, 77, 77, 0.15)' }; // Red
+        } else if (name.includes('telegram') || name.includes('chat') || name.includes('social')) {
+            return { color: '#d946ef', glow: 'rgba(217, 70, 239, 0.85)', colorDim: 'rgba(217, 70, 239, 0.4)', glowDim: 'rgba(217, 70, 239, 0.15)' }; // Magenta
+        } else if (name.includes('vpn') || name.includes('proxy')) {
+            return { color: '#10b981', glow: 'rgba(16, 185, 129, 0.85)', colorDim: 'rgba(16, 185, 129, 0.4)', glowDim: 'rgba(16, 185, 129, 0.15)' }; // Green
+        } else if (name.includes('netflix') || name.includes('ott')) {
+            return { color: '#e50914', glow: 'rgba(229, 9, 20, 0.85)', colorDim: 'rgba(229, 9, 20, 0.4)', glowDim: 'rgba(229, 9, 20, 0.15)' }; // Crimson
+        } else {
+            return { color: '#3b82f6', glow: 'rgba(59, 130, 246, 0.85)', colorDim: 'rgba(59, 130, 246, 0.4)', glowDim: 'rgba(59, 130, 246, 0.15)' }; // Default Blue
+        }
+    }
+
+    // CLICK TO GLOW TOGGLE FUNCTION
+    function toggleCardGlow(cardElement) {
+        cardElement.classList.toggle('is-glowing');
+    }
 
     let isRegisterMode = false;
     let selectedMainCategory = null;
     let selectedPaymentMethodData = null;
     let actualUserPassword = '';
     let isPasswordVisible = false;
+    let currentBinanceRate = 120;
 
     let currentModalData = {
         categoryName: '',
@@ -716,15 +1074,6 @@
 
     function closeCustomAlert() {
         document.getElementById('custom-alert-overlay').style.display = 'none';
-    }
-
-    function showModalError(msg) {
-        let errBanner = document.getElementById('modal-error-banner');
-        errBanner.innerText = msg;
-        errBanner.style.display = 'block';
-        setTimeout(() => {
-            errBanner.style.display = 'none';
-        }, 5000);
     }
 
     function closeSuccessModal() {
@@ -750,6 +1099,152 @@
         });
     }
 
+    function toggleAuthPasswordVisibility(inputId, iconId) {
+        let inputField = document.getElementById(inputId);
+        let iconField = document.getElementById(iconId);
+        if (inputField.type === "password") {
+            inputField.type = "text";
+            iconField.className = "fa-solid fa-eye-slash";
+        } else {
+            inputField.type = "password";
+            iconField.className = "fa-solid fa-eye";
+        }
+    }
+
+    function openPurchaseModal(catName, price, stockCount) {
+        currentModalData = {
+            categoryName: catName,
+            price: price,
+            stockCount: stockCount
+        };
+
+        document.getElementById('modal-cat-name').innerText = catName;
+        document.getElementById('modal-unit-price').innerText = `৳${price}`;
+        document.getElementById('modal-stock-count').innerText = stockCount;
+        document.getElementById('modal-qty-input').value = 1;
+        document.getElementById('modal-error-banner').style.display = 'none';
+        
+        updateModalTotalPrice(1);
+        document.getElementById('purchase-modal-overlay').style.display = 'flex';
+    }
+
+    function closePurchaseModal() {
+        document.getElementById('purchase-modal-overlay').style.display = 'none';
+    }
+
+    function updateModalTotalPrice(qty) {
+        let total = (qty * currentModalData.price).toFixed(2);
+        document.getElementById('modal-total-price').innerText = `৳${total}`;
+    }
+
+    function changeModalQty(change) {
+        let input = document.getElementById('modal-qty-input');
+        let currentQty = parseInt(input.value) || 0;
+        let newQty = currentQty + change;
+
+        if (newQty < 1) newQty = 1;
+        if (newQty > currentModalData.stockCount) newQty = currentModalData.stockCount;
+
+        input.value = newQty;
+        updateModalTotalPrice(newQty);
+    }
+
+    function onModalQtyTyped(input) {
+        if (input.value === '') {
+            updateModalTotalPrice(0);
+            return;
+        }
+
+        let qty = parseInt(input.value);
+        
+        if (qty > currentModalData.stockCount) {
+            qty = currentModalData.stockCount;
+            input.value = qty;
+        }
+
+        updateModalTotalPrice(qty > 0 ? qty : 0);
+    }
+
+    function confirmAndBuy() {
+        let email = localStorage.getItem('apex_logged_user');
+        if (!email) return showCustomAlert('Please login first!');
+
+        let inputField = document.getElementById('modal-qty-input');
+        let qty = parseInt(inputField.value);
+
+        if (isNaN(qty) || qty < 1) {
+            qty = 1;
+            inputField.value = 1;
+        }
+
+        let safeKey = email.replace(/[@.]/g, '_');
+        let totalCost = parseFloat((qty * currentModalData.price).toFixed(2));
+        let errorBanner = document.getElementById('modal-error-banner');
+
+        errorBanner.style.display = 'none';
+
+        db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
+            let currentBalance = parseFloat(balSnap.val() || 0);
+            if (currentBalance < totalCost) {
+                errorBanner.innerText = `Insufficient Balance! You need ৳${totalCost}, but your balance is ৳${currentBalance}.`;
+                errorBanner.style.display = 'block';
+                return;
+            }
+
+            db.ref('stocks').once('value', (stockSnap) => {
+                let stocks = stockSnap.val() || {};
+                let availableKeys = Object.keys(stocks).filter(k => 
+                    stocks[k].category === currentModalData.categoryName && stocks[k].status === 'available'
+                );
+
+                if (availableKeys.length < qty) {
+                    errorBanner.innerText = `Stock shortage! Only ${availableKeys.length} available right now.`;
+                    errorBanner.style.display = 'block';
+                    return;
+                }
+
+                let keysToBuy = availableKeys.slice(0, qty);
+                let purchasedAccounts = [];
+                let timestamp = Date.now();
+
+                let updates = {};
+                keysToBuy.forEach(k => {
+                    updates[`stocks/${k}/status`] = 'sold';
+                    updates[`stocks/${k}/soldTo`] = email;
+                    updates[`stocks/${k}/soldTimestamp`] = timestamp;
+                    purchasedAccounts.push(stocks[k].accountDetails);
+                });
+
+                updates[`balances/${safeKey}`] = parseFloat((currentBalance - totalCost).toFixed(2));
+
+                db.ref().update(updates).then(() => {
+                    let orderId = '#' + Math.random().toString(36).substr(2, 6).toUpperCase();
+                    let orderData = {
+                        orderId: orderId,
+                        user: email,
+                        category: currentModalData.categoryName,
+                        quantity: qty,
+                        totalPrice: totalCost,
+                        accounts: purchasedAccounts,
+                        date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+                        timestamp: timestamp
+                    };
+
+                    db.ref('orders').push(orderData).then(() => {
+                        closePurchaseModal();
+                        
+                        document.getElementById('success-accounts-container').innerText = purchasedAccounts.join('\n');
+                        document.getElementById('success-result-modal').style.display = 'flex';
+                        
+                        loadUserShop();
+                    });
+                }).catch(err => {
+                    showCustomAlert('Transaction failed! Please try again.');
+                });
+            });
+        });
+    }
+
     window.onload = function() {
         let loggedUser = localStorage.getItem('apex_logged_user');
         if(loggedUser) {
@@ -757,7 +1252,123 @@
         } else {
             showAuthSection();
         }
+        setupTelegramSupport();
+        fetchBinanceRate();
+        cleanOldSoldStocks();
+        cleanInactiveUsers();
     };
+
+    function fetchBinanceRate() {
+        db.ref('settings/binanceRate').on('value', snap => {
+            if(snap.exists()) {
+                currentBinanceRate = parseFloat(snap.val()) || 120;
+                if(selectedPaymentMethodData) {
+                    updateDepositUIForMethod(selectedPaymentMethodData.name);
+                }
+            }
+        });
+    }
+
+    function updateDepositUIForMethod(methodName) {
+        let nameLower = (methodName || '').toLowerCase();
+        let minDepositLabel = document.getElementById('min-deposit-text');
+        let amountLabel = document.getElementById('deposit-amount-label');
+        let currencySymbol = document.getElementById('deposit-currency-symbol');
+        let amountInput = document.getElementById('deposit-input-amount');
+        let showBox = document.getElementById('auto-bdt-show');
+
+        showBox.style.display = 'none';
+        amountInput.value = '';
+
+        if (nameLower.includes('bkash') || nameLower.includes('nagad') || nameLower.includes('rocket') || nameLower.includes('upay')) {
+            minDepositLabel.innerText = "৳20.00 BDT";
+            amountLabel.innerText = "Amount (BDT)";
+            currencySymbol.innerText = "৳";
+            amountInput.placeholder = "20";
+            amountInput.min = "20";
+            amountInput.step = "1";
+        } else {
+            let minUsdt = (20 / currentBinanceRate).toFixed(2);
+            minDepositLabel.innerText = `${minUsdt} USDT`;
+            amountLabel.innerText = "Amount (USDT)";
+            currencySymbol.innerText = "$";
+            amountInput.placeholder = minUsdt;
+            amountInput.min = minUsdt;
+            amountInput.step = "0.01";
+        }
+    }
+
+    function calculateBdtAmount() {
+        let inputVal = parseFloat(document.getElementById('deposit-input-amount').value);
+        let showBox = document.getElementById('auto-bdt-show');
+        if (!selectedPaymentMethodData) return;
+        
+        let nameLower = selectedPaymentMethodData.name.toLowerCase();
+        let isBdtMethod = nameLower.includes('bkash') || nameLower.includes('nagad') || nameLower.includes('rocket') || nameLower.includes('upay');
+
+        if (!isNaN(inputVal) && inputVal > 0) {
+            if (isBdtMethod) {
+                let equivalentUsdt = (inputVal / currentBinanceRate).toFixed(2);
+                showBox.innerText = `≈ $${equivalentUsdt} USDT (Rate: 1\$ = ৳${currentBinanceRate})`;
+                showBox.style.display = 'block';
+            } else {
+                let totalBdt = (inputVal * currentBinanceRate).toFixed(2);
+                showBox.innerText = `≈ ৳${totalBdt} BDT (Rate: 1\$ = ৳${currentBinanceRate})`;
+                showBox.style.display = 'block';
+            }
+        } else {
+            showBox.style.display = 'none';
+        }
+    }
+
+    function cleanOldSoldStocks() {
+        let stocksRef = db.ref('stocks');
+        let sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+
+        stocksRef.once('value', (snapshot) => {
+            snapshot.forEach((childSnap) => {
+                let stockData = childSnap.val();
+                if (stockData.status === 'sold' && stockData.soldTimestamp && stockData.soldTimestamp < sevenDaysAgo) {
+                    childSnap.ref.remove();
+                }
+            });
+        });
+    }
+
+    function cleanInactiveUsers() {
+        let twoMonthsAgo = Date.now() - (60 * 24 * 60 * 60 * 1000);
+        db.ref('users').once('value', (snap) => {
+            snap.forEach((childSnap) => {
+                let uKey = childSnap.key;
+                let uData = childSnap.val();
+                let lastActive = uData.lastLogin || uData.createdAtTimestamp;
+                
+                if (lastActive && lastActive < twoMonthsAgo) {
+                    childSnap.ref.remove();
+                    db.ref(`balances/${uKey}`).remove();
+                }
+            });
+        });
+    }
+
+    function setupTelegramSupport() {
+        db.ref('settings/supportTelegram').on('value', (snap) => {
+            let supportVal = snap.val();
+            let tgBtn = document.getElementById('telegram-support-btn');
+            
+            if (supportVal && tgBtn) {
+                let finalLink = supportVal.trim();
+                if (!finalLink.startsWith('http://') && !finalLink.startsWith('https://')) {
+                    let cleanUsername = finalLink.replace('@', '');
+                    finalLink = `https://t.me/${cleanUsername}`;
+                }
+                tgBtn.href = finalLink;
+                tgBtn.style.display = 'flex';
+            } else if (tgBtn) {
+                tgBtn.style.display = 'none';
+            }
+        });
+    }
 
     function showAuthSection() {
         document.getElementById('auth-section').style.display = 'flex';
@@ -771,28 +1382,44 @@
         let sub = document.getElementById('auth-subtitle');
         let btn = document.getElementById('auth-btn');
         let switchText = document.getElementById('auth-switch-text');
+        let confirmPassContainer = document.getElementById('confirm-pass-container');
 
         if(isRegisterMode) {
             title.innerText = "Create Account";
             sub.innerText = "Register a new Mail Market account";
             btn.innerText = "Register Account";
+            confirmPassContainer.style.display = "block";
             switchText.innerHTML = `Already have an account? <a href="#" onclick="toggleAuthMode(event)" class="text-primary fw-bold text-decoration-none">Login</a>`;
         } else {
             title.innerText = "Account Login";
             sub.innerText = "Access your Mail Market account";
             btn.innerText = "Login to Account";
+            confirmPassContainer.style.display = "none";
             switchText.innerHTML = `Don't have an account? <a href="#" onclick="toggleAuthMode(event)" class="text-primary fw-bold text-decoration-none">Create Account</a>`;
         }
     }
 
     function handleAuthSubmit() {
-        let email = document.getElementById('auth-email').value.trim();
+        let emailInput = document.getElementById('auth-email').value.trim();
         let pass = document.getElementById('auth-pass').value.trim();
+        let passConfirm = document.getElementById('auth-pass-confirm').value.trim();
 
-        if(!email || !pass) return showCustomAlert('Please fill in all fields!');
+        if(!emailInput || !pass) return showCustomAlert('Please fill in all fields!');
+
+        let email = emailInput.toLowerCase();
+
+        if(isRegisterMode) {
+            if(!email.endsWith('@gmail.com')) {
+                return showCustomAlert('Only @gmail.com accounts are allowed to register!');
+            }
+            if(pass !== passConfirm) {
+                return showCustomAlert('Passwords do not match!');
+            }
+        }
 
         let safeKey = email.replace(/[@.]/g, '_');
         let currentDate = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        let nowTimestamp = Date.now();
 
         if(isRegisterMode) {
             db.ref(`users/${safeKey}`).once('value', (snap) => {
@@ -802,7 +1429,9 @@
                     db.ref(`users/${safeKey}`).set({ 
                         email: email, 
                         pass: pass,
-                        memberSince: currentDate 
+                        memberSince: currentDate,
+                        lastLogin: nowTimestamp,
+                        createdAtTimestamp: nowTimestamp
                     });
                     db.ref(`balances/${safeKey}`).set(0);
                     showCustomAlert('Registration successful! Please login.');
@@ -816,6 +1445,7 @@
                 } else {
                     let uData = snap.val();
                     if(uData.pass === pass) {
+                        db.ref(`users/${safeKey}/lastLogin`).set(nowTimestamp);
                         localStorage.setItem('apex_logged_user', email);
                         showUserPanel(email);
                     } else {
@@ -836,8 +1466,10 @@
         document.getElementById('user-panel-container').style.display = 'block';
         
         let safeKey = email.replace(/[@.]/g, '_');
-        let avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`;
+        
+        let avatarUrl = `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(email)}`;
         document.getElementById('profile-avatar-img').src = avatarUrl;
+        
         let uname = email.split('@')[0];
         document.getElementById('profile-username-title').innerText = uname.charAt(0).toUpperCase() + uname.slice(1);
 
@@ -871,12 +1503,12 @@
 
         if(isPasswordVisible) {
             passDisplay.innerText = actualUserPassword;
-            eyeIcon.className = "fa-solid fa-eye-slash me-1";
-            toggleLabel.innerText = "Hide password";
+            eyeIcon.className = "fa-solid fa-eye-slash";
+            toggleLabel.innerText = "Hide";
         } else {
             passDisplay.innerText = "••••••••";
-            eyeIcon.className = "fa-solid fa-eye me-1";
-            toggleLabel.innerText = "Click to view";
+            eyeIcon.className = "fa-solid fa-eye";
+            toggleLabel.innerText = "View";
         }
     }
 
@@ -932,9 +1564,10 @@
 
                 mainCats.forEach(mCat => {
                     let isActive = mCat === selectedMainCategory ? 'active' : '';
+                    let dynamicIcon = getCategoryIcon(mCat);
                     container.innerHTML += `
                         <div class="main-category-pill ${isActive}" onclick="selectMainCategory('${mCat}')">
-                            <i class="fa-solid fa-folder-open"></i> ${mCat}
+                            ${dynamicIcon} ${escapeHtml(mCat)}
                         </div>
                     `;
                 });
@@ -954,29 +1587,43 @@
                     let price = availableStocks.length > 0 ? availableStocks[0].price : 0;
                     let stockCount = availableStocks.length;
 
+                    // Get Neon Colors per Category (Normal & Dimmed)
+                    let neonTheme = getCategoryNeonColor(c.cat);
+
                     let actionBtnHtml = stockCount > 0 
-                        ? `<button onclick="openPurchaseModal('${catString}', ${price}, ${stockCount})" class="btn btn-primary fw-bold rounded-pill py-2 w-100 shadow-sm" style="font-size: 14px;">Buy Now</button>`
-                        : `<button class="btn btn-danger fw-bold rounded-pill py-2 w-100 opacity-75 shadow-sm" style="font-size: 14px;" disabled>Stock Out</button>`;
+                        ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount})" class="buy-now-btn">
+                            <i class="fa-solid fa-cart-shopping"></i> Buy Now
+                           </button>`
+                        : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
+
+                    let featuresHtml = '';
+                    if (c.description && String(c.description).trim() !== '') {
+                        featuresHtml = `<div class="item-description">${escapeHtml(c.description)}</div>`;
+                    }
+
+                    let stockBadge = stockCount > 0 
+                        ? `<span class="stock-tag available"><i class="fa-solid fa-circle-check"></i> ${stockCount} available</span>`
+                        : `<span class="stock-tag out"><i class="fa-solid fa-circle-xmark"></i> Out of stock</span>`;
 
                     grid.innerHTML += `
-                        <div class="shop-item-card">
+                        <div class="shop-item-card" onclick="toggleCardGlow(this)" 
+                             style="--neon-color: ${neonTheme.color}; 
+                                    --neon-glow: ${neonTheme.glow}; 
+                                    --neon-color-dim: ${neonTheme.colorDim}; 
+                                    --neon-glow-dim: ${neonTheme.glowDim};">
                             <div>
-                                <h5 class="fw-bold text-white mb-2" style="font-size: 18px;">${c.subCat}</h5>
-                                <div class="mb-3">
-                                    <span class="fw-bold text-info fs-4">৳${price}</span>
-                                    <span class="text-sub" style="font-size: 11px;"> / account</span>
+                                <span class="product-badge">${escapeHtml(c.cat)}</span>
+                                <h5 class="fw-bold mb-2" style="font-size: 19px; color: var(--text-main);">${escapeHtml(c.subCat || '')}</h5>
+                                <div class="mb-3 d-flex align-items-baseline gap-1">
+                                    <span class="fw-extrabold text-info fs-3">৳${price}</span>
+                                    <span class="text-sub" style="font-size: 12px;"> / account</span>
                                 </div>
-
-                                <div class="d-flex flex-column gap-1.5 mb-4 text-sub" style="font-size: 13px;">
-                                    <div><i class="fa-solid fa-check text-success me-2"></i>High Quality</div>
-                                    <div><i class="fa-solid fa-check text-success me-2"></i>Instant Delivery</div>
-                                    <div><i class="fa-solid fa-check text-success me-2"></i>Secure Access</div>
-                                </div>
+                                ${featuresHtml}
                             </div>
                             <div>
-                                <div class="d-flex justify-content-between align-items-center mb-3" style="font-size: 13px;">
-                                    <span class="text-sub">Stock:</span>
-                                    <span class="text-success fw-bold">${stockCount} available</span>
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="text-sub" style="font-size: 13px;">Availability:</span>
+                                    ${stockBadge}
                                 </div>
                                 ${actionBtnHtml}
                             </div>
@@ -992,283 +1639,157 @@
         loadUserShop();
     }
 
-    function openPurchaseModal(categoryName, price, stockCount) {
-        currentModalData = { categoryName, price, stockCount };
-        document.getElementById('modal-cat-name').innerText = categoryName;
-        document.getElementById('modal-unit-price').innerText = `৳${price}`;
-        document.getElementById('modal-stock-count').innerText = stockCount;
-        document.getElementById('modal-qty-input').value = 1;
-        document.getElementById('modal-total-price').innerText = `৳${price}`;
-        document.getElementById('modal-error-banner').style.display = 'none';
-        document.getElementById('purchase-modal-overlay').style.display = 'flex';
-    }
-
-    function closePurchaseModal() {
-        document.getElementById('purchase-modal-overlay').style.display = 'none';
-    }
-
-    function changeModalQty(delta) {
-        let input = document.getElementById('modal-qty-input');
-        let val = parseInt(input.value) || 1;
-        val += delta;
-        if(val < 1) val = 1;
-        if(val > currentModalData.stockCount) val = currentModalData.stockCount;
-        input.value = val;
-        let total = val * currentModalData.price;
-        document.getElementById('modal-total-price').innerText = `৳${total}`;
-    }
-
-    function onModalQtyTyped(input) {
-        let val = parseInt(input.value);
-        if(isNaN(val) || val < 1) return;
-        if(val > currentModalData.stockCount) {
-            val = currentModalData.stockCount;
-            input.value = val;
-        }
-        let total = val * currentModalData.price;
-        document.getElementById('modal-total-price').innerText = `৳${total}`;
-    }
-
-    function confirmAndBuy() {
-        let buyQty = parseInt(document.getElementById('modal-qty-input').value) || 1;
-        let categoryName = currentModalData.categoryName;
-        let price = currentModalData.price;
-        let stockCount = currentModalData.stockCount;
-
-        if(stockCount <= 0) return showModalError('Stock out for this category!');
-        if(buyQty > stockCount) return showModalError('Requested quantity exceeds available stock!');
-
-        let email = localStorage.getItem('apex_logged_user');
-        let safeKey = email.replace(/[@.]/g, '_');
-        let totalCost = price * buyQty;
-
-        db.ref(`balances/${safeKey}`).once('value', (balSnap) => {
-            let bal = balSnap.val() || 0;
-            if(bal < totalCost) {
-                return showModalError('Insufficient balance! Please deposit money first.');
-            }
-
-            db.ref('stocks').once('value', (stockSnap) => {
-                let stocks = stockSnap.val() || {};
-                let targetStockKeys = [];
-
-                for(let key in stocks) {
-                    if(stocks[key].category === categoryName && stocks[key].status === 'available') {
-                        targetStockKeys.push(key);
-                        if(targetStockKeys.length === buyQty) break;
-                    }
-                }
-
-                if(targetStockKeys.length < buyQty) return showModalError('Not enough stock available.');
-
-                db.ref(`balances/${safeKey}`).set(bal - totalCost);
-
-                let purchasedDetailsList = [];
-
-                targetStockKeys.forEach(stockKey => {
-                    let stockData = stocks[stockKey];
-                    db.ref(`stocks/${stockKey}`).update({
-                        status: 'sold',
-                        soldTo: email
-                    });
-
-                    purchasedDetailsList.push(stockData.accountDetails);
-                });
-
-                // Generate a unique Order ID like #934158
-                let randomOrderId = '#' + Math.floor(100000 + Math.random() * 900000);
-
-                // FIXED: Save everything as a single order entry with the full accounts array
-                db.ref('orders').push({
-                    orderId: randomOrderId,
-                    user: email,
-                    category: categoryName,
-                    accounts: purchasedDetailsList,
-                    quantity: buyQty,
-                    totalPrice: totalCost,
-                    date: new Date().toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' })
-                });
-
-                closePurchaseModal();
-                
-                let combinedText = purchasedDetailsList.join('\n');
-                document.getElementById('success-accounts-container').innerText = combinedText;
-                document.getElementById('success-result-modal').style.display = 'flex';
-                loadUserShop();
-            });
-        });
-    }
-
-    function loadUserOrders() {
-        let email = localStorage.getItem('apex_logged_user');
-        db.ref('orders').on('value', (snap) => {
-            let orders = snap.val() || {};
-            let tbody = document.getElementById('user-orders-table-tbody');
-            tbody.innerHTML = '';
-
-            let keys = Object.keys(orders);
-            let userOrders = keys.filter(k => orders[k].user === email);
-
-            if(userOrders.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub py-4">No purchased orders found.</td></tr>`;
-                return;
-            }
-
-            userOrders.reverse().forEach(k => {
-                let o = orders[k];
-                let orderId = o.orderId || ('#' + k.substring(0, 6));
-                let accountsList = o.accounts || (o.accountDetails ? [o.accountDetails] : []);
-                let qtyVal = o.quantity || accountsList.length;
-                let qtyText = `${qtyVal} accounts`;
-                let totalCost = o.totalPrice || 0;
-                let combinedText = accountsList.join('\n');
-
-                let parts = o.category ? o.category.split(' - ') : ['Product', ''];
-                let mainCat = parts[0] || 'Product';
-                let subCat = parts[1] || o.category || '';
-
-                tbody.innerHTML += `
-                    <tr>
-                        <td class="fw-bold text-white">${orderId}</td>
-                        <td class="text-sub" style="font-size: 12px;">${o.date || ''}</td>
-                        <td>
-                            <div class="d-flex flex-column">
-                                <span class="badge bg-secondary bg-opacity-25 text-info mb-1" style="width: fit-content; font-size: 11px;">${mainCat}</span>
-                                <span class="text-white fw-semibold" style="font-size: 13px;">${subCat}</span>
-                            </div>
-                        </td>
-                        <td>${qtyText}</td>
-                        <td class="fw-bold text-info">৳${totalCost}</td>
-                        <td>
-                            <button onclick='openOrderViewModal(${JSON.stringify(orderId)}, ${JSON.stringify(o.date || "")}, ${JSON.stringify(o.category || "")}, ${JSON.stringify(combinedText)})' class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 fw-bold" style="font-size: 12px;">
-                                <i class="fa-solid fa-eye me-1"></i> View
-                            </button>
-                        </td>
-                    </tr>
-                `;
-            });
-        });
-    }
-
-    function openOrderViewModal(orderId, date, category, combinedText) {
-        document.getElementById('order-view-title-head').innerHTML = `<i class="fa-solid fa-eye me-2"></i>Order ${orderId} Accounts`;
-        document.getElementById('order-view-meta').innerHTML = `<strong>Order:</strong> ${orderId} &nbsp;|&nbsp; <strong>Product:</strong> ${category} &nbsp;|&nbsp; <strong>Date:</strong> ${date}`;
-        document.getElementById('order-view-accounts-box').innerText = combinedText;
-        document.getElementById('order-view-modal').style.display = 'flex';
-    }
-
-    function copyAllOrders() {
-        let email = localStorage.getItem('apex_logged_user');
-        db.ref('orders').once('value', (snap) => {
-            let orders = snap.val() || {};
-            let keys = Object.keys(orders);
-            let userOrders = keys.filter(k => orders[k].user === email);
-
-            if(userOrders.length === 0) return showCustomAlert('No orders to copy!');
-
-            let allTexts = [];
-            userOrders.forEach(k => {
-                let o = orders[k];
-                let accs = o.accounts || (o.accountDetails ? [o.accountDetails] : []);
-                allTexts.push(...accs);
-            });
-
-            let finalStr = allTexts.join('\n');
-            navigator.clipboard.writeText(finalStr).then(() => {
-                showCustomAlert('All purchased accounts copied to clipboard!');
-            });
-        });
-    }
-
     function loadUserPaymentMethods() {
-        db.ref('paymentMethods').on('value', (snap) => {
+        db.ref('paymentMethods').once('value', (snap) => {
             let methods = snap.val() || {};
-            let listDiv = document.getElementById('user-payment-methods-list');
-            listDiv.innerHTML = '';
+            let container = document.getElementById('user-payment-methods-list');
+            container.innerHTML = '';
 
             let keys = Object.keys(methods);
             if(keys.length === 0) {
-                listDiv.innerHTML = `<span class="text-sub small">No active payment methods found.</span>`;
+                container.innerHTML = `<div class="text-sub small">No payment methods available right now.</div>`;
+                selectedPaymentMethodData = null;
                 return;
             }
 
-            keys.forEach((k, index) => {
+            keys.forEach((k, idx) => {
                 let m = methods[k];
-                let nameLower = m.name.toLowerCase();
+                let nameLower = (m.name || '').toLowerCase();
                 let logoClass = 'logo-default';
                 let shortText = m.name.substring(0, 3).toUpperCase();
 
                 if(nameLower.includes('bkash')) { logoClass = 'logo-bkash'; shortText = 'bKash'; }
                 else if(nameLower.includes('nagad')) { logoClass = 'logo-nagad'; shortText = 'Nagad'; }
                 else if(nameLower.includes('rocket')) { logoClass = 'logo-rocket'; shortText = 'Rocket'; }
+                else if(nameLower.includes('binance') || nameLower.includes('binnace')) { logoClass = 'logo-binance'; shortText = 'BIN'; }
                 else if(nameLower.includes('upay')) { logoClass = 'logo-upay'; shortText = 'Upay'; }
 
-                let isSelectedClass = index === 0 ? 'selected' : '';
-                if(index === 0) {
-                    selectedPaymentMethodData = { name: m.name, number: m.number, type: m.type };
+                let isSelected = idx === 0 ? 'selected' : '';
+                if(idx === 0) {
+                    selectedPaymentMethodData = m;
+                    updateDepositUIForMethod(m.name);
                 }
 
-                listDiv.innerHTML += `
-                    <div class="pay-method-card ${isSelectedClass}" id="pay-method-card-${k}" onclick='selectThisPaymentMethod("${k}", ${JSON.stringify(m)})'>
-                        <div class="d-flex align-items-center gap-3">
-                            <div class="pay-logo ${logoClass}">${shortText}</div>
-                            <div>
-                                <div class="fw-bold text-white" style="font-size: 14px;">${m.name}</div>
-                                <div class="text-sub" style="font-size: 12px;">${m.type} Account</div>
-                            </div>
-                        </div>
-                        <div class="form-check m-0">
-                            <input class="form-check-input" type="radio" name="payMethodRadio" id="radio-${k}" ${index === 0 ? 'checked' : ''} style="cursor: pointer;">
-                        </div>
+                container.innerHTML += `
+                    <div class="pay-method-card ${isSelected}" onclick="selectPaymentMethodItem(this, '${k}', '${escapeHtml(m.name)}', '${escapeHtml(m.type)}', '${escapeHtml(m.number)}')">
+                        <div class="pay-logo ${logoClass}">${shortText}</div>
+                        <div class="fw-bold" style="font-size: 13px;">${escapeHtml(m.name)}</div>
+                        <div class="text-sub" style="font-size: 10px;">${escapeHtml(m.type)}</div>
                     </div>
                 `;
             });
         });
     }
 
-    function selectThisPaymentMethod(key, methodObj) {
+    function selectPaymentMethodItem(cardElement, key, name, type, number) {
         document.querySelectorAll('.pay-method-card').forEach(el => el.classList.remove('selected'));
-        document.querySelectorAll('input[name="payMethodRadio"]').forEach(el => el.checked = false);
-
-        let card = document.getElementById(`pay-method-card-${key}`);
-        let radio = document.getElementById(`radio-${key}`);
-        if(card) card.classList.add('selected');
-        if(radio) radio.checked = true;
-
-        selectedPaymentMethodData = methodObj;
+        cardElement.classList.add('selected');
+        selectedPaymentMethodData = { name, type, number };
+        updateDepositUIForMethod(name);
     }
 
     function proceedToPaymentInstruction() {
-        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
-        if(isNaN(amount) || amount < 20) return showCustomAlert('Minimum deposit amount is ৳20!');
-        if(!selectedPaymentMethodData) return showCustomAlert('Please select a payment method!');
+        let inputVal = parseFloat(document.getElementById('deposit-input-amount').value);
+        if(!selectedPaymentMethodData) {
+            return showCustomAlert('Please select a payment method!');
+        }
 
+        let nameLower = selectedPaymentMethodData.name.toLowerCase();
+        let isBdtMethod = nameLower.includes('bkash') || nameLower.includes('nagad') || nameLower.includes('rocket') || nameLower.includes('upay');
+
+        let totalBdt, finalUsdt;
+        if(isBdtMethod) {
+            if(isNaN(inputVal) || inputVal < 20) {
+                return showCustomAlert('Minimum deposit amount is 20 BDT!');
+            }
+            totalBdt = inputVal;
+            finalUsdt = (inputVal / currentBinanceRate).toFixed(2);
+        } else {
+            let minUsdt = parseFloat((20 / currentBinanceRate).toFixed(2));
+            if(isNaN(inputVal) || inputVal < minUsdt) {
+                return showCustomAlert(`Minimum deposit amount is ${minUsdt} USDT!`);
+            }
+            finalUsdt = inputVal;
+            totalBdt = Math.round(inputVal * currentBinanceRate);
+        }
+        
         document.getElementById('deposit-step-1').style.display = 'none';
         document.getElementById('deposit-step-2').style.display = 'flex';
 
-        let name = selectedPaymentMethodData.name;
-        let nameLower = name.toLowerCase();
-        let logoClass = 'logo-default';
-        let shortText = name.substring(0, 3).toUpperCase();
-        let dialCode = '*247#';
+        document.getElementById('instruction-method-title').innerText = `${selectedPaymentMethodData.name} (${selectedPaymentMethodData.type})`;
+        
+        if(isBdtMethod) {
+            document.getElementById('instruction-amount-display').innerText = `৳${totalBdt} BDT ≈ ${finalUsdt} USDT`;
+        } else {
+            document.getElementById('instruction-amount-display').innerText = `${finalUsdt} USDT`;
+        }
 
-        if(nameLower.includes('bkash')) { logoClass = 'logo-bkash'; shortText = 'bKash'; dialCode = '*247#'; }
-        else if(nameLower.includes('nagad')) { logoClass = 'logo-nagad'; shortText = 'Nagad'; dialCode = '*167#'; }
-        else if(nameLower.includes('rocket')) { logoClass = 'logo-rocket'; shortText = 'Rocket'; dialCode = '*322#'; }
-        else if(nameLower.includes('upay')) { logoClass = 'logo-upay'; shortText = 'Upay'; dialCode = '*268#'; }
-
+        let stepsBox = document.getElementById('instruction-steps-box');
+        
         let logoDiv = document.getElementById('instruction-method-logo');
-        logoDiv.className = `pay-logo ${logoClass} mx-auto mb-2`;
-        logoDiv.innerText = shortText;
+        logoDiv.className = "pay-logo mx-auto mb-2 logo-default";
+        if(nameLower.includes('bkash')) logoDiv.className = "pay-logo mx-auto mb-2 logo-bkash";
+        else if(nameLower.includes('nagad')) logoDiv.className = "pay-logo mx-auto mb-2 logo-nagad";
+        else if(nameLower.includes('rocket')) logoDiv.className = "pay-logo mx-auto mb-2 logo-rocket";
+        else if(nameLower.includes('binance') || nameLower.includes('binnace')) logoDiv.className = "pay-logo mx-auto mb-2 logo-binance";
+        else if(nameLower.includes('upay')) logoDiv.className = "pay-logo mx-auto mb-2 logo-upay";
+        logoDiv.innerText = selectedPaymentMethodData.name.substring(0, 4);
 
-        document.getElementById('instruction-method-title').innerText = `${name} Payment`;
-        document.getElementById('instruction-amount-display').innerText = `৳${amount.toFixed(2)} BDT`;
-        document.getElementById('instruction-dial-code').innerText = dialCode;
-        document.getElementById('instruction-app-name').innerText = name;
-        document.getElementById('instruction-agent-number').innerText = selectedPaymentMethodData.number;
-        document.getElementById('instruction-amount-text').innerText = `৳${amount.toFixed(2)} BDT`;
-        document.getElementById('instruction-method-name-pin').innerText = name;
-        document.getElementById('deposit-trx-input').value = '';
+        if(!isBdtMethod) {
+            stepsBox.innerHTML = `
+                <div class="d-flex align-items-start gap-3">
+                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">1</span>
+                    <div>Open your <span class="fw-bold">${escapeHtml(selectedPaymentMethodData.name)}</span> app and go to Pay / Transfer.</div>
+                </div>
+                <div class="d-flex align-items-start gap-3 align-items-center">
+                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">2</span>
+                    <div class="flex-grow-1">
+                        Send to Pay ID / Address: <span class="text-info fw-bold font-monospace">${escapeHtml(selectedPaymentMethodData.number)}</span>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('${selectedPaymentMethodData.number}').then(()=>showCustomAlert('Copied!'))" class="btn btn-sm btn-warning text-dark py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                </div>
+                <div class="d-flex align-items-start gap-3 align-items-center">
+                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">3</span>
+                    <div class="flex-grow-1">
+                        Send exact amount: <span class="text-info fw-bold">${finalUsdt} USDT</span>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('${finalUsdt}').then(()=>showCustomAlert('Copied!'))" class="btn btn-sm btn-warning text-dark py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <span class="badge bg-warning text-dark rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">4</span>
+                    <div>Copy the Transaction ID / Hash and paste it below.</div>
+                </div>
+            `;
+        } else {
+            stepsBox.innerHTML = `
+                <div class="d-flex align-items-start gap-3">
+                    <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">1</span>
+                    <div>Open your <span class="fw-bold">${escapeHtml(selectedPaymentMethodData.name)}</span> app.</div>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">2</span>
+                    <div>Choose: <span class="text-success fw-bold">${escapeHtml(selectedPaymentMethodData.type)}</span></div>
+                </div>
+                <div class="d-flex align-items-start gap-3 align-items-center">
+                    <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">3</span>
+                    <div class="flex-grow-1">
+                        Enter Number: <span class="text-info fw-bold font-monospace">${escapeHtml(selectedPaymentMethodData.number)}</span>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('${selectedPaymentMethodData.number}').then(()=>showCustomAlert('Copied!'))" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                </div>
+                <div class="d-flex align-items-start gap-3 align-items-center">
+                    <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">4</span>
+                    <div class="flex-grow-1">
+                        Enter Amount: <span class="text-info fw-bold">৳${totalBdt} BDT</span>
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('${totalBdt}').then(()=>showCustomAlert('Copied!'))" class="btn btn-sm btn-success py-1 px-3 rounded-pill fw-bold" style="font-size: 12px;"><i class="fa-solid fa-copy me-1"></i>Copy</button>
+                </div>
+                <div class="d-flex align-items-start gap-3">
+                    <span class="badge bg-success rounded-circle p-2" style="width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;">5</span>
+                    <div>Enter your PIN to confirm and collect TrxID.</div>
+                </div>
+            `;
+        }
     }
 
     function backToDepositStep1() {
@@ -1276,77 +1797,155 @@
         document.getElementById('deposit-step-1').style.display = 'flex';
     }
 
-    function copyInstructionNumber() {
-        let num = selectedPaymentMethodData ? selectedPaymentMethodData.number : '';
-        if(num) {
-            navigator.clipboard.writeText(num).then(() => {
-                showCustomAlert(`Number ${num} copied successfully!`);
-            });
-        }
-    }
-
-    function copyInstructionAmount() {
-        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
-        if(!isNaN(amount)) {
-            navigator.clipboard.writeText(amount.toString()).then(() => {
-                showCustomAlert(`Amount ${amount} copied successfully!`);
-            });
-        }
-    }
-
     function submitFinalDepositRequest() {
-        let email = localStorage.getItem('apex_logged_user');
-        let amount = parseFloat(document.getElementById('deposit-input-amount').value);
+        let inputVal = parseFloat(document.getElementById('deposit-input-amount').value);
         let trx = document.getElementById('deposit-trx-input').value.trim();
+        if(!trx) return showCustomAlert('Please enter Transaction ID (TrxID)!');
 
-        if(!trx) return showCustomAlert('Please enter your Transaction ID (TrxID)!');
-        let methodStr = `${selectedPaymentMethodData.name} (${selectedPaymentMethodData.type}: ${selectedPaymentMethodData.number})`;
+        let nameLower = selectedPaymentMethodData.name.toLowerCase();
+        let isBdtMethod = nameLower.includes('bkash') || nameLower.includes('nagad') || nameLower.includes('rocket') || nameLower.includes('upay');
+
+        let totalBdt, finalUsdt;
+        if(isBdtMethod) {
+            totalBdt = inputVal;
+            finalUsdt = parseFloat((inputVal / currentBinanceRate).toFixed(2));
+        } else {
+            finalUsdt = inputVal;
+            totalBdt = Math.round(inputVal * currentBinanceRate);
+        }
+
+        let email = localStorage.getItem('apex_logged_user');
 
         db.ref('deposits').push({
             email: email,
-            method: methodStr,
-            amount: amount,
+            method: `${selectedPaymentMethodData.name} (${selectedPaymentMethodData.type})`,
+            amount: totalBdt,
+            usdt: finalUsdt,
             trx: trx,
             status: 'Pending',
-            date: new Date().toLocaleString()
+            timestamp: Date.now()
+        }).then(() => {
+            showCustomAlert('Deposit request submitted successfully! Please wait for admin approval.');
+            document.getElementById('deposit-trx-input').value = '';
+            document.getElementById('deposit-input-amount').value = '';
+            document.getElementById('auto-bdt-show').style.display = 'none';
+            switchUserTab('history');
         });
-
-        document.getElementById('deposit-input-amount').value = '';
-        document.getElementById('deposit-trx-input').value = '';
-        showCustomAlert('Deposit request submitted successfully!');
-        switchUserTab('history');
     }
 
     function loadUserDepositHistory() {
         let email = localStorage.getItem('apex_logged_user');
-        db.ref('deposits').on('value', (snap) => {
+        let thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
+
+        db.ref('deposits').once('value', (snap) => {
             let deposits = snap.val() || {};
             let tbody = document.getElementById('user-deposit-history-tbody');
             tbody.innerHTML = '';
 
             let keys = Object.keys(deposits);
-            let userDeps = keys.filter(k => deposits[k].email === email);
+            let userDeps = [];
+
+            keys.forEach(k => {
+                let d = deposits[k];
+                if(d.timestamp && d.timestamp < thirtyDaysAgo) {
+                    db.ref(`deposits/${k}`).remove();
+                } else if(d.email === email) {
+                    userDeps.push(d);
+                }
+            });
 
             if(userDeps.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="4" class="text-center text-sub py-4">No deposit history found.</td></tr>`;
                 return;
             }
 
-            userDeps.reverse().forEach(k => {
-                let d = deposits[k];
-                let badgeClass = d.status === 'Approved' ? 'bg-success' : (d.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark');
+            userDeps.reverse().forEach(d => {
+                let statusHtml = d.status === 'Approved' ? '<span class="text-success fw-bold">Approved</span>' : (d.status === 'Rejected' ? '<span class="text-danger fw-bold">Rejected</span>' : '<span class="text-warning fw-bold">Pending</span>');
                 tbody.innerHTML += `
                     <tr>
-                        <td>${d.method}</td>
-                        <td class="fw-bold text-success">৳${d.amount}</td>
-                        <td class="text-info font-monospace">${d.trx}</td>
-                        <td><span class="badge ${badgeClass}">${d.status}</span></td>
+                        <td>${escapeHtml(d.method)}</td>
+                        <td><strong class="text-success">৳${d.amount}</strong></td>
+                        <td><code>${escapeHtml(d.trx)}</code></td>
+                        <td>${statusHtml}</td>
                     </tr>
                 `;
             });
         });
     }
-</script>
 
+    function loadUserOrders() {
+        let email = localStorage.getItem('apex_logged_user');
+        let ordersRef = db.ref('orders');
+        let sevenDaysAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
+
+        ordersRef.once('value', (snap) => {
+            let orders = snap.val() || {};
+            let tbody = document.getElementById('user-orders-table-tbody');
+            tbody.innerHTML = '';
+
+            let keys = Object.keys(orders || {});
+            let userOrders = [];
+
+            keys.forEach(k => {
+                let o = orders[k];
+                if(o.timestamp && o.timestamp < sevenDaysAgo) {
+                    db.ref(`orders/${k}`).remove();
+                } else if(o.user === email) {
+                    userOrders.push({ key: k, ...o });
+                }
+            });
+
+            if(userOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-sub py-4">No purchased orders found.</td></tr>`;
+                return;
+            }
+
+            userOrders.reverse().forEach(o => {
+                let orderId = o.orderId || ('#' + o.key.substring(0, 6));
+                let accountsList = o.accounts || (o.accountDetails ? [o.accountDetails] : []);
+                let qtyVal = o.quantity || accountsList.length;
+                let totalCost = o.totalPrice || 0;
+                let combinedText = accountsList.join('\n');
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><span class="font-monospace text-info">${orderId}</span></td>
+                        <td><span style="font-size: 11px;">${escapeHtml(o.date || 'Recent')}</span></td>
+                        <td><strong class="text-main">${escapeHtml(o.category)}</strong></td>
+                        <td>${qtyVal}</td>
+                        <td><strong class="text-success">৳${totalCost}</strong></td>
+                        <td>
+                            <button onclick="viewOrderAccounts('${escapeHtml(o.category)}', '${orderId}', \`${escapeHtml(combinedText)}\`)" class="btn btn-sm btn-outline-info rounded-pill px-3 py-1 fw-bold" style="font-size: 12px;"><i class="fa-solid fa-eye me-1"></i> View</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        });
+    }
+
+    function viewOrderAccounts(catName, orderId, accountsText) {
+        document.getElementById('order-view-title-head').innerHTML = `<i class="fa-solid fa-eye me-2"></i>Order ${orderId}`;
+        document.getElementById('order-view-meta').innerText = `Category: ${catName}`;
+        document.getElementById('order-view-accounts-box').innerText = accountsText;
+        document.getElementById('order-view-modal').style.display = 'flex';
+    }
+
+    function copyAllOrders() {
+        let email = localStorage.getItem('apex_logged_user');
+        db.ref('orders').once('value', snap => {
+            let orders = snap.val() || {};
+            let allAccs = [];
+            Object.values(orders).forEach(o => {
+                if(o.user === email && o.accounts) {
+                    allAccs.push(...o.accounts);
+                }
+            });
+            if(allAccs.length === 0) return showCustomAlert('No accounts found to copy.');
+            navigator.clipboard.writeText(allAccs.join('\n')).then(() => {
+                showCustomAlert('All purchased accounts copied successfully!');
+            });
+        });
+    }
+</script>
 </body>
 </html>
