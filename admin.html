@@ -254,8 +254,8 @@
       </div>
 
       <div class="card-panel" style="border-color: rgba(255, 123, 0, 0.4);">
-        <h5 class="text-warning mb-3"><i class="fa-solid fa-plus-circle me-2"></i>Add Fake Available Count Option</h5>
-        <div class="row g-3">
+        <h5 class="text-warning mb-3"><i class="fa-solid fa-plus-circle me-2"></i>Add & Manage Fake Stocks</h5>
+        <div class="row g-3 mb-4">
           <div class="col-md-4">
             <label class="form-label">Select Sub-Category</label>
             <select id="fakeStockCategory" class="form-select"></select>
@@ -271,6 +271,23 @@
           <div class="col-md-2 d-flex align-items-end">
             <button class="btn btn-warning w-100 fw-bold text-dark" onclick="addFakeStock()">Add Fake</button>
           </div>
+        </div>
+
+        <h6 class="text-warning mb-3 fw-bold"><i class="fa-solid fa-ghost me-2"></i>Existing Fake Stocks List</h6>
+        <div style="overflow:auto">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Category</th>
+                <th>Fake Count</th>
+                <th>Price</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="admin-fake-stocks-tbody">
+              <tr><td colspan="4" class="text-muted text-center py-3">No fake stocks found</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -468,7 +485,7 @@
     }
 
     if(name==='categories') loadCategories();
-    if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); }
+    if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); renderAdminFakeStocks(); }
     if(name==='stock-view') loadViewStockCategoryOptions();
     if(name==='deposits') loadDeposits();
     if(name==='payments') { loadPayments(); loadSupport(); loadBinanceRateSettings(); loadUserNotificationSetting(); }
@@ -588,6 +605,40 @@
     db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('fakeStockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
   }
 
+  function renderAdminFakeStocks() {
+    db.ref('fakeStocks').once('value', (snapshot) => {
+      let fakeStocks = snapshot.val() || {};
+      let tbody = document.getElementById('admin-fake-stocks-tbody');
+      tbody.innerHTML = '';
+      let keys = Object.keys(fakeStocks);
+      if(keys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">No fake stocks found</td></tr>';
+        return;
+      }
+      keys.forEach(key => {
+        let item = fakeStocks[key];
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><strong>${escapeHtml(item.category)}</strong></td>
+            <td><span class="badge-pending">${item.fakeCount}</span></td>
+            <td>৳${item.price}</td>
+            <td>
+              <button class="btn-delete" onclick="deleteFakeStock('${key}')" title="Remove Fake Stock"><i class="fa-solid fa-trash"></i></button>
+            </td>
+          </tr>
+        `);
+      });
+    });
+  }
+
+  function deleteFakeStock(key) {
+    if(!confirm('Are you sure you want to remove this fake stock?')) return;
+    db.ref('fakeStocks/' + key).remove().then(() => {
+      showToast('Fake stock removed successfully!');
+      renderAdminFakeStocks();
+    }).catch(e => showToast('Error: ' + e.message));
+  }
+
   function addFakeStock(){
     const cat = document.getElementById('fakeStockCategory').value.trim();
     const fakeCount = parseInt(document.getElementById('fakeStockCount').value);
@@ -600,6 +651,7 @@
       document.getElementById('fakeStockCount').value = '';
       document.getElementById('fakeStockPrice').value = '';
       showToast('Fake stock count added successfully!');
+      renderAdminFakeStocks();
     });
   }
 
@@ -893,7 +945,6 @@
       return;
     }
 
-    // ডাবল ডাবল ইউজার রিমুভ করার জন্য ইউনিক ইমেইল ফিল্টার করা
     const uniqueUsersMap = new Map();
     entries.forEach(([safeKey, u]) => {
       if (u && u.email) {
@@ -906,7 +957,6 @@
 
     let uniqueEntries = Array.from(uniqueUsersMap.values());
 
-    // Old to New (পুরানো থেকে নতুন) অর্ডারে সাজানো
     uniqueEntries.sort((a, b) => {
       let timeA = a.lastLogin || a.memberSince || 0;
       let timeB = b.lastLogin || b.memberSince || 0;
