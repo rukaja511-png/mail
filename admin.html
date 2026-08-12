@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mail Market — Admin Panel</title>
+  <title>Mail Market — Platform & Admin</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -42,7 +42,6 @@
     .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:10px;color:var(--text-muted);text-decoration:none;font-weight:500;margin-bottom:6px;transition:all 0.2s ease;}
     .sidebar-menu a.active,.sidebar-menu a:hover{background:var(--accent);color:#fff;box-shadow:0 4px 12px rgba(79,70,229,0.3);}
 
-    /* Mobile Header Bar */
     .mobile-topbar{display:none;align-items:center;justify-content:space-between;background:var(--bg-sidebar);padding:12px 20px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:1040;}
     .mobile-menu-btn{background:var(--card-bg);border:1px solid var(--border-color);color:#fff;padding:8px 12px;border-radius:8px;font-size:18px;cursor:pointer;}
 
@@ -131,8 +130,6 @@
 
 <!-- ADMIN MAIN -->
 <div id="admin-app" style="display:none">
-  
-  <!-- Mobile Top Navigation Bar -->
   <div class="mobile-topbar">
     <div style="display:flex;align-items:center;gap:10px;font-weight:700;color:#fff;">
       <div style="width:32px;height:32px;border-radius:8px;background:var(--accent);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved"></i></div>
@@ -176,6 +173,27 @@
           <div><div class="stat-title">Pending Deposits</div><div id="statDeposits" class="stat-number">0</div></div>
         </div>
       </div>
+
+      <div class="table-card mt-4">
+        <h5><i class="fa-solid fa-receipt text-warning me-2"></i>Last 10 Purchases</h5>
+        <div style="overflow:auto">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>User Email</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Total Price</th>
+                <th>Date</th>
+              </tr>
+            </thead>
+            <tbody id="dashboardLast10OrdersBody">
+              <tr><td colspan="6" class="text-muted text-center py-3">Loading recent purchases...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
     <section id="tab-categories" style="display:none">
@@ -212,7 +230,8 @@
 
     <section id="tab-stocks" style="display:none">
       <h1>Add Stocks</h1>
-      <div class="card-panel">
+      <div class="card-panel mb-4">
+        <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload</h5>
         <div class="row g-3">
           <div class="col-md-5">
             <label class="form-label">Select Sub-Category</label>
@@ -228,9 +247,30 @@
           </div>
           <div class="col-12">
             <label class="form-label">Accounts (one per line)</label>
-            <textarea id="stockAccounts" class="form-control" rows="5" placeholder="email:password"></textarea>
+            <textarea id="stockAccounts" class="form-control" rows="4" placeholder="email:password"></textarea>
           </div>
-          <div class="col-12 text-end"><button class="btn btn-success" onclick="uploadStocks()">Upload Stocks</button></div>
+          <div class="col-12 text-end"><button class="btn btn-success" onclick="uploadStocks()">Upload Real Stocks</button></div>
+        </div>
+      </div>
+
+      <div class="card-panel" style="border-color: rgba(255, 123, 0, 0.4);">
+        <h5 class="text-warning mb-3"><i class="fa-solid fa-plus-circle me-2"></i>Add Fake Available Count Option</h5>
+        <div class="row g-3">
+          <div class="col-md-4">
+            <label class="form-label">Select Sub-Category</label>
+            <select id="fakeStockCategory" class="form-select"></select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fake Count to Add</label>
+            <input id="fakeStockCount" type="number" class="form-control" placeholder="e.g. 50">
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Fake Price (BDT)</label>
+            <input id="fakeStockPrice" type="number" class="form-control" placeholder="e.g. 25">
+          </div>
+          <div class="col-md-2 d-flex align-items-end">
+            <button class="btn btn-warning w-100 fw-bold text-dark" onclick="addFakeStock()">Add Fake</button>
+          </div>
         </div>
       </div>
     </section>
@@ -299,6 +339,18 @@
 
     <section id="tab-payments" style="display:none">
       <h1>Payments & Support Settings</h1>
+      <div class="card-panel mb-3" style="border-color: #3b82f6;">
+        <div class="row g-3">
+          <div class="col-md-8">
+            <label class="form-label" style="color: #60a5fa;">Send Live Notification to User Panels</label>
+            <input id="adminNotificationInput" class="form-control" placeholder="Type notification message here to broadcast...">
+          </div>
+          <div class="col-md-4 d-flex align-items-end gap-2">
+            <button class="btn btn-primary w-50" onclick="saveUserNotification()">Send</button>
+            <button class="btn btn-outline-danger w-50" onclick="clearUserNotification()">Clear</button>
+          </div>
+        </div>
+      </div>
       
       <div class="card-panel mb-3" style="border-color: #fcd535;">
         <div class="row g-3">
@@ -411,16 +463,15 @@
     document.getElementById('m-'+name).classList.add('active');
     document.getElementById('tab-'+name).style.display='block';
     
-    // Auto close sidebar on mobile when a tab is clicked
     if(window.innerWidth <= 991) {
       document.getElementById('adminSidebar').classList.remove('mobile-show');
     }
 
     if(name==='categories') loadCategories();
-    if(name==='stocks') loadCategoryOptions();
+    if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); }
     if(name==='stock-view') loadViewStockCategoryOptions();
     if(name==='deposits') loadDeposits();
-    if(name==='payments') { loadPayments(); loadSupport(); loadBinanceRateSettings(); }
+    if(name==='payments') { loadPayments(); loadSupport(); loadBinanceRateSettings(); loadUserNotificationSetting(); }
     if(name==='users') loadUsers();
     if(name==='dashboard') loadDashboard();
   }
@@ -442,6 +493,36 @@
     });
     db.ref('stocks').once('value',s=>{ const avail=Object.values(s.val()||{}).filter(x=>x.status==='available').length; document.getElementById('statStocks').innerText=avail; });
     db.ref('deposits').once('value',d=>{ const pending=Object.values(d.val()||{}).filter(x=>x.status==='Pending').length; document.getElementById('statDeposits').innerText=pending; });
+    loadDashboardLast10Purchases();
+  }
+
+  function loadDashboardLast10Purchases() {
+    db.ref('orders').once('value', snap => {
+      const ordersData = snap.val() || {};
+      const tbody = document.getElementById('dashboardLast10OrdersBody');
+      tbody.innerHTML = '';
+      let keys = Object.keys(ordersData);
+      if(keys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">No purchases found yet</td></tr>';
+        return;
+      }
+      keys.sort((a, b) => (ordersData[b].timestamp || 0) - (ordersData[a].timestamp || 0));
+      let last10Keys = keys.slice(0, 10);
+
+      last10Keys.forEach(k => {
+        let o = ordersData[k];
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><code>${escapeHtml(o.orderId || '#---')}</code></td>
+            <td>${escapeHtml(o.user || '-')}</td>
+            <td>${escapeHtml(o.category || '-')}</td>
+            <td>${o.quantity || 1}</td>
+            <td>৳${o.totalPrice || 0}</td>
+            <td>${escapeHtml(o.date || '-')}</td>
+          </tr>
+        `);
+      });
+    });
   }
 
   function addCategory(){
@@ -451,7 +532,7 @@
     if(!main||!sub){ showToast('Enter main and sub category'); return; }
     db.ref('categories').push({cat:main, subCat:sub, description:desc, status:'ON'}).then(()=>{ 
       document.getElementById('catMain').value=''; document.getElementById('catSub').value=''; document.getElementById('catDesc').value=''; 
-      showToast('Category added successfully'); loadCategories(); loadCategoryOptions(); 
+      showToast('Category added successfully'); loadCategories(); loadCategoryOptions(); loadFakeCategoryOptions();
     });
   }
 
@@ -501,6 +582,25 @@
 
   function loadCategoryOptions(){
     db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('stockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+  }
+
+  function loadFakeCategoryOptions(){
+    db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('fakeStockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+  }
+
+  function addFakeStock(){
+    const cat = document.getElementById('fakeStockCategory').value.trim();
+    const fakeCount = parseInt(document.getElementById('fakeStockCount').value);
+    const fakePrice = parseFloat(document.getElementById('fakeStockPrice').value);
+    if(!cat) return showToast('Select category');
+    if(isNaN(fakeCount) || fakeCount <= 0) return showToast('Enter valid fake count');
+    if(isNaN(fakePrice) || fakePrice < 0) return showToast('Enter valid price');
+
+    db.ref('fakeStocks').push({ category: cat, fakeCount: fakeCount, price: fakePrice }).then(() => {
+      document.getElementById('fakeStockCount').value = '';
+      document.getElementById('fakeStockPrice').value = '';
+      showToast('Fake stock count added successfully!');
+    });
   }
 
   function loadViewStockCategoryOptions(){
@@ -647,136 +747,209 @@
     const body=document.getElementById('depositsBody'); body.innerHTML='';
     const keys=Object.keys(depositsCache||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No deposits found</td></tr>'; return; }
     keys.reverse().forEach(k=>{ const d=depositsCache[k]; if(status && d.status!==status) return; if(q && !(String(d.trx||'').toLowerCase().includes(q))) return;
-      const pill = providerPill(d.method || '');
       const statusHtml = d.status==='Approved' ? '<span class="badge-approved">Approved</span>' : (d.status==='Rejected' ? '<span class="badge-rejected">Rejected</span>':'<span class="badge-pending">Pending</span>');
       
       let trxContent = `<code style="color:#93c5fd">${escapeHtml(d.trx||'')}</code>`;
-      if(d.status==='Rejected' && d.reason) {
-        trxContent += `<div style="font-size:12px;color:#f87171;margin-top:4px">Reason: ${escapeHtml(d.reason)}</div>`;
-      }
-
-      const actions = d.status==='Pending' ? `<button class="btn btn-success btn-sm me-1" onclick="approve('${k}')">Approve</button><button class="btn btn-danger btn-sm" onclick="rejectPrompt('${k}')">Reject</button>` : '-';
-      
       body.insertAdjacentHTML('beforeend', `<tr>
-        <td><strong style="color:#fff">${escapeHtml((d.email||'').toLowerCase())}</strong></td>
-        <td>${pill}</td>
-        <td><strong style="color:var(--success)">৳${parseFloat(d.amount||0).toFixed(2)}</strong></td>
+        <td>${escapeHtml(d.email||'')}</td>
+        <td><span class="provider-pill">${escapeHtml(d.method||'')}</span></td>
+        <td><strong>৳${d.amount||0}</strong></td>
         <td>${trxContent}</td>
         <td>${statusHtml}</td>
-        <td>${actions}</td>
+        <td>
+          ${d.status==='Pending'?`
+            <button class="btn btn-sm btn-success me-1" onclick="approveDeposit('${k}','${d.email}','${d.amount}')">Approve</button>
+            <button class="btn btn-sm btn-danger" onclick="rejectDeposit('${k}')">Reject</button>
+          `:'-'}
+        </td>
       </tr>`);
     });
   }
-  function providerPill(method){
-    return `<span class="provider-pill">${escapeHtml(method || 'Other')}</span>`;
-  }
-  function approve(key){ db.ref(`deposits/${key}`).once('value',s=>{ const d=s.val(); if(!d||d.status!=='Pending') return; const safe=(d.email||'').toLowerCase().replace(/[@.]/g,'_'); db.ref(`balances/${safe}`).once('value',b=>{ const cur=b.val()||0; db.ref(`balances/${safe}`).set(cur + parseFloat(d.amount)); db.ref(`deposits/${key}/status`).set('Approved'); showToast('Deposit Approved'); loadDeposits(); loadDashboard(); }); }); }
-  function rejectPrompt(key){ const r = prompt('Enter rejection reason:'); if(!r) return; db.ref(`deposits/${key}`).update({status:'Rejected', reason:r}).then(()=>{ showToast('Deposit Rejected'); loadDeposits(); }); }
 
-  function saveSupport(){ 
-    const val = document.getElementById('supportInput').value.trim(); 
-    db.ref('settings/supportTelegram').set(val).then(()=>{ showToast('Support updated successfully!'); }); 
+  function approveDeposit(key, email, amount){
+    const safeKey = email.replace(/[@.]/g, '_');
+    const addAmt = parseFloat(amount);
+    db.ref(`balances/${safeKey}`).once('value', snap => {
+      const currentBal = parseFloat(snap.val() || 0);
+      const newBal = parseFloat((currentBal + addAmt).toFixed(2));
+      db.ref(`balances/${safeKey}`).set(newBal).then(() => {
+        db.ref(`deposits/${key}/status`).set('Approved').then(() => {
+          showToast('Deposit approved and balance updated successfully');
+          loadDeposits();
+          loadDashboard();
+        });
+      });
+    });
+  }
+
+  function rejectDeposit(key){
+    db.ref(`deposits/${key}/status`).set('Rejected').then(() => {
+      showToast('Deposit rejected');
+      loadDeposits();
+      loadDashboard();
+    });
+  }
+
+  function loadPayments(){
+    db.ref('paymentMethods').once('value', snap => {
+      const methods = snap.val() || {};
+      const tbody = document.getElementById('paymentsBody');
+      tbody.innerHTML = '';
+      const keys = Object.keys(methods);
+      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
+      keys.forEach(k => {
+        const m = methods[k];
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><strong>${escapeHtml(m.name)}</strong></td>
+            <td>${escapeHtml(m.type)}</td>
+            <td><code>${escapeHtml(m.number)}</code></td>
+            <td><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>
+        `);
+      });
+    });
+  }
+
+  function addPayment(){
+    const name = document.getElementById('payName').value.trim();
+    const type = document.getElementById('payType').value.trim();
+    const number = document.getElementById('payNumber').value.trim();
+    if(!name || !number) { showToast('Enter name and number/details'); return; }
+    db.ref('paymentMethods').push({ name, type, number }).then(() => {
+      document.getElementById('payName').value = '';
+      document.getElementById('payNumber').value = '';
+      showToast('Payment method added successfully');
+      loadPayments();
+    });
+  }
+
+  function removePayment(key){
+    if(!confirm('Delete payment method?')) return;
+    db.ref(`paymentMethods/${key}`).remove().then(() => {
+      showToast('Payment method removed');
+      loadPayments();
+    });
+  }
+
+  function saveSupport(){
+    const link = document.getElementById('supportInput').value.trim();
+    db.ref('settings/supportTelegram').set(link).then(() => showToast('Support link saved successfully'));
   }
 
   function loadSupport(){
     db.ref('settings/supportTelegram').once('value', snap => {
-      document.getElementById('supportInput').value = snap.val() || '';
+      if(snap.exists()) document.getElementById('supportInput').value = snap.val();
     });
   }
 
   function saveBinanceRate(){
     const rate = parseFloat(document.getElementById('binanceRateInput').value);
-    if(isNaN(rate) || rate <= 0) return showToast('Enter a valid dollar rate');
-    db.ref('settings/binanceRate').set(rate).then(()=>{
-      showToast('Binance dollar rate updated successfully!');
-    });
+    if(isNaN(rate) || rate <= 0) { showToast('Enter a valid rate'); return; }
+    db.ref('settings/binanceRate').set(rate).then(() => showToast('Binance dollar rate saved successfully'));
   }
 
   function loadBinanceRateSettings(){
     db.ref('settings/binanceRate').once('value', snap => {
-      document.getElementById('binanceRateInput').value = snap.val() || 120;
+      if(snap.exists()) document.getElementById('binanceRateInput').value = snap.val();
     });
   }
 
-  function addPayment(){ const name=document.getElementById('payName').value.trim(); const type=document.getElementById('payType').value.trim(); const num=document.getElementById('payNumber').value.trim(); if(!name||!num) return showToast('Fill all fields'); db.ref('paymentMethods').push({name:name,type:type,number:num}).then(()=>{ document.getElementById('payName').value=''; document.getElementById('payNumber').value=''; showToast('Payment method added'); loadPayments(); }); }
-  function loadPayments(){ db.ref('paymentMethods').once('value',snap=>{ const data=snap.val()||{}; const body=document.getElementById('paymentsBody'); body.innerHTML=''; const keys=Object.keys(data||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="4" class="text-muted text-center py-4">No payment methods</td></tr>'; return; } keys.forEach(k=>{ const p=data[k]; const pill = providerPill(p.name); body.insertAdjacentHTML('beforeend', `<tr><td>${pill}</td><td>${escapeHtml(p.type)}</td><td><code>${escapeHtml(p.number)}</code></td><td><button class="btn-delete" onclick="deletePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`); }); }); }
-  function deletePayment(k){ if(!confirm('Delete method?')) return; db.ref(`paymentMethods/${k}`).remove().then(()=>{ showToast('Deleted'); loadPayments(); }); }
+  function saveUserNotification(){
+    const text = document.getElementById('adminNotificationInput').value.trim();
+    if(!text) { showToast('Enter notification message'); return; }
+    db.ref('settings/userNotification').set(text).then(() => showToast('Notification broadcasted successfully to all user panels!'));
+  }
 
-  let usersCache = {}, balancesCache = {};
-  function loadUsers(){ db.ref('users').once('value',u=>{ usersCache = u.val()||{}; db.ref('balances').once('value',bSnap=>{ balancesCache = bSnap.val()||{}; renderUsers(); }); }); }
-  
+  function clearUserNotification(){
+    db.ref('settings/userNotification').set('').then(() => {
+      document.getElementById('adminNotificationInput').value = '';
+      showToast('Notification cleared from user panels');
+    });
+  }
+
+  function loadUserNotificationSetting(){
+    db.ref('settings/userNotification').once('value', snap => {
+      if(snap.exists()) document.getElementById('adminNotificationInput').value = snap.val();
+    });
+  }
+
+  let usersCacheData = {};
+  function loadUsers(){
+    db.ref('users').once('value', snap => {
+      usersCacheData = snap.val() || {};
+      renderUsers();
+    });
+  }
+
   function renderUsers(){
-    const searchVal = (document.getElementById('searchUserGmail').value || '').trim().toLowerCase();
-    const body = document.getElementById('usersBody'); 
-    body.innerHTML = ''; 
+    const q = (document.getElementById('searchUserGmail').value || '').trim().toLowerCase();
+    const tbody = document.getElementById('usersBody');
+    tbody.innerHTML = '';
+    
+    let entries = Object.entries(usersCacheData);
+    if(entries.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>';
+      return;
+    }
 
-    const keys = Object.keys(usersCache || {}); 
-    if(!keys.length){ 
-      body.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>'; 
-      return; 
-    } 
-
-    const uniqueUserMap = new Map();
-    keys.forEach(k => {
-      const user = usersCache[k];
-      if(user && user.email) {
-        const lowerEmail = user.email.toLowerCase().trim();
-        if(!uniqueUserMap.has(lowerEmail)) {
-          uniqueUserMap.set(lowerEmail, user);
+    // ডাবল ডাবল ইউজার রিমুভ করার জন্য ইউনিক ইমেইল ফিল্টার করা
+    const uniqueUsersMap = new Map();
+    entries.forEach(([safeKey, u]) => {
+      if (u && u.email) {
+        const emailLower = u.email.toLowerCase();
+        if (!uniqueUsersMap.has(emailLower)) {
+          uniqueUsersMap.set(emailLower, { safeKey, ...u });
         }
       }
     });
 
-    let foundCount = 0;
-    uniqueUserMap.forEach((user, lowerEmail) => { 
-      if(searchVal && !lowerEmail.includes(searchVal)) return;
-      
-      foundCount++;
-      const safe = lowerEmail.replace(/[@.]/g, '_'); 
-      const rawBal = parseFloat(balancesCache[safe] || 0);
-      const formattedBal = rawBal.toFixed(2);
+    let uniqueEntries = Array.from(uniqueUsersMap.values());
 
-      body.insertAdjacentHTML('beforeend', `
-        <tr>
-          <td>${escapeHtml(lowerEmail)}</td>
-          <td><strong style="color:var(--success)">৳${formattedBal}</strong></td>
-          <td>
-            <div class="d-flex align-items-center gap-2">
-              <input id="bal-${safe}" class="form-control form-control-sm" style="width:110px" placeholder="Amount">
-              <button class="btn btn-success btn-sm px-2" onclick="modifyBalance('${lowerEmail}','add')">+</button>
-              <button class="btn btn-danger btn-sm px-2" onclick="modifyBalance('${lowerEmail}','sub')">-</button>
-            </div>
-          </td>
-        </tr>
-      `); 
+    // Old to New (পুরানো থেকে নতুন) অর্ডারে সাজানো
+    uniqueEntries.sort((a, b) => {
+      let timeA = a.lastLogin || a.memberSince || 0;
+      let timeB = b.lastLogin || b.memberSince || 0;
+      return timeA - timeB; 
     });
 
-    if(foundCount === 0) {
-      body.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No matching users</td></tr>';
+    let found = 0;
+    uniqueEntries.forEach((u) => {
+      if(q && !String(u.email || '').toLowerCase().includes(q)) return;
+      found++;
+      
+      db.ref(`balances/${u.safeKey}`).once('value', balSnap => {
+        const bal = balSnap.val() || 0;
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><strong>${escapeHtml(u.email)}</strong></td>
+            <td><strong class="text-success">৳${bal}</strong></td>
+            <td>
+              <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="adjustUserBalance('${u.safeKey}', '${escapeHtml(u.email)}')">Edit Balance</button>
+            </td>
+          </tr>
+        `);
+      });
+    });
+
+    if(found === 0) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No matching users found</td></tr>';
     }
   }
 
-  function modifyBalance(email, action){ 
-    const lowerEmail = email.toLowerCase().trim();
-    const safe = lowerEmail.replace(/[@.]/g, '_'); 
-    const val = parseFloat(document.getElementById('bal-' + safe).value); 
-    if(isNaN(val) || val <= 0) return showToast('Enter valid amount'); 
-    
-    db.ref(`balances/${safe}`).once('value', s => { 
-      let cur = parseFloat(s.val() || 0);
-      let next = action === 'add' ? cur + val : cur - val; 
-      if(next < 0) next = 0; 
-      next = parseFloat(next.toFixed(2));
-
-      db.ref(`balances/${safe}`).set(next).then(() => { 
-        showToast('Balance updated'); 
-        loadUsers(); 
-        loadDashboard(); 
-      }); 
-    }); 
+  function adjustUserBalance(safeKey, email){
+    db.ref(`balances/${safeKey}`).once('value', snap => {
+      let cur = parseFloat(snap.val() || 0);
+      let val = prompt(`Adjust balance for ${email}\nCurrent Balance: ৳${cur}\nEnter new balance or amount adjustment (+/-):`);
+      if(val === null) return;
+      let newAmt = parseFloat(val);
+      if(isNaN(newAmt)) { showToast('Invalid amount'); return; }
+      db.ref(`balances/${safeKey}`).set(newAmt).then(() => {
+        showToast('Balance updated successfully');
+        renderUsers();
+      });
+    });
   }
-
-  firebase.auth().onAuthStateChanged(user => { if(user) initApp(); });
 </script>
 </body>
 </html>
