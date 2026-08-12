@@ -316,6 +316,20 @@
         .telegram-float:hover { transform: scale(1.1); color: #fff; }
         .profile-info-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 18px; }
         .btn-close-custom { background: transparent; border: none; color: var(--text-sub); font-size: 18px; cursor: pointer; }
+        
+        /* Global Notification Banner styling for User Panel */
+        .user-notification-banner {
+            background: linear-gradient(135deg, rgba(255, 123, 0, 0.15), rgba(255, 65, 108, 0.15));
+            border: 1px solid rgba(255, 123, 0, 0.3);
+            border-radius: 16px;
+            padding: 14px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body>
@@ -511,6 +525,15 @@
     </div>
 
     <div class="main-content">
+        <!-- Live Admin Broadcast Notification Banner -->
+        <div id="user-notification-banner-wrapper" style="display: none;" class="user-notification-banner">
+            <div class="d-flex align-items-center gap-3">
+                <div class="text-warning fs-4"><i class="fa-solid fa-bullhorn"></i></div>
+                <div style="font-size: 13px;" class="text-main fw-semibold" id="user-notification-text"></div>
+            </div>
+            <button onclick="dismissUserNotification()" class="btn-close-custom text-sub"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
         <div id="user-section-home" class="section-pane active">
             <div id="main-categories-container" class="main-categories-wrapper"></div>
             <div class="shop-grid" id="user-shop-subcategories-grid"></div>
@@ -717,7 +740,7 @@
     let actualUserPassword = '';
     let isPasswordVisible = false;
     let currentBinanceRate = 120;
-    let currentModalData = { categoryName: '', price: 0, stockCount: 0 };
+    let currentModalData = { categoryName: '', price: 0, stockCount: 0, isFake: false };
 
     function showCustomAlert(msg) {
         document.getElementById('custom-alert-message').innerText = msg;
@@ -733,8 +756,8 @@
         navigator.clipboard.writeText(document.getElementById('order-view-accounts-box').innerText).then(() => showCustomAlert('Copied successfully!'));
     }
 
-    function openPurchaseModal(catName, price, stockCount) {
-        currentModalData = { categoryName: catName, price: price, stockCount: stockCount };
+    function openPurchaseModal(catName, price, stockCount, isFake) {
+        currentModalData = { categoryName: catName, price: price, stockCount: stockCount, isFake: isFake };
         document.getElementById('modal-cat-name').innerText = catName;
         document.getElementById('modal-unit-price').innerText = `৳${price}`;
         document.getElementById('modal-stock-count').innerText = stockCount;
@@ -761,6 +784,12 @@
     }
 
     function confirmAndBuy() {
+        if (currentModalData.isFake) {
+            closePurchaseModal();
+            showCustomAlert('Server busy! Please try again later.');
+            return;
+        }
+
         let email = localStorage.getItem('apex_logged_user');
         if (!email) return showCustomAlert('Please login first!');
         let qty = parseInt(document.getElementById('modal-qty-input').value) || 1;
@@ -780,10 +809,10 @@
                 let stocks = stockSnap.val() || {};
                 let availableKeys = Object.keys(stocks).filter(k => stocks[k].category === currentModalData.categoryName && stocks[k].status === 'available');
                 if (availableKeys.length < qty) {
-                    errorBanner.innerText = `Stock shortage! Only ${availableKeys.length} available.`;
-                    errorBanner.style.display = 'block';
-                    return;
-                }
+    errorBanner.innerText = 'Server is busy';
+    errorBanner.style.display = 'block';
+    return;
+}
                 let keysToBuy = availableKeys.slice(0, qty);
                 let purchasedAccounts = [];
                 let timestamp = Date.now();
@@ -829,6 +858,7 @@
         }
         setupTelegramSupport();
         fetchBinanceRate();
+        listenToUserNotifications();
     };
 
     function fetchBinanceRate() {
@@ -838,6 +868,24 @@
                 if(selectedPaymentMethodData) updateDepositUIForMethod(selectedPaymentMethodData.name);
             }
         });
+    }
+
+    function listenToUserNotifications() {
+        db.ref('settings/userNotification').on('value', snap => {
+            const val = snap.val();
+            const banner = document.getElementById('user-notification-banner-wrapper');
+            const txt = document.getElementById('user-notification-text');
+            if (val && val.trim() !== '') {
+                txt.innerText = val;
+                banner.style.display = 'flex';
+            } else {
+                banner.style.display = 'none';
+            }
+        });
+    }
+
+    function dismissUserNotification() {
+        document.getElementById('user-notification-banner-wrapper').style.display = 'none';
     }
 
     function updateDepositUIForMethod(methodName) {
@@ -1045,55 +1093,71 @@
             let cats = catSnap.val() || {};
             db.ref('stocks').once('value', (stockSnap) => {
                 let stocks = stockSnap.val() || {};
-                let mainCatsSet = new Set(), catList = [];
-                Object.keys(cats).forEach(ckey => {
-                    let c = cats[ckey];
-                    if(c.status === 'ON') { mainCatsSet.add(c.cat); catList.push({ key: ckey, ...c }); }
-                });
-                let mainCats = Array.from(mainCatsSet);
-                let container = document.getElementById('main-categories-container');
-                container.innerHTML = '';
-                if(mainCats.length === 0) {
-                    container.innerHTML = `<div class="text-sub small">No categories added yet.</div>`;
-                    document.getElementById('user-shop-subcategories-grid').innerHTML = '';
-                    return;
-                }
-                if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) selectedMainCategory = mainCats[0];
+                db.ref('fakeStocks').once('value', (fakeSnap) => {
+                    let fakeStocks = fakeSnap.val() || {};
+                    let mainCatsSet = new Set(), catList = [];
+                    Object.keys(cats).forEach(ckey => {
+                        let c = cats[ckey];
+                        if(c.status === 'ON') { mainCatsSet.add(c.cat); catList.push({ key: ckey, ...c }); }
+                    });
+                    let mainCats = Array.from(mainCatsSet);
+                    let container = document.getElementById('main-categories-container');
+                    container.innerHTML = '';
+                    if(mainCats.length === 0) {
+                        container.innerHTML = `<div class="text-sub small">No categories added yet.</div>`;
+                        document.getElementById('user-shop-subcategories-grid').innerHTML = '';
+                        return;
+                    }
+                    if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) selectedMainCategory = mainCats[0];
 
-                mainCats.forEach(mCat => {
-                    container.innerHTML += `<div class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} ${escapeHtml(mCat)}</div>`;
-                });
+                    mainCats.forEach(mCat => {
+                        container.innerHTML += `<div class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} ${escapeHtml(mCat)}</div>`;
+                    });
 
-                let grid = document.getElementById('user-shop-subcategories-grid');
-                grid.innerHTML = '';
-                catList.filter(c => c.cat === selectedMainCategory).forEach((c) => {
-                    let catString = `${c.cat} - ${c.subCat}`;
-                    let availableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
-                    let price = availableStocks.length > 0 ? availableStocks[0].price : 0;
-                    let stockCount = availableStocks.length;
+                    let grid = document.getElementById('user-shop-subcategories-grid');
+                    grid.innerHTML = '';
+                    catList.filter(c => c.cat === selectedMainCategory).forEach((c) => {
+                        let catString = `${c.cat} - ${c.subCat}`;
+                        let realAvailableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
+                        
+                        let categoryFakeCount = 0;
+                        let fakePrice = 0;
+                        Object.values(fakeStocks).forEach(fs => {
+                            if (fs.category === catString) {
+                                categoryFakeCount += parseInt(fs.fakeCount || 0);
+                                if(fakePrice === 0) fakePrice = parseFloat(fs.price || 0);
+                            }
+                        });
 
-                    let actionBtnHtml = stockCount > 0 
-                        ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount})" class="buy-now-btn"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
-                        : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
+                        let stockCount = realAvailableStocks.length + categoryFakeCount;
+                        
+                        // Fix for undefined price: safely pull from the first available stock object or fallback to fakePrice
+                        let price = realAvailableStocks.length > 0 ? (realAvailableStocks[0].price || 0) : (fakePrice > 0 ? fakePrice : 0);
+                        let isFakeItem = realAvailableStocks.length === 0 && categoryFakeCount > 0;
 
-                    grid.innerHTML += `
-                        <div class="shop-item-card" onclick="toggleCardGlow(this)">
-                            <div>
-                                <h5 class="fw-bold mb-2 text-main" style="font-size: 19px;">${escapeHtml(c.subCat)}</h5>
-                                <div class="price-wrapper">
-                                    <span class="fw-extrabold fs-3 text-warning animated-price" style="color: #ff7b00 !important;">৳${price}</span>
-                                    <span class="text-sub" style="font-size: 12px;"> / account</span>
+                        let actionBtnHtml = stockCount > 0 
+                            ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount}, ${isFakeItem})" class="buy-now-btn"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
+                            : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
+
+                        grid.innerHTML += `
+                            <div class="shop-item-card" onclick="toggleCardGlow(this)">
+                                <div>
+                                    <h5 class="fw-bold mb-2 text-main" style="font-size: 19px;">${escapeHtml(c.subCat)}</h5>
+                                    <div class="price-wrapper">
+                                        <span class="fw-extrabold fs-3 text-warning animated-price" style="color: #ff7b00 !important;">৳${price}</span>
+                                        <span class="text-sub" style="font-size: 12px;"> / account</span>
+                                    </div>
+                                    ${c.description ? `<div class="item-description">${escapeHtml(c.description)}</div>` : ''}
                                 </div>
-                                ${c.description ? `<div class="item-description">${escapeHtml(c.description)}</div>` : ''}
-                            </div>
-                            <div>
-                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-sub" style="font-size: 13px;">Availability:</span>
-                                    <span class="stock-tag ${stockCount > 0 ? 'available' : 'out'}"><i class="fa-solid fa-${stockCount > 0 ? 'circle-check' : 'circle-xmark'}"></i> ${stockCount > 0 ? stockCount + ' available' : 'Out of stock'}</span>
+                                <div>
+                                    <div class="d-flex justify-content-between align-items-center mb-3">
+                                        <span class="text-sub" style="font-size: 13px;">Availability:</span>
+                                        <span class="stock-tag ${stockCount > 0 ? 'available' : 'out'}"><i class="fa-solid fa-${stockCount > 0 ? 'circle-check' : 'circle-xmark'}"></i> ${stockCount > 0 ? stockCount + ' available' : 'Out of stock'}</span>
+                                    </div>
+                                    ${actionBtnHtml}
                                 </div>
-                                ${actionBtnHtml}
-                            </div>
-                        </div>`;
+                            </div>`;
+                    });
                 });
             });
         });
@@ -1215,15 +1279,12 @@
         if(!trx) return showCustomAlert('Enter Transaction ID or Order ID!');
         if(isNaN(inputVal) || inputVal <= 0) return showCustomAlert('Enter a valid amount!');
 
-        // Check for duplicate TrxID in the database first
         db.ref('deposits').orderByChild('trx').equalTo(trx).once('value', (snapshot) => {
             if (snapshot.exists()) {
-                // Duplicate TrxID found! Pop-up warning:
                 showCustomAlert('This Transaction Id already-used 😤.');
                 return;
             }
 
-            // If unique, proceed to save deposit request
             let nameLower = selectedPaymentMethodData.name.toLowerCase();
             let isBdtMethod = ['bkash', 'nagad', 'rocket', 'upay'].some(m => nameLower.includes(m));
             let finalAmount = isBdtMethod ? inputVal : (inputVal * currentBinanceRate);
