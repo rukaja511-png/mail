@@ -394,10 +394,22 @@
       </div>
 
       <div class="card-panel mb-3">
+        <h5 class="text-info mb-3"><i class="fa-solid fa-credit-card me-2"></i>Add Payment Method with Logo</h5>
         <div class="row g-3">
           <div class="col-md-4"><label class="form-label">Method Name</label><input id="payName" class="form-control" placeholder="bKash / Binance / Upay"></div>
           <div class="col-md-4"><label class="form-label">Account Type</label><select id="payType" class="form-select"><option>Send Money</option><option>Cash Out</option><option>Personal</option><option>Agent</option><option>Binance Pay ID / USDT Address</option></select></div>
           <div class="col-md-4"><label class="form-label">Account Number / Details</label><input id="payNumber" class="form-control" placeholder="017xxxxxxxx or Wallet Address"></div>
+          
+          <!-- নতুন লোগো আপলোড বা লিংক দেওয়ার ফিল্ড -->
+          <div class="col-md-6">
+            <label class="form-label">Upload Logo Image</label>
+            <input id="payLogoFile" type="file" class="form-control" accept="image/*" onchange="convertLogoFile(event)">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Or Logo Image URL (Optional)</label>
+            <input id="payLogoUrl" class="form-control" placeholder="https://example.com/logo.png">
+          </div>
+
           <div class="col-12 text-end mt-2"><button class="btn btn-primary" onclick="addPayment()">Add Payment Method</button></div>
         </div>
       </div>
@@ -406,7 +418,7 @@
         <h5>Active Payment Methods</h5>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead><tr><th>Name</th><th>Type</th><th>Number</th><th>Action</th></tr></thead>
+            <thead><tr><th>Logo</th><th>Name</th><th>Type</th><th>Number</th><th>Action</th></tr></thead>
             <tbody id="paymentsBody"></tbody>
           </table>
         </div>
@@ -504,7 +516,7 @@
       const usersData = u.val()||{};
       const uniqueEmails = new Set();
       Object.values(usersData).forEach(user => {
-        if(user && user.email) uniqueEmails.add(user.email.toLowerCase());
+        if(user && user.email) uniqueEmails.add(user.email.toLowerCase().trim());
       });
       document.getElementById('statUsers').innerText = uniqueEmails.size; 
     });
@@ -819,7 +831,7 @@
   }
 
   function approveDeposit(key, email, amount){
-    const safeKey = email.replace(/[@.]/g, '_');
+    const safeKey = email.toLowerCase().trim().replace(/[@.]/g, '_');
     const addAmt = parseFloat(amount);
     db.ref(`balances/${safeKey}`).once('value', snap => {
       const currentBal = parseFloat(snap.val() || 0);
@@ -848,11 +860,13 @@
       const tbody = document.getElementById('paymentsBody');
       tbody.innerHTML = '';
       const keys = Object.keys(methods);
-      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
+      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
       keys.forEach(k => {
         const m = methods[k];
+        let logoHtml = m.logo ? `<img src="${m.logo}" alt="logo" style="width:32px;height:32px;object-fit:contain;border-radius:6px;background:#1f2937;padding:2px;">` : `<i class="fa-solid fa-wallet text-muted"></i>`;
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
+            <td>${logoHtml}</td>
             <td><strong>${escapeHtml(m.name)}</strong></td>
             <td>${escapeHtml(m.type)}</td>
             <td><code>${escapeHtml(m.number)}</code></td>
@@ -863,14 +877,35 @@
     });
   }
 
+  let uploadedLogoBase64 = '';
+  function convertLogoFile(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      uploadedLogoBase64 = ev.target.result;
+      showToast('Logo image loaded successfully!');
+    };
+    reader.readAsDataURL(file);
+  }
+
   function addPayment(){
     const name = document.getElementById('payName').value.trim();
     const type = document.getElementById('payType').value.trim();
     const number = document.getElementById('payNumber').value.trim();
+    const logoUrlInput = document.getElementById('payLogoUrl').value.trim();
+    
     if(!name || !number) { showToast('Enter name and number/details'); return; }
-    db.ref('paymentMethods').push({ name, type, number }).then(() => {
+
+    // লোগো হিসেবে ফাইল আপলোড করা বেসসিকোড অথবা ইউআরএল যা দেওয়া থাকে তা সেট হবে
+    const finalLogo = uploadedLogoBase64 || logoUrlInput || '';
+
+    db.ref('paymentMethods').push({ name, type, number, logo: finalLogo }).then(() => {
       document.getElementById('payName').value = '';
       document.getElementById('payNumber').value = '';
+      document.getElementById('payLogoUrl').value = '';
+      document.getElementById('payLogoFile').value = '';
+      uploadedLogoBase64 = '';
       showToast('Payment method added successfully');
       loadPayments();
     });
@@ -946,36 +981,32 @@
     }
 
     const uniqueUsersMap = new Map();
-    entries.forEach(([safeKey, u]) => {
+    entries.forEach(([key, u]) => {
       if (u && u.email) {
-        const emailLower = u.email.toLowerCase();
-        if (!uniqueUsersMap.has(emailLower)) {
-          uniqueUsersMap.set(emailLower, { safeKey, ...u });
+        const cleanEmail = u.email.toLowerCase().trim();
+        if (!uniqueUsersMap.has(cleanEmail)) {
+          const safeKey = cleanEmail.replace(/[@.]/g, '_');
+          uniqueUsersMap.set(cleanEmail, { safeKey, email: cleanEmail, originalEmail: u.email, firebaseKey: key });
         }
       }
     });
 
     let uniqueEntries = Array.from(uniqueUsersMap.values());
 
-    uniqueEntries.sort((a, b) => {
-      let timeA = a.lastLogin || a.memberSince || 0;
-      let timeB = b.lastLogin || b.memberSince || 0;
-      return timeA - timeB; 
-    });
-
     let found = 0;
     uniqueEntries.forEach((u) => {
-      if(q && !String(u.email || '').toLowerCase().includes(q)) return;
+      if(q && !u.email.includes(q)) return;
       found++;
       
       db.ref(`balances/${u.safeKey}`).once('value', balSnap => {
         const bal = balSnap.val() || 0;
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td><strong>${escapeHtml(u.email)}</strong></td>
+            <td><strong>${escapeHtml(u.originalEmail)}</strong></td>
             <td><strong class="text-success">৳${bal}</strong></td>
             <td>
-              <button class="btn btn-sm btn-outline-warning rounded-pill px-3" onclick="adjustUserBalance('${u.safeKey}', '${escapeHtml(u.email)}')">Edit Balance</button>
+              <button class="btn btn-sm btn-outline-warning rounded-pill px-3 me-1" onclick="adjustUserBalance('${u.safeKey}', '${escapeHtml(u.originalEmail)}')">Edit Balance</button>
+              <button class="btn btn-sm btn-danger rounded-pill px-3" onclick="deleteUser('${u.safeKey}', '${escapeHtml(u.originalEmail)}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
             </td>
           </tr>
         `);
@@ -997,6 +1028,31 @@
       db.ref(`balances/${safeKey}`).set(newAmt).then(() => {
         showToast('Balance updated successfully');
         renderUsers();
+      });
+    });
+  }
+
+  function deleteUser(safeKey, email){
+    if(!confirm(`Are you sure you want to delete user: ${email}?\nThis will remove user data and balance from database.`)) return;
+
+    let updates = {};
+    updates[`balances/${safeKey}`] = null;
+
+    db.ref('users').once('value', snap => {
+      let allUsers = snap.val() || {};
+      Object.keys(allUsers).forEach(k => {
+        let u = allUsers[k];
+        if(u && u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim()) {
+          updates[`users/${k}`] = null;
+        }
+      });
+
+      db.ref().update(updates).then(() => {
+        showToast('User deleted successfully from database!');
+        loadUsers();
+        loadDashboard();
+      }).catch(e => {
+        showToast('Error deleting user: ' + e.message);
       });
     });
   }
