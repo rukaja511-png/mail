@@ -809,10 +809,10 @@
                 let stocks = stockSnap.val() || {};
                 let availableKeys = Object.keys(stocks).filter(k => stocks[k].category === currentModalData.categoryName && stocks[k].status === 'available');
                 if (availableKeys.length < qty) {
-    errorBanner.innerText = 'Server is busy';
-    errorBanner.style.display = 'block';
-    return;
-}
+                    errorBanner.innerText = 'Server is busy';
+                    errorBanner.style.display = 'block';
+                    return;
+                }
                 let keysToBuy = availableKeys.slice(0, qty);
                 let purchasedAccounts = [];
                 let timestamp = Date.now();
@@ -1131,7 +1131,6 @@
 
                         let stockCount = realAvailableStocks.length + categoryFakeCount;
                         
-                        // Fix for undefined price: safely pull from the first available stock object or fallback to fakePrice
                         let price = realAvailableStocks.length > 0 ? (realAvailableStocks[0].price || 0) : (fakePrice > 0 ? fakePrice : 0);
                         let isFakeItem = realAvailableStocks.length === 0 && categoryFakeCount > 0;
 
@@ -1279,9 +1278,13 @@
         if(!trx) return showCustomAlert('Enter Transaction ID or Order ID!');
         if(isNaN(inputVal) || inputVal <= 0) return showCustomAlert('Enter a valid amount!');
 
+        let submitBtn = event.target;
+        submitBtn.disabled = true;
+
         db.ref('deposits').orderByChild('trx').equalTo(trx).once('value', (snapshot) => {
             if (snapshot.exists()) {
-                showCustomAlert('This Transaction Id already-used 😤.');
+                submitBtn.disabled = false;
+                showCustomAlert('This Transaction ID has already been used! 😤 Duplicate TrxID is not allowed.');
                 return;
             }
 
@@ -1297,9 +1300,13 @@
                 status: 'Pending', 
                 timestamp: Date.now()
             }).then(() => {
+                submitBtn.disabled = false;
                 showCustomAlert('Deposit request submitted successfully!');
                 document.getElementById('deposit-trx-input').value = '';
                 switchUserTab('history');
+            }).catch(() => {
+                submitBtn.disabled = false;
+                showCustomAlert('Something went wrong. Please try again.');
             });
         });
     }
