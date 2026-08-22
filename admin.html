@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mail Market — Premium Admin Portal</title>
+  <title>Mail Market — Ultra Fast Admin Portal</title>
 
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -11,18 +11,20 @@
 
   <style>
     :root{
-      --bg-main:#030712;
-      --bg-sidebar:#0b0f19;
-      --card-bg:linear-gradient(135deg, rgba(17, 24, 39, 0.85) 0%, rgba(11, 15, 25, 0.95) 100%);
-      --text-main:#f9fafb;
-      --text-muted:#9ca3af;
+      --bg-main:#060814;
+      --bg-sidebar:#0a0e1a;
+      --card-bg: linear-gradient(135deg, rgba(16, 22, 38, 0.9) 0%, rgba(9, 13, 24, 0.95) 100%);
+      --card-solid:#101626;
+      --text-main:#f8fafc;
+      --text-muted:#94a3b8;
       --accent:#6366f1;
       --accent-hover:#4f46e5;
       --accent-glow:rgba(99, 102, 241, 0.35);
       --success:#10b981;
       --danger:#ef4444;
-      --border-color: rgba(255, 255, 255, 0.08);
-      --border-glow: rgba(99, 102, 241, 0.3);
+      --warning:#f59e0b;
+      --border-color: rgba(255, 255, 255, 0.07);
+      --border-glow: rgba(99, 102, 241, 0.4);
     }
     *{box-sizing:border-box}
     body{
@@ -33,73 +35,64 @@
       -webkit-font-smoothing:antialiased;
     }
 
-    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center, #1e1b4b 0%, #030712 100%);}
-    .auth-card{width:100%;max-width:420px;background:var(--card-bg);backdrop-filter:blur(16px);border-radius:20px;padding:36px;border:1px solid var(--border-glow);box-shadow:0 25px 50px -12px rgba(0,0,0,0.7);}
+    ::-webkit-scrollbar{width:6px;height:6px;}
+    ::-webkit-scrollbar-track{background:var(--bg-main);}
+    ::-webkit-scrollbar-thumb{background:#1e293b;border-radius:4px;}
+
+    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center, #1e1b4b 0%, #060814 100%);}
+    .auth-card{width:100%;max-width:440px;background:var(--card-bg);backdrop-filter:blur(20px);border-radius:24px;padding:40px;border:1px solid var(--border-glow);box-shadow:0 30px 60px rgba(0,0,0,0.8);}
     
-    .admin-sidebar{width:260px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;}
-    .admin-main{margin-left:260px;padding:36px;min-height:100vh;transition:margin 0.3s ease;}
+    .admin-sidebar{width:270px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;}
+    .admin-main{margin-left:270px;padding:40px;min-height:100vh;transition:margin 0.3s ease;}
 
-    .sidebar-brand{padding:0 24px 24px 24px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:20px;border-bottom:1px solid var(--border-color);color:#fff;background:linear-gradient(90deg, #fff, #a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-    .sidebar-menu{padding:20px 16px}
-    .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:12px;color:var(--text-muted);text-decoration:none;font-weight:600;margin-bottom:8px;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);}
-    .sidebar-menu a.active,.sidebar-menu a:hover{background:linear-gradient(135deg, var(--accent), var(--accent-hover));color:#fff;box-shadow:0 8px 20px var(--accent-glow);transform:translateX(4px);}
+    .sidebar-brand{padding:0 24px 24px 24px;display:flex;align-items:center;gap:14px;font-weight:800;font-size:20px;border-bottom:1px solid var(--border-color);color:#fff;background:linear-gradient(90deg, #fff, #a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .sidebar-menu{padding:24px 16px}
+    .sidebar-menu a{display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:14px;color:var(--text-muted);text-decoration:none;font-weight:600;font-size:14px;margin-bottom:8px;transition:all 0.2s cubic-bezier(0.4, 0, 0.2, 1);}
+    .sidebar-menu a.active,.sidebar-menu a:hover{background:linear-gradient(135deg, var(--accent), var(--accent-hover));color:#fff;box-shadow:0 10px 25px var(--accent-glow);transform:translateX(6px);}
 
-    .mobile-topbar{display:none;align-items:center;justify-content:space-between;background:var(--bg-sidebar);padding:14px 20px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:1040;}
-    .mobile-menu-btn{background:var(--card-bg);border:1px solid var(--border-color);color:#fff;padding:8px 12px;border-radius:10px;font-size:18px;cursor:pointer;}
+    .mobile-topbar{display:none;align-items:center;justify-content:space-between;background:var(--bg-sidebar);padding:16px 20px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:1040;}
+    .mobile-menu-btn{background:var(--card-solid);border:1px solid var(--border-color);color:#fff;padding:8px 12px;border-radius:10px;font-size:18px;cursor:pointer;}
 
-    .card-panel{background:var(--card-bg);backdrop-filter:blur(12px);padding:28px;border-radius:20px;border:1px solid var(--border-color);box-shadow:0 15px 35px rgba(0,0,0,0.3);margin-bottom:24px;position:relative;overflow:hidden;}
-    .card-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);}
-
-    h1,h2,h5{font-weight:800;color:#ffffff;margin-bottom:16px;letter-spacing:-0.03em;}
-    h1{font-size:28px;background:linear-gradient(180deg, #fff 0%, #cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    .card-panel{background:var(--card-bg);backdrop-filter:blur(16px);padding:30px;border-radius:24px;border:1px solid var(--border-color);box-shadow:0 20px 40px rgba(0,0,0,0.4);margin-bottom:28px;position:relative;overflow:hidden;}
+    
+    h1,h2,h5{font-weight:800;color:#ffffff;margin-bottom:20px;letter-spacing:-0.03em;}
+    h1{font-size:30px;background:linear-gradient(180deg, #fff 0%, #94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     
     label.form-label{font-weight:700;color:var(--text-muted);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;}
     
     .form-control, .form-select, textarea, input {
-      background-color: rgba(15, 23, 42, 0.7) !important;
+      background-color: rgba(11, 16, 28, 0.8) !important;
       border: 1px solid var(--border-color) !important;
       color: #fff !important;
-      border-radius: 12px;
-      padding: 12px 16px;
+      border-radius: 14px;
+      padding: 13px 18px;
       font-size: 14px;
-      transition: all 0.2s ease;
     }
     .form-control:focus, .form-select:focus, textarea:focus, input:focus {
       border-color: var(--accent) !important;
       box-shadow: 0 0 0 4px var(--accent-glow) !important;
-      background-color: rgba(15, 23, 42, 0.9) !important;
     }
-    .form-control::placeholder, textarea::placeholder{color:#64748b !important}
 
-    .stats-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px}
-    .stat-card{flex:1;min-width:220px;display:flex;align-items:center;gap:18px;padding:24px;border-radius:20px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.25);transition:transform 0.2s;}
-    .stat-card:hover{transform:translateY(-3px);border-color:var(--border-glow);}
-    .stat-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 16px var(--accent-glow)}
-    .stat-title{color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;}
+    .stats-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:28px}
+    .stat-card{flex:1;min-width:240px;display:flex;align-items:center;gap:20px;padding:26px;border-radius:24px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 15px 35px rgba(0,0,0,0.3);}
+    .stat-icon{width:60px;height:60px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:24px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 10px 20px var(--accent-glow)}
+    .stat-title{color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;}
     .stat-number{font-weight:800;font-size:32px;color:#fff;margin-top:2px;}
 
-    .table-card{border-radius:20px;padding:24px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:24px;box-shadow:0 15px 35px rgba(0,0,0,0.3);}
+    .table-card{border-radius:24px;padding:30px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:28px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
     .styled-table{width:100%;border-collapse:collapse}
-    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:14px 16px;text-align:left;border-bottom:1px solid var(--border-color)}
-    .styled-table tbody td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#f1f5f9;font-size:14px;vertical-align:middle;}
-    .styled-table tbody tr{transition:background-color 0.2s;}
-    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.02);}
+    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:16px 18px;text-align:left;border-bottom:1px solid var(--border-color)}
+    .styled-table tbody td{padding:18px;border-bottom:1px solid rgba(255,255,255,0.03);color:#f1f5f9;font-size:14px;vertical-align:middle;}
+    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.025);}
     
-    .badge-approved{background:rgba(16, 185, 129, 0.15);color:#34d399;border:1px solid rgba(16, 185, 129, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-pending{background:rgba(245, 158, 11, 0.15);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-rejected{background:rgba(239, 68, 68, 0.15);color:#f87171;border:1px solid rgba(239, 68, 68, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-approved{background:rgba(16, 185, 129, 0.12);color:#34d399;border:1px solid rgba(16, 185, 129, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-pending{background:rgba(245, 158, 11, 0.12);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-rejected{background:rgba(239, 68, 68, 0.12);color:#f87171;border:1px solid rgba(239, 68, 68, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
 
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:12px 24px;border-radius:12px;font-weight:700;box-shadow:0 4px 12px var(--accent-glow);transition:all 0.2s;}
-    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 16px var(--accent-glow);background:linear-gradient(135deg, #4f46e5, #4338ca);}
-    .btn-success{background:linear-gradient(135deg, #10b981, #059669);border:none;padding:12px 24px;border-radius:12px;font-weight:700;box-shadow:0 4px 12px rgba(16,185,129,0.3);}
-    
-    .btn-delete{background:rgba(239, 68, 68, 0.1);border:1px solid rgba(239, 68, 68, 0.25);color:#f87171;width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
-    .btn-delete:hover{background:var(--danger);color:#fff;box-shadow:0 4px 12px rgba(239,68,68,0.4);}
-
-    .btn-edit-action{background:rgba(99, 102, 241, 0.1);border:1px solid rgba(99, 102, 241, 0.25);color:#818cf8;width:38px;height:38px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
-    .btn-edit-action:hover{background:var(--accent);color:#fff;box-shadow:0 4px 12px var(--accent-glow);}
-
-    .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:#e2e8f0;}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:13px 26px;border-radius:14px;font-weight:700;box-shadow:0 6px 18px var(--accent-glow);}
+    .btn-success{background:linear-gradient(135deg, #10b981, #059669);border:none;padding:13px 26px;border-radius:14px;font-weight:700;}
+    .btn-delete{background:rgba(239, 68, 68, 0.1);border:1px solid rgba(239, 68, 68, 0.25);color:#f87171;width:40px;height:40px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+    .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.05);border:1px solid var(--border-color);color:#cbd5e1;}
 
     @media (max-width:991px){
       .admin-sidebar{transform:translateX(-100%);}
@@ -113,27 +106,25 @@
 <body>
 
 <div id="toast" style="position:fixed;right:24px;bottom:24px;z-index:99999;display:none">
-  <div class="card-panel py-3 px-4 shadow-lg" id="toast-text" style="margin:0;background:#0f172a;border-color:var(--accent);"></div>
+  <div class="card-panel py-3 px-4 shadow-lg" id="toast-text" style="margin:0;background:#0d1322;border-color:var(--accent);"></div>
 </div>
 
 <!-- ADMIN LOGIN -->
 <div id="admin-auth" class="auth-wrap" style="display:none;">
   <div class="auth-card">
-    <div style="text-align:center; margin-bottom:28px;">
-      <div style="width:54px;height:54px;border-radius:16px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 8px 20px var(--accent-glow);margin-bottom:14px;"><i class="fa-solid fa-shield-halved"></i></div>
-      <h2 style="margin:0;font-size:24px;">Admin Portal</h2>
-      <div class="text-muted" style="font-size:13px;margin-top:6px">Sign in to securely manage your platform</div>
+    <div style="text-align:center; margin-bottom:32px;">
+      <div style="width:60px;height:60px;border-radius:18px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:24px;margin-bottom:16px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2 style="margin:0;font-size:26px;">Admin Portal</h2>
     </div>
     <div>
       <label class="form-label">Email Address</label>
       <input id="adminEmail" class="form-control" type="email" placeholder="admin@gmail.com">
     </div>
-    <div style="margin-top:16px;position:relative">
+    <div style="margin-top:18px;position:relative">
       <label class="form-label">Password</label>
       <input id="adminPass" class="form-control" type="password" placeholder="••••••••">
-      <button style="position:absolute;right:14px;top:38px;border:none;background:transparent;color:var(--text-muted)" onclick="togglePass()"><i id="eyeIcon" class="fa-solid fa-eye"></i></button>
     </div>
-    <div style="margin-top:28px">
+    <div style="margin-top:32px">
       <button class="btn btn-primary w-100 py-3" onclick="adminLogin()">Sign In to Dashboard</button>
     </div>
   </div>
@@ -142,8 +133,8 @@
 <!-- ADMIN MAIN -->
 <div id="admin-app" style="display:none">
   <div class="mobile-topbar">
-    <div style="display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;">
-      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved"></i></div>
+    <div style="display:flex;align-items:center;gap:12px;font-weight:800;color:#fff;">
+      <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved"></i></div>
       Mail Market
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
@@ -151,7 +142,7 @@
 
   <aside id="adminSidebar" class="admin-sidebar">
     <div class="sidebar-brand">
-      <div style="width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 12px var(--accent-glow)"><i class="fa-solid fa-shield-halved"></i></div>
+      <div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center;color:#fff;"><i class="fa-solid fa-shield-halved"></i></div>
       <div>Mail Market</div>
     </div>
     <nav class="sidebar-menu">
@@ -177,12 +168,48 @@
           <div><div class="stat-title">Total Users</div><div id="statUsers" class="stat-number">0</div></div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon" style="background:linear-gradient(135deg, #10b981, #059669);box-shadow:0 8px 16px rgba(16,185,129,0.3)"><i class="fa-solid fa-box"></i></div>
+          <div class="stat-icon" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-box"></i></div>
           <div><div class="stat-title">Real Stock Available</div><div id="statStocks" class="stat-number">0</div></div>
         </div>
         <div class="stat-card">
-          <div class="stat-icon" style="background:linear-gradient(135deg, #f59e0b, #d97706);box-shadow:0 8px 16px rgba(245,158,11,0.3)"><i class="fa-solid fa-clock"></i></div>
+          <div class="stat-icon" style="background:linear-gradient(135deg, #f59e0b, #d97706);"><i class="fa-solid fa-clock"></i></div>
           <div><div class="stat-title">Pending Deposits</div><div id="statDeposits" class="stat-number">0</div></div>
+        </div>
+      </div>
+
+      <!-- STOCK HISTORY SECTION -->
+      <div class="card-panel mb-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+          <h5 class="mb-0"><i class="fa-solid fa-chart-line text-info me-2"></i>Stock History Summary</h5>
+          <div style="width: 200px;">
+            <select id="stockHistoryTimeframe" class="form-select form-select-sm" onchange="loadFastDashboardData()">
+              <option value="1">Last 1 Day</option>
+              <option value="3">Last 3 Days</option>
+              <option value="7" selected>Last 7 Days</option>
+              <option value="15">Last 15 Days</option>
+              <option value="30">Last 30 Days</option>
+            </select>
+          </div>
+        </div>
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div style="background: rgba(11, 16, 28, 0.6); border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; display: flex; align-items: center; gap: 18px;">
+              <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(16, 185, 129, 0.15); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fa-solid fa-boxes-packing"></i></div>
+              <div>
+                <div class="stat-title">Total Stock Added (Real)</div>
+                <div id="statStockAdded" class="stat-number" style="font-size: 26px;">0</div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div style="background: rgba(11, 16, 28, 0.6); border: 1px solid var(--border-color); border-radius: 18px; padding: 22px; display: flex; align-items: center; gap: 18px;">
+              <div style="width: 52px; height: 52px; border-radius: 14px; background: rgba(99, 102, 241, 0.15); color: #818cf8; display: flex; align-items: center; justify-content: center; font-size: 22px;"><i class="fa-solid fa-cart-shopping"></i></div>
+              <div>
+                <div class="stat-title">Total Stock Sold</div>
+                <div id="statStockSold" class="stat-number" style="font-size: 26px;">0</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -197,7 +224,7 @@
                 <th>Category</th>
                 <th>Quantity</th>
                 <th>Total Price</th>
-                <th>Date</th>
+                <th>Date & Time</th>
               </tr>
             </thead>
             <tbody id="dashboardLast10OrdersBody">
@@ -208,17 +235,10 @@
       </div>
     </section>
 
-    <!-- LIVE INVENTORY STOCK TAB (REAL STOCKS ONLY) -->
+    <!-- LIVE INVENTORY STOCK TAB -->
     <section id="tab-live-inventory" style="display:none">
       <h1>Live Inventory Stock</h1>
       <div class="card-panel">
-        <div class="d-flex align-items-center gap-3 mb-4">
-          <div style="width:46px;height:46px;border-radius:12px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;"><i class="fa-solid fa-boxes-stacked"></i></div>
-          <div>
-            <h5 class="mb-0" style="font-size:18px;">Live Inventory Stock Status (Real Stock Only)</h5>
-            <div class="text-muted" style="font-size:12px;">Real-time available stock count & pricing across categories</div>
-          </div>
-        </div>
         <div style="overflow:auto">
           <table class="styled-table">
             <thead>
@@ -241,20 +261,9 @@
       <h1>Categories Management</h1>
       <div class="card-panel">
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label">Main Category</label>
-            <input id="catMain" class="form-control" list="mainCategoryList" placeholder="Select or type...">
-            <datalist id="mainCategoryList"></datalist>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">Sub Category</label>
-            <input id="catSub" class="form-control" list="subCategoryList" placeholder="Select or type...">
-            <datalist id="subCategoryList"></datalist>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">Description</label>
-            <textarea id="catDesc" class="form-control" rows="1" placeholder="Write description..."></textarea>
-          </div>
+          <div class="col-md-4"><label class="form-label">Main Category</label><input id="catMain" class="form-control" placeholder="Type main..."></div>
+          <div class="col-md-4"><label class="form-label">Sub Category</label><input id="catSub" class="form-control" placeholder="Type sub..."></div>
+          <div class="col-md-4"><label class="form-label">Description</label><textarea id="catDesc" class="form-control" rows="1" placeholder="Description..."></textarea></div>
           <div class="col-12 text-end"><button class="btn btn-primary" onclick="addCategory()">Add Category</button></div>
         </div>
       </div>
@@ -274,60 +283,26 @@
       <div class="card-panel mb-4">
         <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload</h5>
         <div class="row g-3">
-          <div class="col-md-5">
-            <label class="form-label">Select Sub-Category</label>
-            <select id="stockCategory" class="form-select"></select>
-          </div>
-          <div class="col-md-2">
-            <label class="form-label">Price (BDT)</label>
-            <input id="stockPrice" type="number" class="form-control" placeholder="25">
-          </div>
-          <div class="col-md-5">
-            <label class="form-label">Upload (.txt/.csv)</label>
-            <input id="stockFile" type="file" class="form-control" accept=".txt,.csv" onchange="loadStockFile(event)">
-          </div>
-          <div class="col-12">
-            <label class="form-label">Accounts (one per line)</label>
-            <textarea id="stockAccounts" class="form-control" rows="4" placeholder="email:password"></textarea>
-          </div>
+          <div class="col-md-5"><label class="form-label">Select Sub-Category</label><select id="stockCategory" class="form-select"></select></div>
+          <div class="col-md-2"><label class="form-label">Price (BDT)</label><input id="stockPrice" type="number" class="form-control" placeholder="25"></div>
+          <div class="col-md-5"><label class="form-label">Upload (.txt/.csv)</label><input id="stockFile" type="file" class="form-control" accept=".txt,.csv" onchange="loadStockFile(event)"></div>
+          <div class="col-12"><label class="form-label">Accounts (one per line)</label><textarea id="stockAccounts" class="form-control" rows="4" placeholder="email:password"></textarea></div>
           <div class="col-12 text-end"><button class="btn btn-success" onclick="uploadStocks()">Upload Real Stocks</button></div>
         </div>
       </div>
 
-      <div class="card-panel" style="border-color: rgba(245, 158, 11, 0.3);">
+      <div class="card-panel">
         <h5 class="text-warning mb-3"><i class="fa-solid fa-plus-circle me-2"></i>Add & Manage Fake Stocks</h5>
         <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <label class="form-label">Select Sub-Category</label>
-            <select id="fakeStockCategory" class="form-select"></select>
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Fake Count to Add</label>
-            <input id="fakeStockCount" type="number" class="form-control" placeholder="e.g. 50">
-          </div>
-          <div class="col-md-3">
-            <label class="form-label">Fake Price (BDT)</label>
-            <input id="fakeStockPrice" type="number" class="form-control" placeholder="e.g. 25">
-          </div>
-          <div class="col-md-2 d-flex align-items-end">
-            <button class="btn btn-warning w-100 fw-bold text-dark py-3" onclick="addFakeStock()">Add Fake</button>
-          </div>
+          <div class="col-md-4"><label class="form-label">Select Sub-Category</label><select id="fakeStockCategory" class="form-select"></select></div>
+          <div class="col-md-3"><label class="form-label">Fake Count to Add</label><input id="fakeStockCount" type="number" class="form-control" placeholder="50"></div>
+          <div class="col-md-3"><label class="form-label">Fake Price (BDT)</label><input id="fakeStockPrice" type="number" class="form-control" placeholder="25"></div>
+          <div class="col-md-2 d-flex align-items-end"><button class="btn btn-warning w-100 fw-bold text-dark py-3" onclick="addFakeStock()">Add Fake</button></div>
         </div>
-
-        <h6 class="text-warning mb-3 fw-bold"><i class="fa-solid fa-ghost me-2"></i>Existing Fake Stocks List</h6>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead>
-              <tr>
-                <th>Category</th>
-                <th>Fake Count</th>
-                <th>Price</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="admin-fake-stocks-tbody">
-              <tr><td colspan="4" class="text-muted text-center py-3">No fake stocks found</td></tr>
-            </tbody>
+            <thead><tr><th>Category</th><th>Fake Count</th><th>Price</th><th>Action</th></tr></thead>
+            <tbody id="admin-fake-stocks-tbody"><tr><td colspan="4" class="text-muted text-center py-3">No fake stocks</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -337,40 +312,16 @@
       <h1>View Stock Mails</h1>
       <div class="card-panel mb-3">
         <div class="row g-3">
-          <div class="col-md-4">
-            <label class="form-label">Select Category to View Mails</label>
-            <select id="viewStockCategory" class="form-select" onchange="loadStockMailsByCategory()"></select>
-          </div>
-          <div class="col-md-4">
-            <label class="form-label">Update All Prices in Category (BDT)</label>
-            <div class="input-group">
-              <input id="bulkNewPrice" type="number" class="form-control" placeholder="New price">
-              <button class="btn btn-success" onclick="updateCategoryBulkPrice()">Update All</button>
-            </div>
-          </div>
-          <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end mt-2 mt-md-0">
-            <button class="btn btn-danger btn-sm px-3 py-2" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected Mails</button>
-          </div>
+          <div class="col-md-4"><label class="form-label">Select Category</label><select id="viewStockCategory" class="form-select" onchange="loadStockMailsByCategory()"></select></div>
+          <div class="col-md-4"><label class="form-label">Update All Prices (BDT)</label><div class="input-group"><input id="bulkNewPrice" type="number" class="form-control" placeholder="New price"><button class="btn btn-success" onclick="updateCategoryBulkPrice()">Update All</button></div></div>
+          <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end"><button class="btn btn-danger btn-sm px-3 py-2" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected</button></div>
         </div>
       </div>
       <div class="table-card">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5>Available Stock Mails List</h5>
-        </div>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead>
-              <tr>
-                <th style="width:40px;"><input type="checkbox" id="selectAllStocks" onclick="toggleSelectAllStocks(this)"></th>
-                <th>Account Details / Email</th>
-                <th>Price (BDT)</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="stockMailsTableBody">
-              <tr><td colspan="5" class="text-muted text-center py-4">Please select a category above</td></tr>
-            </tbody>
+            <thead><tr><th style="width:40px;"><input type="checkbox" id="selectAllStocks" onclick="toggleSelectAllStocks(this)"></th><th>Account Details</th><th>Price (BDT)</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="stockMailsTableBody"><tr><td colspan="5" class="text-muted text-center py-4">Select category above</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -378,98 +329,20 @@
 
     <section id="tab-deposits" style="display:none">
       <h1>Deposit Requests</h1>
-      <div class="card-panel mb-3">
-        <div class="row g-2 align-items-center">
-          <div class="col-md-4"><input id="searchTrx" class="form-control" placeholder="Search by TrxID..." oninput="renderDeposits()"></div>
-          <div class="col-md-3"><select id="filterStatus" class="form-select" onchange="renderDeposits()"><option value="">All Status</option><option value="Pending">Pending</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option></select></div>
-          <div class="col-md-5 text-end"><button class="btn btn-sm btn-secondary px-4 py-2" onclick="loadDeposits()">Refresh</button></div>
-        </div>
-      </div>
-      <div class="table-card">
-        <div style="overflow:auto">
-          <table class="styled-table">
-            <thead><tr><th>User</th><th>Method</th><th>Amount</th><th>TrxID & Reason</th><th>Status</th><th>Action</th></tr></thead>
-            <tbody id="depositsBody"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="table-card"><div style="overflow:auto"><table class="styled-table"><thead><tr><th>User</th><th>Method</th><th>Amount</th><th>TrxID</th><th>Status</th><th>Action</th></tr></thead><tbody id="depositsBody"></tbody></table></div></div>
     </section>
 
     <section id="tab-payments" style="display:none">
       <h1>Payments & Support Settings</h1>
-      <div class="card-panel mb-3" style="border-color: rgba(59, 130, 246, 0.4);">
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label" style="color: #60a5fa;">Send Live Notification to User Panels</label>
-            <input id="adminNotificationInput" class="form-control" placeholder="Type notification message here to broadcast...">
-          </div>
-          <div class="col-md-4 d-flex align-items-end gap-2">
-            <button class="btn btn-primary w-50" onclick="saveUserNotification()">Send</button>
-            <button class="btn btn-outline-danger w-50" onclick="clearUserNotification()">Clear</button>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card-panel mb-3" style="border-color: rgba(252, 213, 53, 0.4);">
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label" style="color: #fcd535;">Binance Dollar Rate (1 USDT = ? BDT)</label>
-            <input id="binanceRateInput" type="number" step="0.01" class="form-control" placeholder="e.g. 120">
-          </div>
-          <div class="col-md-4 d-flex align-items-end">
-            <button class="btn btn-warning w-100 fw-bold text-dark" onclick="saveBinanceRate()">Save Dollar Rate</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-panel mb-3">
-        <div class="row g-3">
-          <div class="col-md-8">
-            <label class="form-label">Support Link / Telegram Username</label>
-            <input id="supportInput" class="form-control" placeholder="@username or https://t.me/username">
-          </div>
-          <div class="col-md-4 d-flex align-items-end">
-            <button class="btn btn-primary w-100" onclick="saveSupport()">Save Support</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card-panel mb-3">
-        <div class="row g-3">
-          <div class="col-md-3"><label class="form-label">Method Name</label><input id="payName" class="form-control" placeholder="bKash / Binance"></div>
-          <div class="col-md-3"><label class="form-label">Account Type</label><select id="payType" class="form-select"><option>Send Money</option><option>Cash Out</option><option>Personal</option><option>Agent</option><option>Binance Pay ID / USDT Address</option></select></div>
-          <div class="col-md-3"><label class="form-label">Account Number / Details</label><input id="payNumber" class="form-control" placeholder="017xxxxxxxx or Wallet"></div>
-          <div class="col-md-3"><label class="form-label">Logo Image URL</label><input id="payLogo" class="form-control" placeholder="https://... logo url"></div>
-          <div class="col-12 text-end mt-2"><button class="btn btn-primary" onclick="addPayment()">Add Payment Method</button></div>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <h5>Active Payment Methods</h5>
-        <div style="overflow:auto">
-          <table class="styled-table">
-            <thead><tr><th>Name</th><th>Type</th><th>Number</th><th>Logo URL</th><th>Action</th></tr></thead>
-            <tbody id="paymentsBody"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="card-panel mb-3"><div class="row g-3"><div class="col-md-8"><label class="form-label" style="color: #60a5fa;">Broadcast Notification</label><input id="adminNotificationInput" class="form-control" placeholder="Message..."></div><div class="col-md-4 d-flex align-items-end gap-2"><button class="btn btn-primary w-50" onclick="saveUserNotification()">Send</button><button class="btn btn-outline-danger w-50" onclick="clearUserNotification()">Clear</button></div></div></div>
+      <div class="card-panel mb-3"><div class="row g-3"><div class="col-md-8"><label class="form-label" style="color: #fcd535;">Binance Rate (1 USDT = ? BDT)</label><input id="binanceRateInput" type="number" step="0.01" class="form-control" placeholder="120"></div><div class="col-md-4 d-flex align-items-end"><button class="btn btn-warning w-100 fw-bold text-dark" onclick="saveBinanceRate()">Save</button></div></div></div>
+      <div class="card-panel mb-3"><div class="row g-3"><div class="col-md-8"><label class="form-label">Support Telegram</label><input id="supportInput" class="form-control" placeholder="@username"></div><div class="col-md-4 d-flex align-items-end"><button class="btn btn-primary w-100" onclick="saveSupport()">Save</button></div></div></div>
+      <div class="table-card"><h5>Active Payment Methods</h5><div style="overflow:auto"><table class="styled-table"><thead><tr><th>Name</th><th>Type</th><th>Number</th><th>Action</th></tr></thead><tbody id="paymentsBody"></tbody></table></div></div>
     </section>
 
     <section id="tab-users" style="display:none">
       <h1>Users Management</h1>
-      <div class="card-panel mb-3">
-        <div class="row g-2">
-          <div class="col-md-6"><input id="searchUserGmail" class="form-control" placeholder="Search user by Gmail..." oninput="renderUsers()"></div>
-        </div>
-      </div>
-      <div class="table-card">
-        <div style="overflow:auto">
-          <table class="styled-table">
-            <thead><tr><th>Email</th><th>Balance</th><th>Action</th></tr></thead>
-            <tbody id="usersBody"></tbody>
-          </table>
-        </div>
-      </div>
+      <div class="table-card"><div style="overflow:auto"><table class="styled-table"><thead><tr><th>Email</th><th>Balance</th><th>Action</th></tr></thead><tbody id="usersBody"></tbody></table></div></div>
     </section>
   </main>
 </div>
@@ -487,47 +360,35 @@
     projectId: "mywebsite-709e3",
     storageBucket: "mywebsite-709e3.firebasestorage.app",
     messagingSenderId: "218299688364",
-    appId: "1:218299688364:web:bf48e2c069fd7d3702c609",
-    measurementId: "G-5MSD1CCSVY"
+    appId: "1:218299688364:web:bf48e2c069fd7d3702c609"
   };
   if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-    .then(() => {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          initApp();
-        } else {
-          document.getElementById('admin-auth').style.display = 'flex';
-          document.getElementById('admin-app').style.display = 'none';
-        }
-      });
-    })
-    .catch(e => console.error("Persistence error:", e));
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) { initApp(); } else {
+      document.getElementById('admin-auth').style.display = 'flex';
+      document.getElementById('admin-app').style.display = 'none';
+    }
+  });
 
   function showToast(msg){ 
     document.getElementById('toast-text').innerText = msg; 
     const t = document.getElementById('toast'); 
     t.style.display = 'block'; 
-    setTimeout(() => t.style.display = 'none', 3000); 
+    setTimeout(() => t.style.display = 'none', 2500); 
   }
   
   function escapeHtml(s){ return String(s||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;'); }
-  function togglePass(){ const p=document.getElementById('adminPass'); const eye=document.getElementById('eyeIcon'); if(p.type==='password'){p.type='text';eye.className='fa-solid fa-eye-slash'}else{p.type='password';eye.className='fa-solid fa-eye'} }
-  
-  function toggleMobileSidebar(){
-    const sidebar = document.getElementById('adminSidebar');
-    sidebar.classList.toggle('mobile-show');
-  }
+  function toggleMobileSidebar(){ document.getElementById('adminSidebar').classList.toggle('mobile-show'); }
 
   function adminLogin(){
     const email=document.getElementById('adminEmail').value.trim();
     const pass=document.getElementById('adminPass').value.trim();
     if(!email||!pass){ showToast('Enter email & password'); return; }
-    firebase.auth().signInWithEmailAndPassword(email,pass).then(()=>{ initApp(); }).catch(e=>showToast('Login failed: '+e.message));
+    firebase.auth().signInWithEmailAndPassword(email,pass).catch(e=>showToast('Login failed: '+e.message));
   }
-  function logoutAdmin(){ firebase.auth().signOut().finally(()=>{ location.reload(); }); }
+  function logoutAdmin(){ firebase.auth().signOut().finally(()=>location.reload()); }
 
   function openTab(name){
     document.querySelectorAll('[id^="tab-"]').forEach(s=>s.style.display='none');
@@ -535,10 +396,9 @@
     document.getElementById('m-'+name).classList.add('active');
     document.getElementById('tab-'+name).style.display='block';
     
-    if(window.innerWidth <= 991) {
-      document.getElementById('adminSidebar').classList.remove('mobile-show');
-    }
+    if(window.innerWidth <= 991) document.getElementById('adminSidebar').classList.remove('mobile-show');
 
+    if(name==='dashboard') loadFastDashboardData();
     if(name==='live-inventory') loadLiveInventory();
     if(name==='categories') loadCategories();
     if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); renderAdminFakeStocks(); }
@@ -546,95 +406,91 @@
     if(name==='deposits') loadDeposits();
     if(name==='payments') { loadPayments(); loadSupport(); loadBinanceRateSettings(); loadUserNotificationSetting(); }
     if(name==='users') loadUsers();
-    if(name==='dashboard') loadDashboard();
   }
 
   function initApp(){
     document.getElementById('admin-auth').style.display='none';
     document.getElementById('admin-app').style.display='block';
-    if(!document.querySelector('.sidebar-menu a.active')) {
-      openTab('dashboard');
-    }
+    openTab('dashboard');
   }
 
-  function loadLiveInventory(){
-    const tbody = document.getElementById('liveInventoryBody');
-    tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">Loading live inventory...</td></tr>';
-
-    db.ref('categories').once('value', catSnap => {
-      const categories = catSnap.val() || {};
-      db.ref('stocks').once('value', stockSnap => {
-        const stocks = stockSnap.val() || {};
-
-        tbody.innerHTML = '';
-        const catKeys = Object.keys(categories);
-        if(catKeys.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>';
-          return;
-        }
-
-        catKeys.forEach(catKey => {
-          const c = categories[catKey];
-          if(!c) return;
-          const mainCat = c.cat || '';
-          const subCat = c.subCat || '';
-          const categoryFullName = `${mainCat} - ${subCat}`;
-
-          let realCount = 0;
-          let itemPrice = 0;
-
-          Object.values(stocks).forEach(item => {
-            if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
-              realCount++;
-              if(item.price) itemPrice = item.price;
-            }
-          });
-
-          const stockBadgeClass = realCount > 0 ? 'badge-approved' : 'badge-rejected';
-          const stockText = `${realCount} pcs`;
-
-          tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
-              <td><strong>${escapeHtml(subCat)}</strong></td>
-              <td><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
-              <td><span class="${stockBadgeClass}">${stockText}</span></td>
-            </tr>
-          `);
-        });
-      });
-    });
-  }
-
-  function loadDashboard(){
-    db.ref('users').once('value',u=>{ 
-      const usersData = u.val()||{};
+  // ULTRA FAST LIGHTNING DASHBOARD LOADER WITH ACCURATE TIMESTAMP & REVERSE SORTING
+  function loadFastDashboardData(){
+    db.ref().once('value', snapshot => {
+      const data = snapshot.val() || {};
+      
+      // 1. Users Count
+      const usersData = data.users || {};
       const uniqueEmails = new Set();
-      Object.values(usersData).forEach(user => {
-        if(user && user.email) uniqueEmails.add(user.email.toLowerCase().trim());
-      });
-      document.getElementById('statUsers').innerText = uniqueEmails.size; 
-    });
-    db.ref('stocks').once('value',s=>{ const avail=Object.values(s.val()||{}).filter(x=>x.status==='available').length; document.getElementById('statStocks').innerText=avail; });
-    db.ref('deposits').once('value',d=>{ const pending=Object.values(d.val()||{}).filter(x=>x.status==='Pending').length; document.getElementById('statDeposits').innerText=pending; });
-    loadDashboardLast10Purchases();
-  }
+      Object.values(usersData).forEach(u => { if(u && u.email) uniqueEmails.add(u.email.toLowerCase().trim()); });
+      document.getElementById('statUsers').innerText = uniqueEmails.size;
 
-  function loadDashboardLast10Purchases() {
-    db.ref('orders').once('value', snap => {
-      const ordersData = snap.val() || {};
+      // 2. Real Stock Available
+      const stocksData = data.stocks || {};
+      let availCount = 0;
+      Object.values(stocksData).forEach(item => { if(item && item.status === 'available') availCount++; });
+      document.getElementById('statStocks').innerText = availCount;
+
+      // 3. Pending Deposits Count
+      const depositsData = data.deposits || {};
+      let pendingCount = 0;
+      Object.values(depositsData).forEach(d => { if(d && d.status === 'Pending') pendingCount++; });
+      document.getElementById('statDeposits').innerText = pendingCount;
+
+      // 4. Stock History Summary Calculation
+      const days = parseInt(document.getElementById('stockHistoryTimeframe').value) || 7;
+      const cutoffTime = Date.now() - (days * 24 * 60 * 60 * 1000);
+
+      let addedCount = 0;
+      Object.values(stocksData).forEach(item => {
+        let t = item.timestamp || 0;
+        if(t >= cutoffTime || t === 0) addedCount++;
+      });
+      document.getElementById('statStockAdded').innerText = addedCount;
+
+      const ordersData = data.orders || {};
+      let soldCount = 0;
+      Object.values(ordersData).forEach(o => {
+        let t = o.timestamp || Date.now();
+        if(t >= cutoffTime) soldCount += parseInt(o.quantity || 1);
+      });
+      document.getElementById('statStockSold').innerText = soldCount;
+
+      // 5. Last 10 Purchases (Strictly sorted by real timestamp & Firebase push keys descending - newest on top)
       const tbody = document.getElementById('dashboardLast10OrdersBody');
       tbody.innerHTML = '';
-      let keys = Object.keys(ordersData);
-      if(keys.length === 0) {
+      let orderKeys = Object.keys(ordersData);
+      if(orderKeys.length === 0) {
         tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">No purchases found yet</td></tr>';
         return;
       }
-      keys.sort((a, b) => (ordersData[b].timestamp || 0) - (ordersData[a].timestamp || 0));
-      let last10Keys = keys.slice(0, 10);
 
-      last10Keys.forEach(k => {
+      // Sort keys: If both have valid timestamps, sort by timestamp descending. Otherwise fallback to string key comparison.
+      orderKeys.sort((a, b) => {
+        let timeA = ordersData[a].timestamp || 0;
+        let timeB = ordersData[b].timestamp || 0;
+        if (timeA !== timeB) {
+          return timeB - timeA; // Newer timestamp first
+        }
+        return b.localeCompare(a); // Fallback to push key sorting
+      });
+
+      orderKeys.slice(0, 10).forEach(k => {
         let o = ordersData[k];
+        let formattedDateTime = '-';
+        if (o.timestamp) {
+          formattedDateTime = new Date(o.timestamp).toLocaleString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric', 
+            hour: 'numeric', 
+            minute: '2-digit', 
+            hour12: true 
+          });
+        } else if (o.date) {
+          formattedDateTime = o.date;
+        }
+
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
             <td><code>${escapeHtml(o.orderId || '#---')}</code></td>
@@ -642,7 +498,46 @@
             <td>${escapeHtml(o.category || '-')}</td>
             <td>${o.quantity || 1}</td>
             <td>৳${o.totalPrice || 0}</td>
-            <td>${escapeHtml(o.date || '-')}</td>
+            <td>${escapeHtml(formattedDateTime)}</td>
+          </tr>
+        `);
+      });
+    });
+  }
+
+  function loadLiveInventory(){
+    db.ref().once('value', snapshot => {
+      const data = snapshot.val() || {};
+      const categories = data.categories || {};
+      const stocks = data.stocks || {};
+      const tbody = document.getElementById('liveInventoryBody');
+      tbody.innerHTML = '';
+
+      const catKeys = Object.keys(categories);
+      if(catKeys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>';
+        return;
+      }
+
+      catKeys.forEach(catKey => {
+        const c = categories[catKey];
+        if(!c) return;
+        const categoryFullName = `${c.cat || ''} - ${c.subCat || ''}`;
+        let realCount = 0, itemPrice = 0;
+
+        Object.values(stocks).forEach(item => {
+          if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
+            realCount++;
+            if(item.price) itemPrice = item.price;
+          }
+        });
+
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><span class="provider-pill">${escapeHtml(c.cat)}</span></td>
+            <td><strong>${escapeHtml(c.subCat)}</strong></td>
+            <td><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
+            <td><span class="${realCount > 0 ? 'badge-approved' : 'badge-rejected'}">${realCount} pcs</span></td>
           </tr>
         `);
       });
@@ -656,519 +551,216 @@
     if(!main||!sub){ showToast('Enter main and sub category'); return; }
     db.ref('categories').push({cat:main, subCat:sub, description:desc, status:'ON'}).then(()=>{ 
       document.getElementById('catMain').value=''; document.getElementById('catSub').value=''; document.getElementById('catDesc').value=''; 
-      showToast('Category added successfully'); loadCategories(); loadCategoryOptions(); loadFakeCategoryOptions();
+      showToast('Category added successfully'); loadCategories(); 
     });
   }
 
   function loadCategories(){
     db.ref('categories').once('value',snap=>{
       const cats=snap.val()||{}; const body=document.getElementById('categoriesBody'); body.innerHTML='';
-      const mainList = document.getElementById('mainCategoryList'); const subList = document.getElementById('subCategoryList');
-      mainList.innerHTML = ''; subList.innerHTML = '';
-      const keys=Object.keys(cats||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="5" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
-      const uniqueMains = new Set(); const uniqueSubs = new Set();
+      const keys=Object.keys(cats); if(!keys.length){ body.innerHTML='<tr><td colspan="5" class="text-muted text-center py-4">No categories</td></tr>'; return; }
       keys.forEach(k=>{
-        const c=cats[k]||{};
-        if(c.cat) uniqueMains.add(c.cat);
-        if(c.subCat) uniqueSubs.add(c.subCat);
-
+        const c=cats[k];
         body.insertAdjacentHTML('beforeend', `<tr>
-          <td><strong style="color:#818cf8">${escapeHtml(c.cat||'')}</strong></td>
-          <td>${escapeHtml(c.subCat||'')}</td>
-          <td><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'')}</span></td>
+          <td><strong style="color:#818cf8">${escapeHtml(c.cat)}</strong></td>
+          <td>${escapeHtml(c.subCat)}</td>
+          <td>${escapeHtml(c.description||'')}</td>
           <td>${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
           <td>
-            <button class="btn-edit-action" onclick="editCategoryDescription('${k}')" title="Edit Description"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
-            <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
+            <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="db.ref('categories/${k}/status').set('${c.status==='ON'?'OFF':'ON'}').then(loadCategories)">${c.status==='ON'?'OFF':'ON'}</button>
+            <button class="btn-delete" onclick="db.ref('categories/${k}').remove().then(loadCategories)"><i class="fa-solid fa-trash"></i></button>
           </td>
         </tr>`);
       });
-      uniqueMains.forEach(m => mainList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(m)}">`));
-      uniqueSubs.forEach(s => subList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(s)}">`));
     });
   }
-
-  function editCategoryDescription(key){
-    db.ref(`categories/${key}/description`).once('value', snapshot => {
-      const currentDesc = snapshot.val() || '';
-      const newDesc = prompt('Edit description:', currentDesc);
-      if(newDesc === null) return;
-      db.ref(`categories/${key}/description`).set(newDesc.trim()).then(()=>{
-        showToast('Description updated successfully');
-        loadCategories();
-      }).catch(e=>showToast('Error: '+e.message));
-    });
-  }
-
-  function toggleCategory(key,cur){ db.ref(`categories/${key}/status`).set(cur==='ON'?'OFF':'ON').then(()=>loadCategories()); }
-  function removeCategory(key){ if(!confirm('Delete category?')) return; db.ref(`categories/${key}`).remove().then(()=>loadCategories()); }
 
   function loadCategoryOptions(){
-    db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('stockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+    db.ref('categories').once('value',s=>{ 
+      const sel=document.getElementById('stockCategory'); sel.innerHTML=''; 
+      Object.values(s.val()||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); 
+    });
   }
-
   function loadFakeCategoryOptions(){
-    db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('fakeStockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+    db.ref('categories').once('value',s=>{ 
+      const sel=document.getElementById('fakeStockCategory'); sel.innerHTML=''; 
+      Object.values(s.val()||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); 
+    });
   }
 
   function renderAdminFakeStocks() {
-    db.ref('fakeStocks').once('value', (snapshot) => {
+    db.ref('fakeStocks').once('value', snapshot => {
       let fakeStocks = snapshot.val() || {};
       let tbody = document.getElementById('admin-fake-stocks-tbody');
       tbody.innerHTML = '';
       let keys = Object.keys(fakeStocks);
-      if(keys.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">No fake stocks found</td></tr>';
-        return;
-      }
+      if(keys.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">No fake stocks</td></tr>'; return; }
       keys.forEach(key => {
         let item = fakeStocks[key];
-        tbody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td><strong>${escapeHtml(item.category)}</strong></td>
-            <td><span class="badge-pending">${item.fakeCount}</span></td>
-            <td>৳${item.price}</td>
-            <td>
-              <button class="btn-edit-action" onclick="editFakeStock('${key}')" title="Edit Fake Stock Count & Price"><i class="fa-solid fa-pen"></i></button>
-              <button class="btn-delete" onclick="deleteFakeStock('${key}')" title="Remove Fake Stock"><i class="fa-solid fa-trash"></i></button>
-            </td>
-          </tr>
-        `);
+        tbody.insertAdjacentHTML('beforeend', `<tr><td><strong>${escapeHtml(item.category)}</strong></td><td><span class="badge-pending">${item.fakeCount}</span></td><td>৳${item.price}</td><td><button class="btn-delete" onclick="db.ref('fakeStocks/${key}').remove().then(renderAdminFakeStocks)"><i class="fa-solid fa-trash"></i></button></td></tr>`);
       });
     });
-  }
-
-  function editFakeStock(key) {
-    db.ref('fakeStocks/' + key).once('value', snap => {
-      let item = snap.val();
-      if(!item) return;
-      let newCount = prompt('Edit Fake Count (You can enter absolute value or type e.g. +10 or -10 to adjust):', item.fakeCount);
-      if(newCount === null) return;
-      let newPrice = prompt('Edit Price (BDT):', item.price);
-      if(newPrice === null) return;
-
-      let parsedCount = item.fakeCount;
-      newCount = newCount.trim();
-      if(newCount.startsWith('+')) {
-        parsedCount = item.fakeCount + parseInt(newCount.substring(1) || 0);
-      } else if(newCount.startsWith('-')) {
-        parsedCount = item.fakeCount - parseInt(newCount.substring(1) || 0);
-      } else {
-        parsedCount = parseInt(newCount);
-      }
-
-      let parsedPrice = parseFloat(newPrice);
-      if(isNaN(parsedCount) || isNaN(parsedPrice)) {
-        showToast('Invalid numbers entered!');
-        return;
-      }
-
-      db.ref('fakeStocks/' + key).update({ fakeCount: parsedCount, price: parsedPrice }).then(() => {
-        showToast('Fake stock updated successfully!');
-        renderAdminFakeStocks();
-      }).catch(e => showToast('Error: ' + e.message));
-    });
-  }
-
-  function deleteFakeStock(key) {
-    if(!confirm('Are you sure you want to remove this fake stock?')) return;
-    db.ref('fakeStocks/' + key).remove().then(() => {
-      showToast('Fake stock removed successfully!');
-      renderAdminFakeStocks();
-    }).catch(e => showToast('Error: ' + e.message));
   }
 
   function addFakeStock(){
     const cat = document.getElementById('fakeStockCategory').value.trim();
     const fakeCount = parseInt(document.getElementById('fakeStockCount').value);
     const fakePrice = parseFloat(document.getElementById('fakeStockPrice').value);
-    if(!cat) return showToast('Select category');
-    if(isNaN(fakeCount) || fakeCount <= 0) return showToast('Enter valid fake count');
-    if(isNaN(fakePrice) || fakePrice < 0) return showToast('Enter valid price');
-
-    db.ref('fakeStocks').push({ category: cat, fakeCount: fakeCount, price: fakePrice }).then(() => {
+    if(!cat || isNaN(fakeCount) || isNaN(fakePrice)) return showToast('Fill all fields correctly');
+    db.ref('fakeStocks').push({ category: cat, fakeCount, price: fakePrice }).then(() => {
       document.getElementById('fakeStockCount').value = '';
       document.getElementById('fakeStockPrice').value = '';
-      showToast('Fake stock count added successfully!');
+      showToast('Fake stock added');
       renderAdminFakeStocks();
     });
   }
 
   function loadViewStockCategoryOptions(){
     db.ref('categories').once('value',s=>{ 
-      const cats=s.val()||{}; 
-      const sel=document.getElementById('viewStockCategory'); 
-      sel.innerHTML='<option value="">Select Category</option>'; 
-      Object.values(cats||{}).forEach(c=>{ 
-        if(c.status==='ON') {
-          const catName = `${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}`;
-          sel.insertAdjacentHTML('beforeend', `<option value="${catName}">${catName}</option>`); 
-        }
-      }); 
+      const sel=document.getElementById('viewStockCategory'); sel.innerHTML='<option value="">Select Category</option>'; 
+      Object.values(s.val()||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}</option>`); }); 
     });
   }
 
   function loadStockMailsByCategory(){
-    const selectedCategory = document.getElementById('viewStockCategory').value;
+    const cat = document.getElementById('viewStockCategory').value;
     const tbody = document.getElementById('stockMailsTableBody');
     tbody.innerHTML = '';
-    
-    if(!selectedCategory) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">Please select a category above</td></tr>';
-      return;
-    }
-
+    if(!cat) return;
     db.ref('stocks').once('value', snapshot => {
       const stocks = snapshot.val() || {};
-      const keys = Object.keys(stocks);
       let found = 0;
-
-      keys.forEach(k => {
+      Object.keys(stocks).forEach(k => {
         const item = stocks[k];
-        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
+        if(item && item.category === cat && item.status === 'available') {
           found++;
-          tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td><input type="checkbox" class="stock-checkbox" value="${k}"></td>
-              <td><code>${escapeHtml(item.accountDetails)}</code></td>
-              <td>৳${escapeHtml(item.price)}</td>
-              <td><span class="badge-approved">Available</span></td>
-              <td><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
-            </tr>
-          `);
+          tbody.insertAdjacentHTML('beforeend', `<tr><td><input type="checkbox" class="stock-checkbox" value="${k}"></td><td><code>${escapeHtml(item.accountDetails)}</code></td><td>৳${escapeHtml(item.price)}</td><td><span class="badge-approved">Available</span></td><td><button class="btn-delete" onclick="db.ref('stocks/${k}').remove().then(loadStockMailsByCategory)"><i class="fa-solid fa-trash"></i></button></td></tr>`);
         }
       });
-
-      if(found === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
-      }
+      if(!found) tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found</td></tr>';
     });
   }
 
   function updateCategoryBulkPrice(){
-    const selectedCategory = document.getElementById('viewStockCategory').value;
+    const cat = document.getElementById('viewStockCategory').value;
     const newPrice = parseFloat(document.getElementById('bulkNewPrice').value);
-
-    if(!selectedCategory) {
-      showToast('Please select a category first!');
-      return;
-    }
-    if(isNaN(newPrice) || newPrice < 0){
-      showToast('Please enter a valid price!');
-      return;
-    }
-
+    if(!cat || isNaN(newPrice)) return showToast('Select category & enter price');
     db.ref('stocks').once('value', snapshot => {
-      const stocks = snapshot.val() || {};
       const updates = {};
-      let count = 0;
-
-      Object.keys(stocks).forEach(k => {
-        const item = stocks[k];
-        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
-          updates[`stocks/${k}/price`] = newPrice;
-          count++;
-        }
+      Object.keys(snapshot.val()||{}).forEach(k => {
+        if(snapshot.val()[k].category === cat && snapshot.val()[k].status === 'available') updates[`stocks/${k}/price`] = newPrice;
       });
-
-      if(count === 0) {
-        showToast('No available stocks found in this category to update!');
-        return;
-      }
-
-      db.ref().update(updates).then(() => {
-        showToast(`Successfully updated price for ${count} item(s)!`);
-        document.getElementById('bulkNewPrice').value = '';
-        loadStockMailsByCategory();
-      }).catch(e => showToast('Error: '+e.message));
+      db.ref().update(updates).then(() => { showToast('Prices updated'); loadStockMailsByCategory(); });
     });
   }
 
-  function toggleSelectAllStocks(masterCheckbox){
-    const checkboxes = document.querySelectorAll('.stock-checkbox');
-    checkboxes.forEach(cb => cb.checked = masterCheckbox.checked);
-  }
+  function toggleSelectAllStocks(master){ document.querySelectorAll('.stock-checkbox').forEach(cb => cb.checked = master.checked); }
 
   function deleteSelectedStocks(){
-    const selectedCheckboxes = document.querySelectorAll('.stock-checkbox:checked');
-    if(selectedCheckboxes.length === 0){
-      showToast('Please select at least one mail to delete!');
-      return;
-    }
-    if(!confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected mail(s)?`)) return;
-
-    let updates = {};
-    selectedCheckboxes.forEach(cb => {
-      updates[`stocks/${cb.value}`] = null;
-    });
-
-    db.ref().update(updates).then(() => {
-      showToast('Selected stock mails deleted successfully');
-      loadStockMailsByCategory();
-      loadDashboard();
-      const masterCb = document.getElementById('selectAllStocks');
-      if(masterCb) masterCb.checked = false;
-    }).catch(e => showToast('Error: '+e.message));
+    const checks = document.querySelectorAll('.stock-checkbox:checked');
+    if(!checks.length) return showToast('Select mails first');
+    const updates = {};
+    checks.forEach(cb => updates[`stocks/${cb.value}`] = null);
+    db.ref().update(updates).then(() => { showToast('Deleted successfully'); loadStockMailsByCategory(); });
   }
 
-  function deleteStockItem(key){
-    if(!confirm('Are you sure you want to delete this mail stock?')) return;
-    db.ref(`stocks/${key}`).remove().then(() => {
-      showToast('Stock mail deleted successfully');
-      loadStockMailsByCategory();
-      loadDashboard();
-    }).catch(e => showToast('Error: '+e.message));
+  function loadStockFile(e){
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onload = ev => { document.getElementById('stockAccounts').value = (ev.target.result||'').trim(); showToast('File loaded'); };
+    r.readAsText(f);
   }
 
-  function loadStockFile(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ document.getElementById('stockAccounts').value = (ev.target.result||'').trim(); showToast('File loaded'); }; r.readAsText(f); }
   function uploadStocks(){
-    const cat=document.getElementById('stockCategory').value.trim();
-    const price=parseFloat(document.getElementById('stockPrice').value);
-    const raw=document.getElementById('stockAccounts').value.trim();
-    if(!cat) return showToast('Select category'); if(isNaN(price)||price<=0) return showToast('Enter price'); if(!raw) return showToast('Paste accounts');
-    const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean); let cnt=0;
-    lines.forEach(line=>{ db.ref('stocks').push({category:cat, price:price, accountDetails:line, status:'available', soldTo:null}); cnt++; });
-    document.getElementById('stockAccounts').value=''; document.getElementById('stockPrice').value=''; showToast(`Uploaded ${cnt} accounts successfully`); loadDashboard();
+    const cat = document.getElementById('stockCategory').value.trim();
+    const price = parseFloat(document.getElementById('stockPrice').value);
+    const raw = document.getElementById('stockAccounts').value.trim();
+    if(!cat || isNaN(price) || !raw) return showToast('Fill all fields');
+    
+    const lines = raw.split('\n').map(l=>l.trim()).filter(Boolean);
+    const now = Date.now();
+    lines.forEach(line => {
+      db.ref('stocks').push({ category: cat, price: price, accountDetails: line, status: 'available', timestamp: now });
+    });
+    document.getElementById('stockAccounts').value = '';
+    showToast(`Uploaded ${lines.length} real accounts`);
+    loadFastDashboardData();
   }
 
-  let depositsCache = {};
-  function loadDeposits(){ db.ref('deposits').once('value',snap=>{ depositsCache = snap.val()||{}; renderDeposits(); }); }
-  function renderDeposits(){
-    const q=(document.getElementById('searchTrx').value||'').trim().toLowerCase(); const status=document.getElementById('filterStatus').value;
-    const body=document.getElementById('depositsBody'); body.innerHTML='';
-    const keys=Object.keys(depositsCache||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No deposits found</td></tr>'; return; }
-    keys.reverse().forEach(k=>{ const d=depositsCache[k]; if(status && d.status!==status) return; if(q && !(String(d.trx||'').toLowerCase().includes(q))) return;
-      const statusHtml = d.status==='Approved' ? '<span class="badge-approved">Approved</span>' : (d.status==='Rejected' ? '<span class="badge-rejected">Rejected</span>':'<span class="badge-pending">Pending</span>');
-      
-      let trxContent = `<code style="color:#93c5fd">${escapeHtml(d.trx||'')}</code>`;
-      body.insertAdjacentHTML('beforeend', `<tr>
-        <td>${escapeHtml(d.email||'')}</td>
-        <td><span class="provider-pill">${escapeHtml(d.method||'')}</span></td>
-        <td><strong>৳${d.amount||0}</strong></td>
-        <td>${trxContent}</td>
-        <td>${statusHtml}</td>
-        <td>
-          ${d.status==='Pending'?`
-            <button class="btn btn-sm btn-success me-1 px-3 py-2" onclick="approveDeposit('${k}','${d.email}','${d.amount}')">Approve</button>
-            <button class="btn btn-sm btn-danger px-3 py-2" onclick="rejectDeposit('${k}')">Reject</button>
-          `:'-'}
-        </td>
-      </tr>`);
+  function loadDeposits(){
+    db.ref('deposits').once('value', snap => {
+      const deposits = snap.val() || {};
+      const tbody = document.getElementById('depositsBody');
+      tbody.innerHTML = '';
+      const keys = Object.keys(deposits);
+      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-4">No deposits</td></tr>'; return; }
+      keys.reverse().forEach(k => {
+        const d = deposits[k];
+        const statusHtml = d.status==='Approved' ? '<span class="badge-approved">Approved</span>' : (d.status==='Rejected' ? '<span class="badge-rejected">Rejected</span>':'<span class="badge-pending">Pending</span>');
+        tbody.insertAdjacentHTML('beforeend', `<tr><td>${escapeHtml(d.email)}</td><td><span class="provider-pill">${escapeHtml(d.method)}</span></td><td><strong>৳${d.amount}</strong></td><td><code>${escapeHtml(d.trx)}</code></td><td>${statusHtml}</td><td>${d.status==='Pending'?`<button class="btn btn-sm btn-success me-1" onclick="approveDeposit('${k}','${d.email}',${d.amount})">Approve</button><button class="btn btn-sm btn-danger" onclick="db.ref('deposits/${k}/status').set('Rejected').then(loadDeposits)">Reject</button>`:'-'}</td></tr>`);
+      });
     });
   }
 
   function approveDeposit(key, email, amount){
     const safeKey = email.toLowerCase().trim().replace(/[@.]/g, '_');
-    const addAmt = parseFloat(amount);
     db.ref(`balances/${safeKey}`).once('value', snap => {
-      const currentBal = parseFloat(snap.val() || 0);
-      const newBal = parseFloat((currentBal + addAmt).toFixed(2));
+      const newBal = (parseFloat(snap.val()||0) + parseFloat(amount));
       db.ref(`balances/${safeKey}`).set(newBal).then(() => {
         db.ref(`deposits/${key}/status`).set('Approved').then(() => {
-          showToast('Deposit approved and balance updated successfully');
+          showToast('Deposit approved');
           loadDeposits();
-          loadDashboard();
         });
       });
     });
   }
 
-  function rejectDeposit(key){
-    db.ref(`deposits/${key}/status`).set('Rejected').then(() => {
-      showToast('Deposit rejected');
-      loadDeposits();
-      loadDashboard();
-    });
-  }
-
   function loadPayments(){
     db.ref('paymentMethods').once('value', snap => {
-      const methods = snap.val() || {};
-      const tbody = document.getElementById('paymentsBody');
-      tbody.innerHTML = '';
-      const keys = Object.keys(methods);
-      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
-      keys.forEach(k => {
-        const m = methods[k];
-        tbody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td>
-              ${m.logo ? `<img src="${escapeHtml(m.logo)}" style="width:30px;height:30px;border-radius:8px;object-fit:cover;margin-right:10px;vertical-align:middle;">` : ''}
-              <strong>${escapeHtml(m.name)}</strong>
-            </td>
-            <td>${escapeHtml(m.type)}</td>
-            <td><code>${escapeHtml(m.number)}</code></td>
-            <td><code>${escapeHtml(m.logo || 'No Logo')}</code></td>
-            <td><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>
-        `);
+      const tbody = document.getElementById('paymentsBody'); tbody.innerHTML = '';
+      Object.keys(snap.val()||{}).forEach(k => {
+        const m = snap.val()[k];
+        tbody.insertAdjacentHTML('beforeend', `<tr><td><strong>${escapeHtml(m.name)}</strong></td><td>${escapeHtml(m.type)}</td><td><code>${escapeHtml(m.number)}</code></td><td><button class="btn-delete" onclick="db.ref('paymentMethods/${k}').remove().then(loadPayments)"><i class="fa-solid fa-trash"></i></button></td></tr>`);
       });
     });
   }
 
-  function addPayment(){
-    const name = document.getElementById('payName').value.trim();
-    const type = document.getElementById('payType').value.trim();
-    const number = document.getElementById('payNumber').value.trim();
-    const logo = document.getElementById('payLogo').value.trim();
-    if(!name || !number) { showToast('Enter name and number/details'); return; }
-    db.ref('paymentMethods').push({ name, type, number, logo }).then(() => {
-      document.getElementById('payName').value = '';
-      document.getElementById('payNumber').value = '';
-      document.getElementById('payLogo').value = '';
-      showToast('Payment method added successfully');
-      loadPayments();
-    });
-  }
+  function saveSupport(){ db.ref('settings/supportTelegram').set(document.getElementById('supportInput').value.trim()).then(() => showToast('Saved')); }
+  function loadSupport(){ db.ref('settings/supportTelegram').once('value', s => { if(s.exists()) document.getElementById('supportInput').value = s.val(); }); }
+  function saveBinanceRate(){ db.ref('settings/binanceRate').set(parseFloat(document.getElementById('binanceRateInput').value)).then(() => showToast('Saved')); }
+  function loadBinanceRateSettings(){ db.ref('settings/binanceRate').once('value', s => { if(s.exists()) document.getElementById('binanceRateInput').value = s.val(); }); }
+  function saveUserNotification(){ db.ref('settings/userNotification').set(document.getElementById('adminNotificationInput').value.trim()).then(() => showToast('Broadcasted')); }
+  function clearUserNotification(){ db.ref('settings/userNotification').set('').then(() => showToast('Cleared')); }
+  function loadUserNotificationSetting(){ db.ref('settings/userNotification').once('value', s => { if(s.exists()) document.getElementById('adminNotificationInput').value = s.val(); }); }
 
-  function removePayment(key){
-    if(!confirm('Delete payment method?')) return;
-    db.ref(`paymentMethods/${key}`).remove().then(() => {
-      showToast('Payment method removed');
-      loadPayments();
-    });
-  }
-
-  function saveSupport(){
-    const link = document.getElementById('supportInput').value.trim();
-    db.ref('settings/supportTelegram').set(link).then(() => showToast('Support link saved successfully'));
-  }
-
-  function loadSupport(){
-    db.ref('settings/supportTelegram').once('value', snap => {
-      if(snap.exists()) document.getElementById('supportInput').value = snap.val();
-    });
-  }
-
-  function saveBinanceRate(){
-    const rate = parseFloat(document.getElementById('binanceRateInput').value);
-    if(isNaN(rate) || rate <= 0) { showToast('Enter a valid rate'); return; }
-    db.ref('settings/binanceRate').set(rate).then(() => showToast('Binance dollar rate saved successfully'));
-  }
-
-  function loadBinanceRateSettings(){
-    db.ref('settings/binanceRate').once('value', snap => {
-      if(snap.exists()) document.getElementById('binanceRateInput').value = snap.val();
-    });
-  }
-
-  function saveUserNotification(){
-    const text = document.getElementById('adminNotificationInput').value.trim();
-    if(!text) { showToast('Enter notification message'); return; }
-    db.ref('settings/userNotification').set(text).then(() => showToast('Notification broadcasted successfully to all user panels!'));
-  }
-
-  function clearUserNotification(){
-    db.ref('settings/userNotification').set('').then(() => {
-      document.getElementById('adminNotificationInput').value = '';
-      showToast('Notification cleared from user panels');
-    });
-  }
-
-  function loadUserNotificationSetting(){
-    db.ref('settings/userNotification').once('value', snap => {
-      if(snap.exists()) document.getElementById('adminNotificationInput').value = snap.val();
-    });
-  }
-
-  let usersCacheData = {};
   function loadUsers(){
-    db.ref('users').once('value', snap => {
-      usersCacheData = snap.val() || {};
-      renderUsers();
-    });
-  }
-
-  function renderUsers(){
-    const q = (document.getElementById('searchUserGmail').value || '').trim().toLowerCase();
-    const tbody = document.getElementById('usersBody');
-    tbody.innerHTML = '';
-    
-    let entries = Object.entries(usersCacheData);
-    if(entries.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>';
-      return;
-    }
-
-    const uniqueUsersMap = new Map();
-    entries.forEach(([key, u]) => {
-      if (u && u.email) {
-        const cleanEmail = u.email.toLowerCase().trim();
-        if (!uniqueUsersMap.has(cleanEmail)) {
-          const safeKey = cleanEmail.replace(/[@.]/g, '_');
-          uniqueUsersMap.set(cleanEmail, { safeKey, email: cleanEmail, originalEmail: u.email });
-        }
-      }
-    });
-
-    let uniqueEntries = Array.from(uniqueUsersMap.values());
-
-    db.ref('balances').once('value', balSnap => {
-      const balancesData = balSnap.val() || {};
+    db.ref().once('value', snapshot => {
+      const data = snapshot.val() || {};
+      const usersData = data.users || {};
+      const balancesData = data.balances || {};
+      const tbody = document.getElementById('usersBody');
       tbody.innerHTML = '';
-      let found = 0;
 
-      uniqueEntries.forEach((u) => {
-        if(q && !u.email.includes(q)) return;
-        found++;
-        
-        const bal = balancesData[u.safeKey] || 0;
-        tbody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td><strong>${escapeHtml(u.originalEmail)}</strong></td>
-            <td><strong class="text-success">৳${bal}</strong></td>
-            <td>
-              <button class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2 me-1" onclick="adjustUserBalance('${u.safeKey}', '${escapeHtml(u.originalEmail)}')">Edit Balance</button>
-              <button class="btn btn-sm btn-danger rounded-pill px-3 py-2" onclick="deleteUser('${u.safeKey}', '${escapeHtml(u.originalEmail)}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
-            </td>
-          </tr>
-        `);
-      });
+      const uniqueUsers = new Set();
+      Object.values(usersData).forEach(u => { if(u && u.email) uniqueUsers.add(u.email.toLowerCase().trim()); });
 
-      if(found === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No matching users found</td></tr>';
-      }
-    });
-  }
+      if(uniqueUsers.size === 0) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>'; return; }
 
-  function adjustUserBalance(safeKey, email){
-    db.ref(`balances/${safeKey}`).once('value', snap => {
-      let cur = parseFloat(snap.val() || 0);
-      let val = prompt(`Adjust balance for ${email}\nCurrent Balance: ৳${cur}\nEnter new balance or amount adjustment (+/-):`);
-      if(val === null) return;
-      let newAmt = parseFloat(val);
-      if(isNaN(newAmt)) { showToast('Invalid amount'); return; }
-      db.ref(`balances/${safeKey}`).set(newAmt).then(() => {
-        showToast('Balance updated successfully');
-        renderUsers();
+      uniqueUsers.forEach(email => {
+        const safeKey = email.replace(/[@.]/g, '_');
+        const bal = balancesData[safeKey] || 0;
+        tbody.insertAdjacentHTML('beforeend', `<tr><td><strong>${escapeHtml(email)}</strong></td><td><strong class="text-success">৳${bal}</strong></td><td><button class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2" onclick="adjustBalance('${safeKey}','${email}')">Edit Balance</button></td></tr>`);
       });
     });
   }
 
-  function deleteUser(safeKey, email){
-    if(!confirm(`Are you sure you want to delete user: ${email}?\nThis will remove user data and balance from database.`)) return;
-
-    let updates = {};
-    updates[`balances/${safeKey}`] = null;
-
-    db.ref('users').once('value', snap => {
-      let allUsers = snap.val() || {};
-      Object.keys(allUsers).forEach(k => {
-        let u = allUsers[k];
-        if(u && u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim()) {
-          updates[`users/${k}`] = null;
-        }
-      });
-
-      db.ref().update(updates).then(() => {
-        showToast('User deleted successfully from database!');
-        loadUsers();
-        loadDashboard();
-      }).catch(e => {
-        showToast('Error deleting user: ' + e.message);
-      });
-    });
+  function adjustBalance(safeKey, email){
+    let val = prompt(`Enter new balance for ${email}:`);
+    if(val === null) return;
+    let newAmt = parseFloat(val);
+    if(isNaN(newAmt)) return showToast('Invalid amount');
+    db.ref(`balances/${safeKey}`).set(newAmt).then(() => { showToast('Balance updated'); loadUsers(); });
   }
 </script>
 </body>
