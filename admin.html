@@ -158,8 +158,8 @@
       .styled-table thead { display: none; }
       .styled-table, .styled-table tbody, .styled-table tr, .styled-table td { display: block; width: 100%; }
       .styled-table tr { margin-bottom: 15px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
-      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; }
-      .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; }
+      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; word-break: break-word; }
+      .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-right: 10px; flex-shrink: 0; }
       .styled-table td:last-child { border-bottom: none; justify-content: flex-end; padding-top: 12px; }
     }
   </style>
@@ -373,15 +373,19 @@
       <h1>Categories Management</h1>
       <div class="card-panel">
         <div class="row g-3">
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label">Main Category</label>
             <input id="catMain" class="form-control" list="mainCategoryList" placeholder="Select or type...">
             <datalist id="mainCategoryList"></datalist>
           </div>
-          <div class="col-md-4">
+          <div class="col-md-3">
             <label class="form-label">Sub Category</label>
             <input id="catSub" class="form-control" list="subCategoryList" placeholder="Select or type...">
             <datalist id="subCategoryList"></datalist>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Sort Order (No.)</label>
+            <input id="catOrder" type="number" class="form-control" placeholder="1, 2, 3...">
           </div>
           <div class="col-md-4">
             <label class="form-label">Description</label>
@@ -391,10 +395,10 @@
         </div>
       </div>
       <div class="table-card">
-        <h5>Existing Categories</h5>
+        <h5>Existing Categories (Sorted by Order)</h5>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead><tr><th>Category</th><th>Sub-Category</th><th>Description</th><th>Status</th><th>Action</th></tr></thead>
+            <thead><tr><th>Order</th><th>Category</th><th>Sub-Category</th><th>Description</th><th>Status</th><th>Action</th></tr></thead>
             <tbody id="categoriesBody"></tbody>
           </table>
         </div>
@@ -847,10 +851,10 @@
 
           tbody.insertAdjacentHTML('beforeend', `
             <tr>
-              <td><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
-              <td><strong>${escapeHtml(subCat)}</strong></td>
-              <td><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
-              <td><span class="${stockBadgeClass}">${stockText}</span></td>
+              <td data-label="Category"><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
+              <td data-label="Item Title"><strong>${escapeHtml(subCat)}</strong></td>
+              <td data-label="Price"><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
+              <td data-label="Real In Stock"><span class="${stockBadgeClass}">${stockText}</span></td>
             </tr>
           `);
         });
@@ -891,12 +895,12 @@
         if(o.timestamp) formattedOrderDate = new Date(o.timestamp).toLocaleString();
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td><code>${escapeHtml(o.orderId || '#---')}</code></td>
-            <td>${escapeHtml(o.user || '-')}</td>
-            <td>${escapeHtml(o.category || '-')}</td>
-            <td>${o.quantity || 1}</td>
-            <td>৳${o.totalPrice || o.price || 0}</td>
-            <td>${escapeHtml(formattedOrderDate)}</td>
+            <td data-label="Order ID"><code>${escapeHtml(o.orderId || '#---')}</code></td>
+            <td data-label="User Email">${escapeHtml(o.user || '-')}</td>
+            <td data-label="Category">${escapeHtml(o.category || '-')}</td>
+            <td data-label="Quantity">${o.quantity || 1}</td>
+            <td data-label="Total Price">৳${o.totalPrice || o.price || 0}</td>
+            <td data-label="Date">${escapeHtml(formattedOrderDate)}</td>
           </tr>
         `);
       });
@@ -906,11 +910,18 @@
   function addCategory(){
     const main=document.getElementById('catMain').value.trim();
     const sub=document.getElementById('catSub').value.trim();
+    const order=parseInt(document.getElementById('catOrder').value) || 0;
     const desc=document.getElementById('catDesc').value.trim();
     if(!main||!sub){ showToast('Enter main and sub category'); return; }
-    db.ref('categories').push({cat:main, subCat:sub, description:desc, status:'ON'}).then(()=>{ 
-      document.getElementById('catMain').value=''; document.getElementById('catSub').value=''; document.getElementById('catDesc').value=''; 
-      showToast('Category added successfully'); loadCategories(); loadCategoryOptions(); loadFakeCategoryOptions();
+    db.ref('categories').push({cat:main, subCat:sub, sortOrder:order, description:desc, status:'ON'}).then(()=>{ 
+      document.getElementById('catMain').value=''; 
+      document.getElementById('catSub').value=''; 
+      document.getElementById('catOrder').value=''; 
+      document.getElementById('catDesc').value=''; 
+      showToast('Category added successfully'); 
+      loadCategories(); 
+      loadCategoryOptions(); 
+      loadFakeCategoryOptions();
     });
   }
 
@@ -919,7 +930,10 @@
       const cats=snap.val()||{}; const body=document.getElementById('categoriesBody'); body.innerHTML='';
       const mainList = document.getElementById('mainCategoryList'); const subList = document.getElementById('subCategoryList');
       mainList.innerHTML = ''; subList.innerHTML = '';
-      const keys=Object.keys(cats||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="5" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
+      let keys=Object.keys(cats||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
+      
+      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+
       const uniqueMains = new Set(); const uniqueSubs = new Set();
       keys.forEach(k=>{
         const c=cats[k]||{};
@@ -927,12 +941,13 @@
         if(c.subCat) uniqueSubs.add(c.subCat);
 
         body.insertAdjacentHTML('beforeend', `<tr>
-          <td><strong style="color:#818cf8">${escapeHtml(c.cat||'')}</strong></td>
-          <td>${escapeHtml(c.subCat||'')}</td>
-          <td><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'')}</span></td>
-          <td>${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
-          <td>
-            <button class="btn-edit-action" onclick="editCategoryDescription('${k}')" title="Edit Description"><i class="fa-solid fa-pen"></i></button>
+          <td data-label="Order"><span class="badge bg-secondary">${c.sortOrder || 0}</span></td>
+          <td data-label="Category"><strong style="color:#818cf8">${escapeHtml(c.cat||'')}</strong></td>
+          <td data-label="Sub-Category">${escapeHtml(c.subCat||'')}</td>
+          <td data-label="Description"><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'')}</span></td>
+          <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
+          <td data-label="Action">
+            <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
             <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
             <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
           </td>
@@ -943,13 +958,19 @@
     });
   }
 
-  function editCategoryDescription(key){
-    db.ref(`categories/${key}/description`).once('value', snapshot => {
-      const currentDesc = snapshot.val() || '';
-      const newDesc = prompt('Edit description:', currentDesc);
+  function editCategoryDetails(key){
+    db.ref(`categories/${key}`).once('value', snapshot => {
+      const c = snapshot.val() || {};
+      const newOrder = prompt('Edit Sort Order (number for sorting up/down):', c.sortOrder || 0);
+      if(newOrder === null) return;
+      const newDesc = prompt('Edit description:', c.description || '');
       if(newDesc === null) return;
-      db.ref(`categories/${key}/description`).set(newDesc.trim()).then(()=>{
-        showToast('Description updated successfully');
+
+      db.ref(`categories/${key}`).update({
+        sortOrder: parseInt(newOrder) || 0,
+        description: newDesc.trim()
+      }).then(()=>{
+        showToast('Category updated successfully');
         loadCategories();
       }).catch(e=>showToast('Error: '+e.message));
     });
@@ -959,11 +980,33 @@
   function removeCategory(key){ if(!confirm('Delete category?')) return; db.ref(`categories/${key}`).remove().then(()=>loadCategories()); }
 
   function loadCategoryOptions(){
-    db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('stockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+    db.ref('categories').once('value',s=>{ 
+      const cats=s.val()||{}; 
+      const sel=document.getElementById('stockCategory'); 
+      sel.innerHTML=''; 
+      let keys = Object.keys(cats);
+      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+      keys.forEach(k=>{ 
+        let c = cats[k];
+        if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); 
+      }); 
+      if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; 
+    });
   }
 
   function loadFakeCategoryOptions(){
-    db.ref('categories').once('value',s=>{ const cats=s.val()||{}; const sel=document.getElementById('fakeStockCategory'); sel.innerHTML=''; Object.values(cats||{}).forEach(c=>{ if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); }); if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; });
+    db.ref('categories').once('value',s=>{ 
+      const cats=s.val()||{}; 
+      const sel=document.getElementById('fakeStockCategory'); 
+      sel.innerHTML=''; 
+      let keys = Object.keys(cats);
+      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+      keys.forEach(k=>{ 
+        let c = cats[k];
+        if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); 
+      }); 
+      if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; 
+    });
   }
 
   function renderAdminFakeStocks() {
@@ -980,10 +1023,10 @@
         let item = fakeStocks[key];
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td><strong>${escapeHtml(item.category)}</strong></td>
-            <td><span class="badge-pending">${item.fakeCount}</span></td>
-            <td>৳${item.price}</td>
-            <td>
+            <td data-label="Category"><strong>${escapeHtml(item.category)}</strong></td>
+            <td data-label="Fake Count"><span class="badge-pending">${item.fakeCount}</span></td>
+            <td data-label="Price">৳${item.price}</td>
+            <td data-label="Action">
               <button class="btn-edit-action" onclick="editFakeStock('${key}')" title="Edit Fake Stock Count & Price"><i class="fa-solid fa-pen"></i></button>
               <button class="btn-delete" onclick="deleteFakeStock('${key}')" title="Remove Fake Stock"><i class="fa-solid fa-trash"></i></button>
             </td>
@@ -997,7 +1040,7 @@
     db.ref('fakeStocks/' + key).once('value', snap => {
       let item = snap.val();
       if(!item) return;
-      let newCount = prompt('Edit Fake Count (You can enter absolute value or type e.g. +10 or -10 to adjust):', item.fakeCount);
+      let newCount = prompt('Edit Fake Count (Absolute value or +10 / -10):', item.fakeCount);
       if(newCount === null) return;
       let newPrice = prompt('Edit Price (BDT):', item.price);
       if(newPrice === null) return;
@@ -1054,7 +1097,10 @@
       const cats=s.val()||{}; 
       const sel=document.getElementById('viewStockCategory'); 
       sel.innerHTML='<option value="">Select Category</option>'; 
-      Object.values(cats||{}).forEach(c=>{ 
+      let keys = Object.keys(cats);
+      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+      keys.forEach(k=>{ 
+        let c = cats[k];
         if(c.status==='ON') {
           const catName = `${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}`;
           sel.insertAdjacentHTML('beforeend', `<option value="${catName}">${catName}</option>`); 
@@ -1084,11 +1130,11 @@
           found++;
           tbody.insertAdjacentHTML('beforeend', `
             <tr>
-              <td><input type="checkbox" class="stock-checkbox" value="${k}"></td>
-              <td><code>${escapeHtml(item.accountDetails)}</code></td>
-              <td>৳${escapeHtml(item.price)}</td>
-              <td><span class="badge-approved">Available</span></td>
-              <td><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
+              <td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td>
+              <td data-label="Account Details"><code>${escapeHtml(item.accountDetails)}</code></td>
+              <td data-label="Price">৳${escapeHtml(item.price)}</td>
+              <td data-label="Status"><span class="badge-approved">Available</span></td>
+              <td data-label="Action"><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
             </tr>
           `);
         }
@@ -1266,14 +1312,14 @@
         const m = methods[k];
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td>
+            <td data-label="Name">
               ${m.logo ? `<img src="${escapeHtml(m.logo)}" style="width:30px;height:30px;border-radius:8px;object-fit:cover;margin-right:10px;vertical-align:middle;">` : ''}
               <strong>${escapeHtml(m.name)}</strong>
             </td>
-            <td>${escapeHtml(m.type)}</td>
-            <td><code>${escapeHtml(m.number)}</code></td>
-            <td><code>${escapeHtml(m.logo || 'No Logo')}</code></td>
-            <td><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td>
+            <td data-label="Type">${escapeHtml(m.type)}</td>
+            <td data-label="Number"><code>${escapeHtml(m.number)}</code></td>
+            <td data-label="Logo URL"><code>${escapeHtml(m.logo || 'No Logo')}</code></td>
+            <td data-label="Action"><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td>
           </tr>
         `);
       });
@@ -1389,9 +1435,9 @@
         const bal = balancesData[u.safeKey] || 0;
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td><strong>${escapeHtml(u.originalEmail)}</strong></td>
-            <td><strong class="text-success">৳${bal}</strong></td>
-            <td>
+            <td data-label="Email"><strong>${escapeHtml(u.originalEmail)}</strong></td>
+            <td data-label="Balance"><strong class="text-success">৳${bal}</strong></td>
+            <td data-label="Action">
               <button class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2 me-1" onclick="openBalanceModal('${u.safeKey}', '${escapeHtml(u.originalEmail)}', ${bal})"><i class="fa-solid fa-calculator me-1"></i> +/- Balance</button>
               <button class="btn btn-sm btn-danger rounded-pill px-3 py-2" onclick="deleteUser('${u.safeKey}', '${escapeHtml(u.originalEmail)}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
             </td>
