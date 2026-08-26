@@ -92,7 +92,6 @@
     .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:12px 24px;border-radius:14px;font-weight:700;box-shadow:0 4px 15px var(--accent-glow);transition:all 0.2s;}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accent-glow);background:linear-gradient(135deg, #4f46e5, #4338ca);}
     
-    /* --- NEW PREMIUM DEPOSIT ACTION BUTTONS DESIGN --- */
     .btn-action-group {
       display: flex;
       gap: 8px;
@@ -156,7 +155,6 @@
       .mobile-topbar{display:flex;}
       .stats-row{flex-direction:column}
       
-      /* Mobile responsive table styling for cleaner card look */
       .styled-table thead { display: none; }
       .styled-table, .styled-table tbody, .styled-table tr, .styled-table td { display: block; width: 100%; }
       .styled-table tr { margin-bottom: 15px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
@@ -226,7 +224,7 @@
   </aside>
 
   <main class="admin-main">
-    <section id="tab-dashboard" style="display:none">
+    <section id="tab-dashboard" style="display:block">
       <h1>Dashboard Overview</h1>
       <div class="stats-row">
         <div class="stat-card">
@@ -510,8 +508,8 @@
       </div>
     </section>
 
-    <!-- DEPOSIT REQUESTS TAB (REDESIGNED) -->
-    <section id="tab-deposits" style="display:block">
+    <!-- DEPOSIT REQUESTS TAB -->
+    <section id="tab-deposits" style="display:none">
       <h1>Deposit Requests</h1>
       <div class="card-panel mb-3">
         <div class="row g-2 align-items-center">
@@ -723,9 +721,7 @@
   function initApp(){
     document.getElementById('admin-auth').style.display='none';
     document.getElementById('admin-app').style.display='block';
-    if(!document.querySelector('.sidebar-menu a.active')) {
-      openTab('dashboard');
-    }
+    openTab('dashboard');
   }
 
   // --- USER ACTIVITY HISTORY SEARCH (A-Z) ---
