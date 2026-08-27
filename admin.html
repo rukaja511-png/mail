@@ -76,7 +76,7 @@
     .stat-card:hover{transform:translateY(-4px);border-color:var(--border-glow);}
     .stat-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 20px var(--accent-glow)}
     .stat-title{color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;}
-    .stat-number{font-weight:800;font-size:32px;color:#fff;margin-top:2px;}
+    .stat-number{font-weight:800;font-size:28px;color:#fff;margin-top:2px;}
 
     .table-card{border-radius:24px;padding:26px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:26px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
     .styled-table{width:100%;border-collapse:collapse}
@@ -147,6 +147,24 @@
     .btn-edit-action:hover{background:var(--accent);color:#fff;box-shadow:0 4px 15px var(--accent-glow);}
 
     .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:#e2e8f0;}
+
+    /* Category Accordion Styling with Premium Look */
+    .main-category-row {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%);
+      cursor: pointer;
+      font-weight: bold;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2) !important;
+    }
+    .main-category-row:hover {
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(30, 27, 75, 0.6) 100%) !important;
+    }
+    .sub-category-row {
+      background: rgba(15, 23, 42, 0.6);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+    .sub-category-row:hover {
+      background: rgba(30, 41, 59, 0.8) !important;
+    }
 
     @media (max-width:991px){
       .admin-sidebar{transform:translateX(-100%);}
@@ -238,6 +256,25 @@
         <div class="stat-card">
           <div class="stat-icon" style="background:linear-gradient(135deg, #f59e0b, #d97706);box-shadow:0 8px 20px rgba(245,158,11,0.3)"><i class="fa-solid fa-clock"></i></div>
           <div><div class="stat-title">Pending Deposits</div><div id="statDeposits" class="stat-number">0</div></div>
+        </div>
+      </div>
+
+      <!-- TOTAL APPROVED DEPOSIT CARD WITH TIME FILTER (Starts with Last 1 Month) -->
+      <div class="card-panel mb-4" style="border-color: rgba(16, 185, 129, 0.3);">
+        <div class="row align-items-center">
+          <div class="col-md-8">
+            <div class="stat-title text-success mb-1"><i class="fa-solid fa-wallet me-2"></i>Total Approved Deposit Amount</div>
+            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:36px;">৳0</div>
+          </div>
+          <div class="col-md-4 mt-3 mt-md-0 text-md-end">
+            <label class="form-label">Time Period</label>
+            <select id="depositTimeFilter" class="form-select" onchange="loadDashboard()">
+              <option value="1month" selected>Last 1 Month</option>
+              <option value="2months">Last 2 Months</option>
+              <option value="3months">Last 3 Months</option>
+              <option value="all">All Time</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -369,6 +406,7 @@
       </div>
     </section>
 
+    <!-- CATEGORIES MANAGEMENT TAB -->
     <section id="tab-categories" style="display:none">
       <h1>Categories Management</h1>
       <div class="card-panel">
@@ -383,40 +421,48 @@
             <input id="catSub" class="form-control" list="subCategoryList" placeholder="Select or type...">
             <datalist id="subCategoryList"></datalist>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2" style="display:none;">
             <label class="form-label">Sort Order (No.)</label>
-            <input id="catOrder" type="number" class="form-control" placeholder="1, 2, 3...">
+            <input id="catOrder" type="number" class="form-control" value="0" placeholder="1, 2, 3...">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <label class="form-label">Description</label>
-            <textarea id="catDesc" class="form-control" rows="1" placeholder="Write description..."></textarea>
+            <textarea id="catDesc" class="form-control" rows="1" placeholder="Write clear description for category..."></textarea>
           </div>
           <div class="col-12 text-end"><button class="btn btn-primary" onclick="addCategory()">Add Category</button></div>
         </div>
       </div>
       <div class="table-card">
-        <h5>Existing Categories (Sorted by Order)</h5>
+        <h5 class="mb-3" style="color: #a5b4fc;"><i class="fa-solid fa-list-ul me-2"></i>Existing Categories (Click Main Category to Expand/Collapse Sub-Categories)</h5>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead><tr><th>Order</th><th>Category</th><th>Sub-Category</th><th>Description</th><th>Status</th><th>Action</th></tr></thead>
+            <thead>
+              <tr>
+                <th style="width:35%;">Category / Sub-Category</th>
+                <th style="width:40%;">Description</th>
+                <th style="width:10%;">Status</th>
+                <th style="width:15%; text-align:right;">Action</th>
+              </tr>
+            </thead>
             <tbody id="categoriesBody"></tbody>
           </table>
         </div>
       </div>
     </section>
 
+    <!-- ADD STOCKS TAB (WITH CATEGORY PRICE SETTING) -->
     <section id="tab-stocks" style="display:none">
       <h1>Add Stocks</h1>
       <div class="card-panel mb-4">
-        <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload</h5>
+        <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload & Price Setting</h5>
         <div class="row g-3">
-          <div class="col-md-5">
+          <div class="col-md-4">
             <label class="form-label">Select Sub-Category</label>
-            <select id="stockCategory" class="form-select"></select>
+            <select id="stockCategory" class="form-select" onchange="onStockCategorySelect(this)"></select>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-3">
             <label class="form-label">Price (BDT)</label>
-            <input id="stockPrice" type="number" class="form-control" placeholder="25">
+            <input id="stockPrice" type="number" class="form-control" placeholder="Set price for category">
           </div>
           <div class="col-md-5">
             <label class="form-label">Upload (.txt/.csv)</label>
@@ -426,7 +472,7 @@
             <label class="form-label">Accounts (one per line)</label>
             <textarea id="stockAccounts" class="form-control" rows="4" placeholder="email:password"></textarea>
           </div>
-          <div class="col-12 text-end"><button class="btn btn-success" onclick="uploadStocks()">Upload Real Stocks</button></div>
+          <div class="col-12 text-end"><button class="btn btn-success px-4 py-3 fw-bold" onclick="uploadStocks()">Upload Real Stocks & Save Price</button></div>
         </div>
       </div>
 
@@ -872,7 +918,37 @@
       document.getElementById('statUsers').innerText = uniqueEmails.size; 
     });
     db.ref('stocks').once('value',s=>{ const avail=Object.values(s.val()||{}).filter(x=>x.status==='available').length; document.getElementById('statStocks').innerText=avail; });
-    db.ref('deposits').once('value',d=>{ const pending=Object.values(d.val()||{}).filter(x=>x.status==='Pending').length; document.getElementById('statDeposits').innerText=pending; });
+    db.ref('deposits').once('value',d=>{ 
+      const depositsVal = d.val()||{};
+      const depositsArr = Object.values(depositsVal);
+      const pending=depositsArr.filter(x=>x.status==='Pending').length; 
+      document.getElementById('statDeposits').innerText=pending; 
+
+      // Calculate Total Approved Deposits with Time Filter (Default: Last 1 Month)
+      const timeFilter = document.getElementById('depositTimeFilter').value;
+      const now = Date.now();
+      let cutoffTime = 0;
+      if(timeFilter === '1month') {
+        cutoffTime = now - (30 * 24 * 60 * 60 * 1000);
+      } else if(timeFilter === '2months') {
+        cutoffTime = now - (60 * 24 * 60 * 60 * 1000);
+      } else if(timeFilter === '3months') {
+        cutoffTime = now - (90 * 24 * 60 * 60 * 1000);
+      } else if(timeFilter === 'all') {
+        cutoffTime = 0;
+      }
+
+      let totalApprovedAmount = 0;
+      depositsArr.forEach(dep => {
+        if(dep && dep.status === 'Approved') {
+          let depTime = dep.timestamp || 0;
+          if(depTime >= cutoffTime) {
+            totalApprovedAmount += parseFloat(dep.amount || 0);
+          }
+        }
+      });
+      document.getElementById('statTotalApprovedDeposit').innerText = '৳' + totalApprovedAmount.toLocaleString();
+    });
     loadDashboardLast10Orders();
   }
 
@@ -916,7 +992,6 @@
     db.ref('categories').push({cat:main, subCat:sub, sortOrder:order, description:desc, status:'ON'}).then(()=>{ 
       document.getElementById('catMain').value=''; 
       document.getElementById('catSub').value=''; 
-      document.getElementById('catOrder').value=''; 
       document.getElementById('catDesc').value=''; 
       showToast('Category added successfully'); 
       loadCategories(); 
@@ -927,47 +1002,105 @@
 
   function loadCategories(){
     db.ref('categories').once('value',snap=>{
-      const cats=snap.val()||{}; const body=document.getElementById('categoriesBody'); body.innerHTML='';
-      const mainList = document.getElementById('mainCategoryList'); const subList = document.getElementById('subCategoryList');
-      mainList.innerHTML = ''; subList.innerHTML = '';
-      let keys=Object.keys(cats||{}); if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
+      const cats=snap.val()||{}; 
+      const body=document.getElementById('categoriesBody'); 
+      body.innerHTML='';
+      const mainList = document.getElementById('mainCategoryList'); 
+      const subList = document.getElementById('subCategoryList');
+      mainList.innerHTML = ''; 
+      subList.innerHTML = '';
+      
+      let keys=Object.keys(cats||{}); 
+      if(!keys.length){ 
+        body.innerHTML='<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>'; 
+        return; 
+      }
       
       keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
 
-      const uniqueMains = new Set(); const uniqueSubs = new Set();
+      const grouped = {};
+      const uniqueMains = new Set(); 
+      const uniqueSubs = new Set();
+
       keys.forEach(k=>{
         const c=cats[k]||{};
         if(c.cat) uniqueMains.add(c.cat);
         if(c.subCat) uniqueSubs.add(c.subCat);
 
-        body.insertAdjacentHTML('beforeend', `<tr>
-          <td data-label="Order"><span class="badge bg-secondary">${c.sortOrder || 0}</span></td>
-          <td data-label="Category"><strong style="color:#818cf8">${escapeHtml(c.cat||'')}</strong></td>
-          <td data-label="Sub-Category">${escapeHtml(c.subCat||'')}</td>
-          <td data-label="Description"><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'')}</span></td>
-          <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
-          <td data-label="Action">
-            <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
-            <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
-          </td>
-        </tr>`);
+        const mainName = c.cat || 'Uncategorized';
+        if(!grouped[mainName]) grouped[mainName] = [];
+        grouped[mainName].push({ key: k, data: c });
       });
+
+      Object.keys(grouped).forEach((mainCat, index) => {
+        const subItems = grouped[mainCat];
+        const collapseId = 'subCatGroup_' + index;
+
+        body.insertAdjacentHTML('beforeend', `
+          <tr class="main-category-row" onclick="toggleCategoryGroup('${collapseId}', this)">
+            <td data-label="Category">
+              <i class="fa-solid fa-chevron-right me-2 transition-icon" id="icon_${collapseId}"></i>
+              <strong style="font-size:15px; color:#ffffff;">${escapeHtml(mainCat)}</strong> 
+              <span class="badge bg-primary ms-2" style="font-size:10px; background:var(--accent)!important;">${subItems.length} sub-categories</span>
+            </td>
+            <td data-label="Description"><span class="text-muted" style="font-style:italic;">Click to expand/collapse sub-categories</span></td>
+            <td data-label="Status">-</td>
+            <td data-label="Action" style="text-align:right;">-</td>
+          </tr>
+        `);
+
+        subItems.forEach(subObj => {
+          const k = subObj.key;
+          const c = subObj.data;
+          body.insertAdjacentHTML('beforeend', `
+            <tr class="sub-category-row sub-group-${collapseId}" style="display: none;">
+              <td data-label="Sub-Category" style="padding-left: 35px;">
+                <i class="fa-solid fa-angle-right me-2 text-muted" style="font-size:10px;"></i>
+                <span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span>
+              </td>
+              <td data-label="Description"><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'No description')}</span></td>
+              <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
+              <td data-label="Action" style="text-align:right;">
+                <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
+                <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
+                <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
+              </td>
+            </tr>
+          `);
+        });
+      });
+
       uniqueMains.forEach(m => mainList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(m)}">`));
       uniqueSubs.forEach(s => subList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(s)}">`));
     });
   }
 
+  function toggleCategoryGroup(collapseId, rowEl) {
+    const subRows = document.querySelectorAll('.sub-group-' + collapseId);
+    const iconEl = document.getElementById('icon_' + collapseId);
+    
+    let isHidden = subRows[0] && subRows[0].style.display === 'none';
+    
+    subRows.forEach(tr => {
+      tr.style.display = isHidden ? 'table-row' : 'none';
+    });
+
+    if(isHidden) {
+      iconEl.style.transform = 'rotate(90deg)';
+      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 27, 75, 0.8) 100%)';
+    } else {
+      iconEl.style.transform = 'rotate(0deg)';
+      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%)';
+    }
+  }
+
   function editCategoryDetails(key){
     db.ref(`categories/${key}`).once('value', snapshot => {
       const c = snapshot.val() || {};
-      const newOrder = prompt('Edit Sort Order (number for sorting up/down):', c.sortOrder || 0);
-      if(newOrder === null) return;
       const newDesc = prompt('Edit description:', c.description || '');
       if(newDesc === null) return;
 
       db.ref(`categories/${key}`).update({
-        sortOrder: parseInt(newOrder) || 0,
         description: newDesc.trim()
       }).then(()=>{
         showToast('Category updated successfully');
@@ -983,7 +1116,7 @@
     db.ref('categories').once('value',s=>{ 
       const cats=s.val()||{}; 
       const sel=document.getElementById('stockCategory'); 
-      sel.innerHTML=''; 
+      sel.innerHTML='<option value="">Select Category</option>'; 
       let keys = Object.keys(cats);
       keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
       keys.forEach(k=>{ 
@@ -991,6 +1124,23 @@
         if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); 
       }); 
       if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; 
+    });
+  }
+
+  function onStockCategorySelect(selectEl) {
+    const selectedCategory = selectEl.value;
+    if(!selectedCategory) return;
+    
+    // Auto-fetch existing price for this category from active stocks if available
+    db.ref('stocks').once('value', snapshot => {
+      const stocks = snapshot.val() || {};
+      for(let k in stocks) {
+        let item = stocks[k];
+        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.price) {
+          document.getElementById('stockPrice').value = item.price;
+          break;
+        }
+      }
     });
   }
 
@@ -1222,14 +1372,25 @@
   }
 
   function loadStockFile(e){ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=ev=>{ document.getElementById('stockAccounts').value = (ev.target.result||'').trim(); showToast('File loaded'); }; r.readAsText(f); }
+  
   function uploadStocks(){
     const cat=document.getElementById('stockCategory').value.trim();
     const price=parseFloat(document.getElementById('stockPrice').value);
     const raw=document.getElementById('stockAccounts').value.trim();
-    if(!cat) return showToast('Select category'); if(isNaN(price)||price<=0) return showToast('Enter price'); if(!raw) return showToast('Paste accounts');
-    const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean); let cnt=0;
-    lines.forEach(line=>{ db.ref('stocks').push({category:cat, price:price, accountDetails:line, status:'available', soldTo:null}); cnt++; });
-    document.getElementById('stockAccounts').value=''; document.getElementById('stockPrice').value=''; showToast(`Uploaded ${cnt} accounts successfully`); loadDashboard();
+    if(!cat) return showToast('Select category'); 
+    if(isNaN(price)||price<=0) return showToast('Enter a valid price'); 
+    if(!raw) return showToast('Paste accounts');
+    
+    const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean); 
+    let cnt=0;
+    lines.forEach(line=>{ 
+      db.ref('stocks').push({category:cat, price:price, accountDetails:line, status:'available', soldTo:null}); 
+      cnt++; 
+    });
+    
+    document.getElementById('stockAccounts').value=''; 
+    showToast(`Uploaded ${cnt} accounts successfully with price ৳${price}`); 
+    loadDashboard();
   }
 
   let depositsCache = {};
@@ -1284,7 +1445,7 @@
       const currentBal = parseFloat(snap.val() || 0);
       const newBal = parseFloat((currentBal + addAmt).toFixed(2));
       db.ref(`balances/${safeKey}`).set(newBal).then(() => {
-        db.ref(`deposits/${key}/status`).set('Approved').then(() => {
+        db.ref(`deposits/${key}`).update({ status: 'Approved', timestamp: Date.now() }).then(() => {
           showToast('Deposit approved and balance updated successfully');
           loadDeposits();
           loadDashboard();
@@ -1473,7 +1634,7 @@
       let currentBal = parseFloat(snap.val() || 0);
       let newBal = currentBal;
 
-    if(action === 'plus'){
+      if(action === 'plus'){
         newBal = currentBal + inputVal;
       } else if(action === 'minus'){
         newBal = currentBal - inputVal;
