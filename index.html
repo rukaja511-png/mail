@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail Market </title>
+    <title>Mail Market</title>
     <!-- Google Fonts & FontAwesome for Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -141,6 +141,7 @@
         }
         .main-content { padding: 20px; max-width: 1100px; margin: 0 auto; }
         
+        /* --- FIXED LEFT SIDEBAR LAYOUT FOR BOTH MOBILE & PC --- */
         .shop-layout-container {
             display: flex;
             gap: 20px;
@@ -209,12 +210,12 @@
         }
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
 
+        /* মোবাইল বা ছোট স্ক্রিনের জন্য ফ্লেক্স লেআউট ঠিক রাখা যাতে বাম পাশেই ক্যাটাগরি থাকে */
         @media (max-width: 768px) {
             .shop-layout-container { flex-direction: column; }
             .sidebar-categories { width: 100%; position: relative; top: 0; }
-            .main-categories-wrapper { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
-            .main-category-pill { white-space: nowrap; width: auto; }
-            .main-category-pill:hover { transform: none; }
+            .main-categories-wrapper { flex-direction: column; overflow-x: visible; }
+            .main-category-pill { width: 100%; }
         }
 
         .card-box { 
@@ -369,14 +370,15 @@
 <body>
 
 <div id="custom-alert-overlay" class="custom-alert-overlay">
-    <div class="custom-alert-box">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <span class="fw-bold text-info fs-5"><i class="fa-solid fa-circle-info me-2"></i>Notice</span>
-            <button onclick="closeCustomAlert()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
+    <div class="custom-alert-box" style="max-width: 420px; padding: 24px;">
+        <div class="d-flex align-items-center mb-3">
+            <span class="fw-bold text-info fs-5"><i class="fa-solid fa-circle-info me-2"></i>Important Notice</span>
         </div>
-        <div id="custom-alert-message" class="py-3 mb-3 text-sub" style="font-size: 15px; word-break: break-all;"></div>
+        <div id="custom-alert-message" class="py-2 mb-4 text-sub" style="font-size: 14px; line-height: 1.6; word-break: break-all;"></div>
         <div class="text-end">
-            <button onclick="closeCustomAlert()" class="btn btn-primary rounded-pill px-4 fw-bold">OK</button>
+            <button onclick="closeCustomAlert()" class="btn btn-success rounded-pill px-4 fw-bold py-2" style="background: linear-gradient(135deg, #10b981, #047857); border: none; min-width: 110px;">
+                <i class="fa-solid fa-check me-1"></i> Done
+            </button>
         </div>
     </div>
 </div>
@@ -783,6 +785,25 @@
     let currentBinanceRate = 120;
     let currentModalData = { categoryName: '', price: 0, stockCount: 0, isFake: false };
 
+    let cachedCategories = null;
+    let cachedStocks = null;
+    let cachedFakeStocks = null;
+
+    function preloadShopData() {
+        db.ref('categories').on('value', (catSnap) => {
+            cachedCategories = catSnap.val() || {};
+            if(document.getElementById('user-section-home').classList.contains('active')) renderUserShopUI();
+        });
+        db.ref('stocks').on('value', (stockSnap) => {
+            cachedStocks = stockSnap.val() || {};
+            if(document.getElementById('user-section-home').classList.contains('active')) renderUserShopUI();
+        });
+        db.ref('fakeStocks').on('value', (fakeSnap) => {
+            cachedFakeStocks = fakeSnap.val() || {};
+            if(document.getElementById('user-section-home').classList.contains('active')) renderUserShopUI();
+        });
+    }
+
     function showCustomAlert(msg) {
         document.getElementById('custom-alert-message').innerText = msg;
         document.getElementById('custom-alert-overlay').style.display = 'flex';
@@ -910,6 +931,7 @@
         setupTelegramSupport();
         fetchBinanceRate();
         listenToUserNotifications();
+        preloadShopData();
     };
 
     function fetchBinanceRate() {
@@ -1139,92 +1161,104 @@
         if(tab === 'history') { loadUserOrders(); loadUserDepositHistory(); }
     }
 
-    /* --- FAST RENDER CATEGORY SHOP WITH UNIQUE COLORS & BUTTON ANIMATIONS --- */
     function loadUserShop() {
-        db.ref('categories').once('value', (catSnap) => {
-            let cats = catSnap.val() || {};
-            db.ref('stocks').once('value', (stockSnap) => {
-                let stocks = stockSnap.val() || {};
-                db.ref('fakeStocks').once('value', (fakeSnap) => {
-                    let fakeStocks = fakeSnap.val() || {};
-                    let mainCatsSet = new Set(), catList = [];
-                    Object.keys(cats).forEach(ckey => {
-                        let c = cats[ckey];
-                        if(c.status === 'ON') { mainCatsSet.add(c.cat); catList.push({ key: ckey, ...c }); }
-                    });
-                    let mainCats = Array.from(mainCatsSet);
-                    let container = document.getElementById('main-categories-container');
-                    container.innerHTML = '';
-                    if(mainCats.length === 0) {
-                        container.innerHTML = `<div class="text-sub small p-2">No categories.</div>`;
-                        document.getElementById('user-shop-subcategories-grid').innerHTML = '';
-                        return;
-                    }
-                    if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) selectedMainCategory = mainCats[0];
-
-                    mainCats.forEach(mCat => {
-                        container.innerHTML += `<button class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} <span>${escapeHtml(mCat)}</span></button>`;
-                    });
-
-                    let grid = document.getElementById('user-shop-subcategories-grid');
-                    grid.innerHTML = '';
-                    
-                    let filteredCats = catList.filter(c => c.cat === selectedMainCategory);
-                    filteredCats.forEach((c, index) => {
-                        let catString = `${c.cat} - ${c.subCat}`;
-                        let realAvailableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
-                        
-                        let categoryFakeCount = 0;
-                        let fakePrice = 0;
-                        Object.values(fakeStocks).forEach(fs => {
-                            if (fs.category === catString) {
-                                categoryFakeCount += parseInt(fs.fakeCount || 0);
-                                if(fakePrice === 0) fakePrice = parseFloat(fs.price || 0);
-                            }
-                        });
-
-                        let stockCount = realAvailableStocks.length + categoryFakeCount;
-                        let price = realAvailableStocks.length > 0 ? (realAvailableStocks[0].price || 0) : (fakePrice > 0 ? fakePrice : 0);
-                        let isFakeItem = realAvailableStocks.length === 0 && categoryFakeCount > 0;
-
-                        // Assigning unique styles based on category index (1st, 2nd, 3rd, 4th, etc.)
-                        let colorThemes = [
-                            { border: '#3b82f6', hoverBorder: '#60a5fa', shadow: 'rgba(59, 130, 246, 0.3)', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', btnGrad: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', anim: 'pulseGlow1 2s infinite ease-in-out', priceCol: '#3b82f6' },
-                            { border: '#10b981', hoverBorder: '#34d399', shadow: 'rgba(16, 185, 129, 0.3)', gradient: 'linear-gradient(135deg, #10b981, #047857)', btnGrad: 'linear-gradient(135deg, #10b981, #047857)', anim: 'pulseGlow2 1.5s infinite ease-in-out', priceCol: '#10b981' },
-                            { border: '#f59e0b', hoverBorder: '#fbbf24', shadow: 'rgba(245, 158, 11, 0.3)', gradient: 'linear-gradient(135deg, #f59e0b, #d97706)', btnGrad: 'linear-gradient(135deg, #f59e0b, #d97706)', anim: 'pulseGlow3 2.2s infinite ease-in-out', priceCol: '#f59e0b' },
-                            { border: '#8b5cf6', hoverBorder: '#a78bfa', shadow: 'rgba(139, 92, 246, 0.3)', gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', btnGrad: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', anim: 'pulseGlow4 1.8s infinite ease-in-out', priceCol: '#8b5cf6' }
-                        ];
-                        let theme = colorThemes[index % colorThemes.length];
-
-                        let actionBtnHtml = stockCount > 0 
-                            ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount}, ${isFakeItem})" class="buy-now-btn" style="--btn-gradient: ${theme.btnGrad}; --btn-animation: ${theme.anim};"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
-                            : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
-
-                        grid.innerHTML += `
-                            <div class="shop-item-card" style="--card-border-color: ${theme.border}55; --card-hover-border: ${theme.hoverBorder}; --card-shadow: ${theme.shadow}; --card-gradient: ${theme.gradient};" onclick="toggleCardGlow(this)">
-                                <div>
-                                    <h5 class="fw-bold mb-2 text-main" style="font-size: 19px;">${escapeHtml(c.subCat)}</h5>
-                                    <div class="price-wrapper">
-                                        <span class="fw-extrabold fs-3 animated-price" style="--price-color: ${theme.priceCol};">৳${price}</span>
-                                        <span class="text-sub" style="font-size: 12px;"> / account</span>
-                                    </div>
-                                    ${c.description ? `<div class="item-description">${escapeHtml(c.description)}</div>` : ''}
-                                </div>
-                                <div>
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <span class="text-sub" style="font-size: 13px;">Availability:</span>
-                                        <span class="stock-tag ${stockCount > 0 ? 'available' : 'out'}"><i class="fa-solid fa-${stockCount > 0 ? 'circle-check' : 'circle-xmark'}"></i> ${stockCount > 0 ? stockCount + ' available' : 'Out of stock'}</span>
-                                    </div>
-                                    ${actionBtnHtml}
-                                </div>
-                            </div>`;
+        if (cachedCategories && cachedStocks) {
+            renderUserShopUI();
+        } else {
+            db.ref('categories').once('value', (catSnap) => {
+                cachedCategories = catSnap.val() || {};
+                db.ref('stocks').once('value', (stockSnap) => {
+                    cachedStocks = stockSnap.val() || {};
+                    db.ref('fakeStocks').once('value', (fakeSnap) => {
+                        cachedFakeStocks = fakeSnap.val() || {};
+                        renderUserShopUI();
                     });
                 });
             });
+        }
+    }
+
+    function renderUserShopUI() {
+        let cats = cachedCategories || {};
+        let stocks = cachedStocks || {};
+        let fakeStocks = cachedFakeStocks || {};
+
+        let mainCatsSet = new Set(), catList = [];
+        Object.keys(cats).forEach(ckey => {
+            let c = cats[ckey];
+            if(c.status === 'ON') { mainCatsSet.add(c.cat); catList.push({ key: ckey, ...c }); }
+        });
+        let mainCats = Array.from(mainCatsSet);
+        let container = document.getElementById('main-categories-container');
+        if (!container) return;
+        
+        container.innerHTML = '';
+        if(mainCats.length === 0) {
+            container.innerHTML = `<div class="text-sub small p-2">No categories.</div>`;
+            document.getElementById('user-shop-subcategories-grid').innerHTML = '';
+            return;
+        }
+        if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) selectedMainCategory = mainCats[0];
+
+        mainCats.forEach(mCat => {
+            container.innerHTML += `<button class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} <span>${escapeHtml(mCat)}</span></button>`;
+        });
+
+        let grid = document.getElementById('user-shop-subcategories-grid');
+        grid.innerHTML = '';
+        
+        let filteredCats = catList.filter(c => c.cat === selectedMainCategory);
+        filteredCats.forEach((c, index) => {
+            let catString = `${c.cat} - ${c.subCat}`;
+            let realAvailableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
+            
+            let categoryFakeCount = 0;
+            let fakePrice = 0;
+            Object.values(fakeStocks).forEach(fs => {
+                if (fs.category === catString) {
+                    categoryFakeCount += parseInt(fs.fakeCount || 0);
+                    if(fakePrice === 0) fakePrice = parseFloat(fs.price || 0);
+                }
+            });
+
+            let stockCount = realAvailableStocks.length + categoryFakeCount;
+            let price = realAvailableStocks.length > 0 ? (realAvailableStocks[0].price || 0) : (fakePrice > 0 ? fakePrice : 0);
+            let isFakeItem = realAvailableStocks.length === 0 && categoryFakeCount > 0;
+
+            let colorThemes = [
+                { border: '#3b82f6', hoverBorder: '#60a5fa', shadow: 'rgba(59, 130, 246, 0.3)', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', btnGrad: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', anim: 'pulseGlow1 2s infinite ease-in-out', priceCol: '#3b82f6' },
+                { border: '#10b981', hoverBorder: '#34d399', shadow: 'rgba(16, 185, 129, 0.3)', gradient: 'linear-gradient(135deg, #10b981, #047857)', btnGrad: 'linear-gradient(135deg, #10b981, #047857)', anim: 'pulseGlow2 1.5s infinite ease-in-out', priceCol: '#10b981' },
+                { border: '#f59e0b', hoverBorder: '#fbbf24', shadow: 'rgba(245, 158, 11, 0.3)', gradient: 'linear-gradient(135deg, #f59e0b, #d97706)', btnGrad: 'linear-gradient(135deg, #f59e0b, #d97706)', anim: 'pulseGlow3 2.2s infinite ease-in-out', priceCol: '#f59e0b' },
+                { border: '#8b5cf6', hoverBorder: '#a78bfa', shadow: 'rgba(139, 92, 246, 0.3)', gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', btnGrad: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', anim: 'pulseGlow4 1.8s infinite ease-in-out', priceCol: '#8b5cf6' }
+            ];
+            let theme = colorThemes[index % colorThemes.length];
+
+            let actionBtnHtml = stockCount > 0 
+                ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount}, ${isFakeItem})" class="buy-now-btn" style="--btn-gradient: ${theme.btnGrad}; --btn-animation: ${theme.anim};"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
+                : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
+
+            grid.innerHTML += `
+                <div class="shop-item-card" style="--card-border-color: ${theme.border}55; --card-hover-border: ${theme.hoverBorder}; --card-shadow: ${theme.shadow}; --card-gradient: ${theme.gradient};" onclick="toggleCardGlow(this)">
+                    <div>
+                        <h5 class="fw-bold mb-2 text-main" style="font-size: 19px;">${escapeHtml(c.subCat)}</h5>
+                        <div class="price-wrapper">
+                            <span class="fw-extrabold fs-3 animated-price" style="--price-color: ${theme.priceCol};">৳${price}</span>
+                            <span class="text-sub" style="font-size: 12px;"> / account</span>
+                        </div>
+                        ${c.description ? `<div class="item-description">${escapeHtml(c.description)}</div>` : ''}
+                    </div>
+                    <div>
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="text-sub" style="font-size: 13px;">Availability:</span>
+                            <span class="stock-tag ${stockCount > 0 ? 'available' : 'out'}"><i class="fa-solid fa-${stockCount > 0 ? 'circle-check' : 'circle-xmark'}"></i> ${stockCount > 0 ? stockCount + ' available' : 'Out of stock'}</span>
+                        </div>
+                        ${actionBtnHtml}
+                    </div>
+                </div>`;
         });
     }
 
-    function selectMainCategory(catName) { selectedMainCategory = catName; loadUserShop(); }
+    function selectMainCategory(catName) { selectedMainCategory = catName; renderUserShopUI(); }
 
     function loadUserPaymentMethods() {
         db.ref('paymentMethods').once('value', (snap) => {
@@ -1387,7 +1421,7 @@
                         <td>${escapeHtml(o.category)}</td>
                         <td>${o.quantity}</td>
                         <td>৳${o.totalPrice}</td>
-                        <td><button class="btn btn-sm btn-outline-info rounded-pill px-3" onclick='viewOrderAccounts(${JSON.stringify(o.accounts)})'><i class="fa-solid fa-eye me-1"></i> View</button></td>
+                        <td><button class="bton btn-sm btn-outline-info rounded-pill px-3" onclick='viewOrderAccounts(${JSON.stringify(o.accounts)})'><i class="fa-solid fa-eye me-1"></i> View</button></td>
                     </tr>`);
             });
         });
