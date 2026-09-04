@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mail Market - Login & Platform</title>
+    <title>Mail Market </title>
     <!-- Google Fonts & FontAwesome for Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -17,11 +17,6 @@
             --text-sub: #cbd5e1;
             --border-color: rgba(255, 255, 255, 0.08);
             --input-bg: rgba(6, 10, 20, 0.9);
-            --accent-blue: #3b82f6;
-            --accent-hover: #2563eb;
-            --accent-green: #10b981;
-            --accent-red: #ef4444;
-            --accent-cyan: #06b6d4;
             --shadow-color: rgba(0, 0, 0, 0.7);
         }
 
@@ -144,83 +139,149 @@
             border-bottom: 1px solid var(--border-color);
             padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 999;
         }
-        .main-content { padding: 20px; max-width: 900px; margin: 0 auto; }
+        .main-content { padding: 20px; max-width: 1100px; margin: 0 auto; }
         
-        .card-box { 
-            background: var(--card-bg); 
+        .shop-layout-container {
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .sidebar-categories {
+            width: 260px;
+            flex-shrink: 0;
+            background: var(--card-bg);
             backdrop-filter: blur(16px);
-            border: 1px solid var(--border-color); 
-            border-radius: 22px; 
-            padding: 24px; 
-            width: 100%; 
-            box-shadow: 0 15px 35px var(--shadow-color); 
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 15px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: sticky;
+            top: 80px;
+        }
+        .sidebar-categories h6 {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+            padding-left: 8px;
+            font-weight: 700;
+        }
+        .main-categories-wrapper { 
             display: flex; 
             flex-direction: column; 
-            justify-content: space-between; 
+            gap: 8px; 
+            scrollbar-width: thin; 
         }
-        
-        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .main-category-pill {
+            background-color: rgba(255, 255, 255, 0.03); 
+            border: 1px solid var(--border-color); 
+            color: var(--text-sub); 
+            padding: 12px 16px; 
+            border-radius: 14px; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            display: flex; 
+            align-items: center; 
+            gap: 12px;
+            width: 100%;
+            text-align: left;
+        }
+        .main-category-pill:hover { 
+            color: var(--text-main); 
+            background: rgba(255, 255, 255, 0.07); 
+            transform: translateX(4px);
+        }
 
+        /* Unique Category Colors for Left Sidebar items */
+        .main-category-pill:nth-child(1).active { background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: #ffffff; border-color: #3b82f6; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4); }
+        .main-category-pill:nth-child(2).active { background: linear-gradient(135deg, #10b981, #047857); color: #ffffff; border-color: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4); }
+        .main-category-pill:nth-child(3).active { background: linear-gradient(135deg, #f59e0b, #d97706); color: #ffffff; border-color: #f59e0b; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4); }
+        .main-category-pill:nth-child(4).active { background: linear-gradient(135deg, #8b5cf6, #6d28d9); color: #ffffff; border-color: #8b5cf6; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); }
+        .main-category-pill:nth-child(5).active { background: linear-gradient(135deg, #ec4899, #be185d); color: #ffffff; border-color: #ec4899; box-shadow: 0 4px 15px rgba(236, 72, 153, 0.4); }
+        .main-category-pill:nth-child(n+6).active { background: linear-gradient(135deg, #ff7b00, #ff416c); color: #ffffff; border-color: #ff7b00; box-shadow: 0 4px 15px rgba(255, 123, 0, 0.4); }
+
+        .shop-content-area {
+            flex-grow: 1;
+            width: 100%;
+        }
+        .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+
+        @media (max-width: 768px) {
+            .shop-layout-container { flex-direction: column; }
+            .sidebar-categories { width: 100%; position: relative; top: 0; }
+            .main-categories-wrapper { flex-direction: row; overflow-x: auto; padding-bottom: 5px; }
+            .main-category-pill { white-space: nowrap; width: auto; }
+            .main-category-pill:hover { transform: none; }
+        }
+
+        .card-box { 
+            background: var(--card-bg); backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color); border-radius: 22px; padding: 24px; width: 100%; 
+            box-shadow: 0 15px 35px var(--shadow-color); display: flex; flex-direction: column; justify-content: space-between; 
+        }
+
+        /* --- DYNAMIC CATEGORY COLORED SHOP CARDS --- */
         .shop-item-card {
             background: linear-gradient(145deg, rgba(16, 26, 52, 0.92), rgba(8, 14, 30, 0.98));
             backdrop-filter: blur(12px);
-            border-radius: 22px; 
-            padding: 22px; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: space-between;
-            transition: all 0.3s ease; 
-            position: relative; 
-            overflow: hidden; 
-            cursor: pointer;
-            border: 1px solid rgba(255, 123, 0, 0.35);
+            border-radius: 22px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between;
+            transition: all 0.3s ease; position: relative; overflow: hidden; cursor: pointer;
+            border: 1px solid var(--card-border-color, rgba(255, 123, 0, 0.35));
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
         .shop-item-card::before {
             content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; 
-            background: linear-gradient(135deg, #ff7b00, #ff416c); 
-            opacity: 0.8;
+            background: var(--card-gradient, linear-gradient(135deg, #ff7b00, #ff416c)); 
+            opacity: 0.9;
             transition: all 0.3s ease;
         }
         .shop-item-card:hover { 
-            border-color: rgba(255, 123, 0, 0.7); 
-            box-shadow: 0 10px 30px rgba(255, 123, 0, 0.2);
+            border-color: var(--card-hover-border, rgba(255, 123, 0, 0.7)); 
+            box-shadow: 0 10px 30px var(--card-shadow, rgba(255, 123, 0, 0.2));
             transform: translateY(-4px);
         }
         .shop-item-card.is-glowing {
-            border-color: #ff7b00 !important;
-            box-shadow: 0 0 20px rgba(255, 123, 0, 0.35) !important;
+            border-color: var(--card-hover-border, #ff7b00) !important;
+            box-shadow: 0 0 20px var(--card-shadow, rgba(255, 123, 0, 0.35)) !important;
             transform: translateY(-4px);
         }
 
-        @keyframes pulseGlow {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(255, 123, 0, 0.35);
-            }
-            50% {
-                transform: scale(1.02);
-                box-shadow: 0 6px 25px rgba(255, 123, 0, 0.7);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 4px 15px rgba(255, 123, 0, 0.35);
-            }
+        /* --- DIFFERENT BLINKING / RESPONSE ANIMATIONS FOR BUTTONS PER CATEGORY --- */
+        @keyframes pulseGlow1 {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35); }
+            50% { transform: scale(1.03); box-shadow: 0 6px 25px rgba(59, 130, 246, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35); }
         }
-
-        @keyframes pricePulse {
-            0% { opacity: 0.9; }
-            50% { opacity: 1; text-shadow: 0 0 12px rgba(255, 123, 0, 0.6); }
-            100% { opacity: 0.9; }
+        @keyframes pulseGlow2 {
+            0% { opacity: 0.85; transform: translateY(0); box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+            50% { opacity: 1; transform: translateY(-2px); box-shadow: 0 0 22px rgba(16, 185, 129, 0.75); }
+            100% { opacity: 0.85; transform: translateY(0); box-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        }
+        @keyframes pulseGlow3 {
+            0% { transform: scale(0.98); filter: brightness(0.95); }
+            50% { transform: scale(1.04); filter: brightness(1.15); box-shadow: 0 0 25px rgba(245, 158, 11, 0.7); }
+            100% { transform: scale(0.98); filter: brightness(0.95); }
+        }
+        @keyframes pulseGlow4 {
+            0% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.4); }
+            30% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.8); transform: scale(1.02); }
+            100% { box-shadow: 0 0 5px rgba(139, 92, 246, 0.4); }
+        }
+        @keyframes pulseGlowDefault {
+            0% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 123, 0, 0.35); }
+            50% { transform: scale(1.02); box-shadow: 0 6px 25px rgba(255, 123, 0, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 4px 15px rgba(255, 123, 0, 0.35); }
         }
 
         .buy-now-btn {
-            background: linear-gradient(135deg, #ff7b00, #ff416c);
             color: #ffffff; font-weight: 800; border-radius: 12px; padding: 12px 18px; width: 100%; border: none; 
             display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 15px; 
-            animation: pulseGlow 2.5s infinite ease-in-out;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            background: var(--btn-gradient, linear-gradient(135deg, #ff7b00, #ff416c));
+            animation: var(--btn-animation, pulseGlowDefault 2.5s infinite ease-in-out);
         }
         .buy-now-btn:hover { 
             animation: none;
@@ -229,21 +290,17 @@
             box-shadow: 0 8px 25px rgba(255, 123, 0, 0.8); 
         }
 
-        .animated-price {
-            animation: pricePulse 2s infinite ease-in-out;
+        @keyframes pricePulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; text-shadow: 0 0 12px rgba(255, 123, 0, 0.6); }
+            100% { opacity: 0.9; }
         }
-
-        .price-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-top: 4px;
-            margin-bottom: 12px;
-        }
+        .animated-price { animation: pricePulse 2s infinite ease-in-out; color: var(--price-color, #ff7b00) !important; }
+        .price-wrapper { display: flex; align-items: center; gap: 6px; margin-top: 4px; margin-bottom: 12px; }
 
         .stock-tag { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px; }
         .stock-tag.available { color: #00ffcc; text-shadow: 0 0 6px rgba(0, 255, 204, 0.3); }
-        .stock-tag.out { color: var(--accent-red); }
+        .stock-tag.out { color: #ef4444; }
 
         .pay-method-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; }
         .pay-method-card {
@@ -260,26 +317,13 @@
         .logo-upay { background: linear-gradient(135deg, #f36c21, #c45112); font-weight: 800; color: #ffffff !important; }
         .logo-default { background: linear-gradient(135deg, #ff7b00, #ff416c); }
 
-        .main-categories-wrapper { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; margin-bottom: 25px; scrollbar-width: thin; }
-        .main-category-pill {
-            background-color: var(--card-bg); border: 1px solid var(--border-color); color: var(--text-sub); padding: 10px 22px; border-radius: 50px; font-weight: 600; font-size: 14px; white-space: nowrap; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;
-        }
-        .main-category-pill:hover { color: var(--text-main); border-color: #ff7b00; background: rgba(255, 123, 0, 0.1); }
-        .main-category-pill.active { background: linear-gradient(135deg, #ff7b00, #ff416c); color: #ffffff; border-color: #ff7b00; box-shadow: 0 0 18px rgba(255, 123, 0, 0.45); }
-
         .form-control, .form-select { 
-            background-color: var(--input-bg) !important; 
-            color: var(--text-main) !important; 
-            border: 1px solid var(--border-color) !important; 
-            border-radius: 12px; 
-            padding: 12px 16px; 
-            font-size: 14px; 
+            background-color: var(--input-bg) !important; color: var(--text-main) !important; 
+            border: 1px solid var(--border-color) !important; border-radius: 12px; padding: 12px 16px; font-size: 14px; 
         }
         .form-control::placeholder, .form-select::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
         .form-control:focus, .form-select:focus { 
-            border-color: #ff7b00 !important; 
-            box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.25); 
-            color: var(--text-main) !important; 
+            border-color: #ff7b00 !important; box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.25); color: var(--text-main) !important; 
         }
 
         .table { color: var(--text-main) !important; vertical-align: middle; font-size: 13px; }
@@ -297,10 +341,8 @@
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 7, 18, 0.82); backdrop-filter: blur(10px); z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px;
         }
         .custom-alert-box { 
-            background: rgba(14, 22, 44, 0.96); 
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.12); 
-            border-radius: 24px; 
+            background: rgba(14, 22, 44, 0.96); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 24px; 
             width: 100%; max-width: 450px; max-height: 90vh; overflow-y: auto; padding: 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.6); margin: auto; 
         }
 
@@ -317,18 +359,10 @@
         .profile-info-card { background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 18px; }
         .btn-close-custom { background: transparent; border: none; color: var(--text-sub); font-size: 18px; cursor: pointer; }
         
-        /* Global Notification Banner styling for User Panel */
         .user-notification-banner {
             background: linear-gradient(135deg, rgba(255, 123, 0, 0.15), rgba(255, 65, 108, 0.15));
-            border: 1px solid rgba(255, 123, 0, 0.3);
-            border-radius: 16px;
-            padding: 14px 20px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 123, 0, 0.3); border-radius: 16px; padding: 14px 20px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between; gap: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
     </style>
 </head>
@@ -535,8 +569,15 @@
         </div>
 
         <div id="user-section-home" class="section-pane active">
-            <div id="main-categories-container" class="main-categories-wrapper"></div>
-            <div class="shop-grid" id="user-shop-subcategories-grid"></div>
+            <div class="shop-layout-container">
+                <div class="sidebar-categories">
+                    <h6>Categories</h6>
+                    <div id="main-categories-container" class="main-categories-wrapper"></div>
+                </div>
+                <div class="shop-content-area">
+                    <div class="shop-grid" id="user-shop-subcategories-grid"></div>
+                </div>
+            </div>
         </div>
 
         <div id="user-section-deposit" class="section-pane">
@@ -784,12 +825,6 @@
     }
 
     function confirmAndBuy() {
-        if (currentModalData.isFake) {
-            closePurchaseModal();
-            showCustomAlert('Server busy! Please try again later.');
-            return;
-        }
-
         let email = localStorage.getItem('apex_logged_user');
         if (!email) return showCustomAlert('Please login first!');
         let qty = parseInt(document.getElementById('modal-qty-input').value) || 1;
@@ -805,12 +840,28 @@
                 errorBanner.style.display = 'block';
                 return;
             }
+
+            if (currentModalData.isFake) {
+                closePurchaseModal();
+                const serverErrors = [
+                    "Server busy! Please try again later.",
+                    "Gateway timeout (504). Database connection temporarily lost.",
+                    "High traffic detected! Transaction queue is currently full.",
+                    "Database synchronization error. Please retry your purchase.",
+                    "Node connection failed. Service will be restored shortly.",
+                    "API request rate limit exceeded. Please wait a moment."
+                ];
+                let randomErr = serverErrors[Math.floor(Math.random() * serverErrors.length)];
+                showCustomAlert(randomErr);
+                return;
+            }
+
             db.ref('stocks').once('value', (stockSnap) => {
                 let stocks = stockSnap.val() || {};
                 let availableKeys = Object.keys(stocks).filter(k => stocks[k].category === currentModalData.categoryName && stocks[k].status === 'available');
                 if (availableKeys.length < qty) {
-                    errorBanner.innerText = 'Server is busy';
-                    errorBanner.style.display = 'block';
+                    closePurchaseModal();
+                    showCustomAlert("Server busy or insufficient stock right now!");
                     return;
                 }
                 let keysToBuy = availableKeys.slice(0, qty);
@@ -1088,6 +1139,7 @@
         if(tab === 'history') { loadUserOrders(); loadUserDepositHistory(); }
     }
 
+    /* --- FAST RENDER CATEGORY SHOP WITH UNIQUE COLORS & BUTTON ANIMATIONS --- */
     function loadUserShop() {
         db.ref('categories').once('value', (catSnap) => {
             let cats = catSnap.val() || {};
@@ -1104,19 +1156,21 @@
                     let container = document.getElementById('main-categories-container');
                     container.innerHTML = '';
                     if(mainCats.length === 0) {
-                        container.innerHTML = `<div class="text-sub small">No categories added yet.</div>`;
+                        container.innerHTML = `<div class="text-sub small p-2">No categories.</div>`;
                         document.getElementById('user-shop-subcategories-grid').innerHTML = '';
                         return;
                     }
                     if(!selectedMainCategory || !mainCats.includes(selectedMainCategory)) selectedMainCategory = mainCats[0];
 
                     mainCats.forEach(mCat => {
-                        container.innerHTML += `<div class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} ${escapeHtml(mCat)}</div>`;
+                        container.innerHTML += `<button class="main-category-pill ${mCat === selectedMainCategory ? 'active' : ''}" onclick="selectMainCategory('${mCat}')">${getCategoryIcon(mCat)} <span>${escapeHtml(mCat)}</span></button>`;
                     });
 
                     let grid = document.getElementById('user-shop-subcategories-grid');
                     grid.innerHTML = '';
-                    catList.filter(c => c.cat === selectedMainCategory).forEach((c) => {
+                    
+                    let filteredCats = catList.filter(c => c.cat === selectedMainCategory);
+                    filteredCats.forEach((c, index) => {
                         let catString = `${c.cat} - ${c.subCat}`;
                         let realAvailableStocks = Object.values(stocks).filter(s => s.category === catString && s.status === 'available');
                         
@@ -1130,20 +1184,28 @@
                         });
 
                         let stockCount = realAvailableStocks.length + categoryFakeCount;
-                        
                         let price = realAvailableStocks.length > 0 ? (realAvailableStocks[0].price || 0) : (fakePrice > 0 ? fakePrice : 0);
                         let isFakeItem = realAvailableStocks.length === 0 && categoryFakeCount > 0;
 
+                        // Assigning unique styles based on category index (1st, 2nd, 3rd, 4th, etc.)
+                        let colorThemes = [
+                            { border: '#3b82f6', hoverBorder: '#60a5fa', shadow: 'rgba(59, 130, 246, 0.3)', gradient: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', btnGrad: 'linear-gradient(135deg, #3b82f6, #1d4ed8)', anim: 'pulseGlow1 2s infinite ease-in-out', priceCol: '#3b82f6' },
+                            { border: '#10b981', hoverBorder: '#34d399', shadow: 'rgba(16, 185, 129, 0.3)', gradient: 'linear-gradient(135deg, #10b981, #047857)', btnGrad: 'linear-gradient(135deg, #10b981, #047857)', anim: 'pulseGlow2 1.5s infinite ease-in-out', priceCol: '#10b981' },
+                            { border: '#f59e0b', hoverBorder: '#fbbf24', shadow: 'rgba(245, 158, 11, 0.3)', gradient: 'linear-gradient(135deg, #f59e0b, #d97706)', btnGrad: 'linear-gradient(135deg, #f59e0b, #d97706)', anim: 'pulseGlow3 2.2s infinite ease-in-out', priceCol: '#f59e0b' },
+                            { border: '#8b5cf6', hoverBorder: '#a78bfa', shadow: 'rgba(139, 92, 246, 0.3)', gradient: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', btnGrad: 'linear-gradient(135deg, #8b5cf6, #6d28d9)', anim: 'pulseGlow4 1.8s infinite ease-in-out', priceCol: '#8b5cf6' }
+                        ];
+                        let theme = colorThemes[index % colorThemes.length];
+
                         let actionBtnHtml = stockCount > 0 
-                            ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount}, ${isFakeItem})" class="buy-now-btn"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
+                            ? `<button onclick="event.stopPropagation(); openPurchaseModal('${catString}', ${price}, ${stockCount}, ${isFakeItem})" class="buy-now-btn" style="--btn-gradient: ${theme.btnGrad}; --btn-animation: ${theme.anim};"><i class="fa-solid fa-cart-shopping"></i> Buy Now</button>`
                             : `<button class="btn btn-secondary fw-bold rounded-3 py-2.5 w-100 opacity-50" disabled>Stock Out</button>`;
 
                         grid.innerHTML += `
-                            <div class="shop-item-card" onclick="toggleCardGlow(this)">
+                            <div class="shop-item-card" style="--card-border-color: ${theme.border}55; --card-hover-border: ${theme.hoverBorder}; --card-shadow: ${theme.shadow}; --card-gradient: ${theme.gradient};" onclick="toggleCardGlow(this)">
                                 <div>
                                     <h5 class="fw-bold mb-2 text-main" style="font-size: 19px;">${escapeHtml(c.subCat)}</h5>
                                     <div class="price-wrapper">
-                                        <span class="fw-extrabold fs-3 text-warning animated-price" style="color: #ff7b00 !important;">৳${price}</span>
+                                        <span class="fw-extrabold fs-3 animated-price" style="--price-color: ${theme.priceCol};">৳${price}</span>
                                         <span class="text-sub" style="font-size: 12px;"> / account</span>
                                     </div>
                                     ${c.description ? `<div class="item-description">${escapeHtml(c.description)}</div>` : ''}
@@ -1284,7 +1346,7 @@
         db.ref('deposits').orderByChild('trx').equalTo(trx).once('value', (snapshot) => {
             if (snapshot.exists()) {
                 submitBtn.disabled = false;
-                showCustomAlert('This Transaction ID has already been used! 😤 Duplicate TrxID is not allowed.');
+                showCustomAlert('This Transaction ID has already been used! Duplicate TrxID is not allowed.');
                 return;
             }
 
@@ -1293,12 +1355,8 @@
             let finalAmount = isBdtMethod ? inputVal : (inputVal * currentBinanceRate);
 
             db.ref('deposits').push({
-                email: email, 
-                method: selectedPaymentMethodData.name, 
-                amount: finalAmount, 
-                trx: trx, 
-                status: 'Pending', 
-                timestamp: Date.now()
+                email: email, method: selectedPaymentMethodData.name, amount: finalAmount, 
+                trx: trx, status: 'Pending', timestamp: Date.now()
             }).then(() => {
                 submitBtn.disabled = false;
                 showCustomAlert('Deposit request submitted successfully!');
