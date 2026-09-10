@@ -15,13 +15,13 @@
       --bg-sidebar:#090d16;
       --card-bg:linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(9, 13, 22, 0.95) 100%);
       --text-main:#f8fafc;
-      --text-muted:#94a3b8;
+      --text-muted:#cbd5e1;
       --accent:#6366f1;
       --accent-hover:#4f46e5;
       --accent-glow:rgba(99, 102, 241, 0.4);
       --success:#10b981;
       --danger:#ef4444;
-      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color: rgba(255, 255, 255, 0.15);
       --border-glow: rgba(99, 102, 241, 0.35);
     }
     *{box-sizing:border-box}
@@ -36,7 +36,7 @@
     .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);}
     .auth-card{width:100%;max-width:420px;background:var(--card-bg);backdrop-filter:blur(20px);border-radius:24px;padding:38px;border:1px solid var(--border-glow);box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);}
     
-    .admin-sidebar{width:265px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 4px 0 25px rgba(0,0,0,0.4);}
+    .admin-sidebar{width:265px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 4px 0 25px rgba(0,0,0,0.4); overflow-y: auto;}
     .admin-main{margin-left:265px;padding:38px;min-height:100vh;transition:margin 0.3s ease;}
 
     .sidebar-brand{padding:0 24px 26px 24px;display:flex;align-items:center;gap:14px;font-weight:800;font-size:20px;border-bottom:1px solid var(--border-color);color:#fff;background:linear-gradient(90deg, #fff, #a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -56,9 +56,9 @@
     label.form-label{font-weight:700;color:var(--text-muted);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;}
     
     .form-control, .form-select, textarea, input {
-      background-color: rgba(15, 23, 42, 0.8) !important;
+      background-color: rgba(15, 23, 42, 0.85) !important;
       border: 1px solid var(--border-color) !important;
-      color: #fff !important;
+      color: #ffffff !important;
       border-radius: 14px;
       padding: 13px 18px;
       font-size: 14px;
@@ -68,29 +68,30 @@
       border-color: var(--accent) !important;
       box-shadow: 0 0 0 4px var(--accent-glow) !important;
       background-color: rgba(15, 23, 42, 0.95) !important;
+      color: #ffffff !important;
     }
-    .form-control::placeholder, textarea::placeholder{color:#64748b !important}
+    .form-control::placeholder, textarea::placeholder{color:#cbd5e1 !important}
 
     .stats-row{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:26px}
     .stat-card{flex:1;min-width:220px;display:flex;align-items:center;gap:18px;padding:26px;border-radius:24px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 12px 35px rgba(0,0,0,0.3);transition:transform 0.25s;}
     .stat-card:hover{transform:translateY(-4px);border-color:var(--border-glow);}
     .stat-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 20px var(--accent-glow)}
     .stat-title{color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;}
-    .stat-number{font-weight:800;font-size:28px;color:#fff;margin-top:2px;}
+    .stat-number{font-weight:800;font-size:28px;color:#ffffff;margin-top:2px;}
 
     .table-card{border-radius:24px;padding:26px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:26px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
     .styled-table{width:100%;border-collapse:collapse}
     .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:15px 16px;text-align:left;border-bottom:1px solid var(--border-color)}
-    .styled-table tbody td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#f1f5f9;font-size:14px;vertical-align:middle;}
+    .styled-table tbody td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#f8fafc;font-size:14px;vertical-align:middle;}
     .styled-table tbody tr{transition:background-color 0.2s;}
-    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.025);}
+    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.05);}
     
-    .badge-approved{background:rgba(16, 185, 129, 0.15);color:#34d399;border:1px solid rgba(16, 185, 129, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-pending{background:rgba(245, 158, 11, 0.15);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-rejected{background:rgba(239, 68, 68, 0.15);color:#f87171;border:1px solid rgba(239, 68, 68, 0.3);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-approved{background:rgba(16, 185, 129, 0.2);color:#34d399;border:1px solid rgba(16, 185, 129, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-pending{background:rgba(245, 158, 11, 0.2);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-rejected{background:rgba(239, 68, 68, 0.2);color:#f87171;border:1px solid rgba(239, 68, 68, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
 
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:12px 24px;border-radius:14px;font-weight:700;box-shadow:0 4px 15px var(--accent-glow);transition:all 0.2s;}
-    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accent-glow);background:linear-gradient(135deg, #4f46e5, #4338ca);}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:12px 24px;border-radius:14px;font-weight:700;box-shadow:0 4px 15px var(--accent-glow);transition:all 0.2s; color:#fff;}
+    .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accent-glow);background:linear-gradient(135deg, #4f46e5, #4338ca); color:#fff;}
     
     .btn-action-group {
       display: flex;
@@ -119,8 +120,8 @@
       color: #fff;
     }
     .btn-deposit-reject {
-      background: rgba(239, 68, 68, 0.12);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.4);
       color: #f87171;
       padding: 8px 14px;
       border-radius: 12px;
@@ -140,30 +141,29 @@
       border-color: var(--danger);
     }
 
-    .btn-delete{background:rgba(239, 68, 68, 0.1);border:1px solid rgba(239, 68, 68, 0.25);color:#f87171;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+    .btn-delete{background:rgba(239, 68, 68, 0.15);border:1px solid rgba(239, 68, 68, 0.35);color:#f87171;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
     .btn-delete:hover{background:var(--danger);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.4);}
 
-    .btn-edit-action{background:rgba(99, 102, 241, 0.1);border:1px solid rgba(99, 102, 241, 0.25);color:#818cf8;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
+    .btn-edit-action{background:rgba(99, 102, 241, 0.15);border:1px solid rgba(99, 102, 241, 0.35);color:#a5b4fc;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
     .btn-edit-action:hover{background:var(--accent);color:#fff;box-shadow:0 4px 15px var(--accent-glow);}
 
-    .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:#e2e8f0;}
+    .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:#f8fafc;}
 
-    /* Category Accordion Styling with Premium Look */
     .main-category-row {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%);
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(30, 27, 75, 0.5) 100%);
       cursor: pointer;
       font-weight: bold;
-      border-bottom: 1px solid rgba(99, 102, 241, 0.2) !important;
+      border-bottom: 1px solid rgba(99, 102, 241, 0.3) !important;
     }
     .main-category-row:hover {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(30, 27, 75, 0.6) 100%) !important;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 27, 75, 0.7) 100%) !important;
     }
     .sub-category-row {
-      background: rgba(15, 23, 42, 0.6);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      background: rgba(15, 23, 42, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     .sub-category-row:hover {
-      background: rgba(30, 41, 59, 0.8) !important;
+      background: rgba(30, 41, 59, 0.9) !important;
     }
 
     @media (max-width:991px){
@@ -175,8 +175,8 @@
       
       .styled-table thead { display: none; }
       .styled-table, .styled-table tbody, .styled-table tr, .styled-table td { display: block; width: 100%; }
-      .styled-table tr { margin-bottom: 15px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
-      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; justify-content: space-between; align-items: center; word-break: break-word; }
+      .styled-table tr { margin-bottom: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
+      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; word-break: break-word; color:#f8fafc; }
       .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-right: 10px; flex-shrink: 0; }
       .styled-table td:last-child { border-bottom: none; justify-content: flex-end; padding-top: 12px; }
     }
@@ -185,7 +185,7 @@
 <body>
 
 <div id="toast" style="position:fixed;right:24px;bottom:24px;z-index:99999;display:none">
-  <div class="card-panel py-3 px-4 shadow-lg" id="toast-text" style="margin:0;background:#0f172a;border-color:var(--accent);"></div>
+  <div class="card-panel py-3 px-4 shadow-lg text-white" id="toast-text" style="margin:0;background:#0f172a;border-color:var(--accent);"></div>
 </div>
 
 <!-- ADMIN LOGIN -->
@@ -259,12 +259,61 @@
         </div>
       </div>
 
-      <!-- TOTAL APPROVED DEPOSIT CARD WITH TIME FILTER (Starts with Last 1 Month) -->
+      <!-- LAST 24 HOURS & LAST 30 DAYS PERFORMANCE METRICS -->
+      <div class="row g-4 mb-4">
+        <div class="col-xl-6">
+          <div class="card-panel h-100 mb-0" style="border-color: rgba(99, 102, 241, 0.4);">
+            <h5 class="mb-3" style="color: #a5b4fc;"><i class="fa-solid fa-bolt me-2"></i>Last 24 Hours Performance</h5>
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
+                  <div class="stat-title">Stock Added</div>
+                  <div id="d24Stock" class="stat-number text-info">0</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
+                  <div class="stat-title">Total Deposits</div>
+                  <div id="d24DepositCount" class="stat-number text-warning">0 <span style="font-size:14px; font-weight:normal;" id="d24DepositAmount">(&#2547;0)</span></div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
+                  <div class="stat-title">Items Sold</div>
+                  <div id="d24Sold" class="stat-number text-success">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-xl-6">
+          <div class="card-panel h-100 mb-0" style="border-color: rgba(16, 185, 129, 0.4);">
+            <h5 class="text-success mb-3"><i class="fa-solid fa-calendar-days me-2"></i>Last 30 Days Performance</h5>
+            <div class="row g-3">
+              <div class="col-6">
+                <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
+                  <div class="stat-title">Stock Added</div>
+                  <div id="d30Stock" class="stat-number text-info">0</div>
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
+                  <div class="stat-title">Items Sold</div>
+                  <div id="d30Sold" class="stat-number text-success">0</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOTAL APPROVED DEPOSIT CARD WITH TIME FILTER -->
       <div class="card-panel mb-4" style="border-color: rgba(16, 185, 129, 0.3);">
         <div class="row align-items-center">
           <div class="col-md-8">
             <div class="stat-title text-success mb-1"><i class="fa-solid fa-wallet me-2"></i>Total Approved Deposit Amount</div>
-            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:36px;">৳0</div>
+            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:36px;">&#2547;0</div>
           </div>
           <div class="col-md-4 mt-3 mt-md-0 text-md-end">
             <label class="form-label">Time Period</label>
@@ -318,10 +367,10 @@
         </div>
 
         <div id="userActivityDetailsContainer" style="display:none;">
-          <div class="p-3 mb-4 rounded-4" style="background: rgba(99, 102, 241, 0.1); border: 1px solid var(--border-glow);">
+          <div class="p-3 mb-4 rounded-4" style="background: rgba(99, 102, 241, 0.15); border: 1px solid var(--border-glow);">
             <h5 class="mb-1" style="color: #a5b4fc;"><i class="fa-solid fa-user-circle me-2"></i>User Profile: <span id="lblActivityEmail" class="text-white"></span></h5>
             <div class="d-flex gap-4 mt-2" style="font-size: 13px;">
-              <div>Current Balance: <strong class="text-success" id="lblActivityBalance">৳0</strong></div>
+              <div>Current Balance: <strong class="text-success" id="lblActivityBalance">&#2547;0</strong></div>
             </div>
           </div>
 
@@ -382,10 +431,10 @@
       <h1>Live Inventory Stock</h1>
       <div class="card-panel">
         <div class="d-flex align-items-center gap-3 mb-4">
-          <div style="width:46px;height:46px;border-radius:14px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <div style="width:46px;height:46px;border-radius:14px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;"><i class="fa-solid fa-boxes-stacked"></i></div>
           <div>
-            <h5 class="mb-0" style="font-size:18px;">Live Inventory Stock Status (Real Stock Only)</h5>
-            <div class="text-muted" style="font-size:12px;">Real-time available stock count & pricing across categories</div>
+            <h5 class="mb-0 text-white" style="font-size:18px;">Live Inventory Stock Status (Real Stock Only - Available Items)</h5>
+            <div class="text-muted" style="font-size:12px;">Real-time available stock count & pricing across categories (excluding sold-out items)</div>
           </div>
         </div>
         <div style="overflow:auto">
@@ -450,7 +499,7 @@
       </div>
     </section>
 
-    <!-- ADD STOCKS TAB (WITH CATEGORY PRICE SETTING) -->
+    <!-- ADD STOCKS TAB -->
     <section id="tab-stocks" style="display:none">
       <h1>Add Stocks</h1>
       <div class="card-panel mb-4">
@@ -537,7 +586,7 @@
       </div>
       <div class="table-card">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5>Available Stock Mails List</h5>
+          <h5 class="text-white">Available Stock Mails List</h5>
         </div>
         <div style="overflow:auto">
           <table class="styled-table">
@@ -587,6 +636,7 @@
       </div>
     </section>
 
+    <!-- PAYMENTS & SUPPORT SETTINGS TAB -->
     <section id="tab-payments" style="display:none">
       <h1>Payments & Support Settings</h1>
       <div class="card-panel mb-3" style="border-color: rgba(59, 130, 246, 0.4);">
@@ -637,7 +687,7 @@
       </div>
 
       <div class="table-card">
-        <h5>Active Payment Methods</h5>
+        <h5 class="text-white">Active Payment Methods</h5>
         <div style="overflow:auto">
           <table class="styled-table">
             <thead><tr><th>Name</th><th>Type</th><th>Number</th><th>Logo URL</th><th>Action</th></tr></thead>
@@ -647,6 +697,7 @@
       </div>
     </section>
 
+    <!-- USERS MANAGEMENT TAB -->
     <section id="tab-users" style="display:none">
       <h1>Users Management</h1>
       <div class="card-panel mb-3">
@@ -678,7 +729,7 @@
         <p class="text-muted" style="font-size:13px;" id="modalUserEmailLabel"></p>
         <div class="mb-3">
           <label class="form-label">Current Balance</label>
-          <div class="fs-4 text-success fw-bold" id="modalCurrentBalance">৳0</div>
+          <div class="fs-4 text-success fw-bold" id="modalCurrentBalance">&#2547;0</div>
         </div>
         <div class="mb-3">
           <label class="form-label">Enter Amount</label>
@@ -687,6 +738,46 @@
         <div class="d-flex gap-3">
           <button class="btn btn-danger w-50 py-3 fw-bold" onclick="modifyUserBalance('minus')"><i class="fa-solid fa-minus me-1"></i> Sub (-) Amount</button>
           <button class="btn btn-success w-50 py-3 fw-bold" onclick="modifyUserBalance('plus')"><i class="fa-solid fa-plus me-1"></i> Add (+) Amount</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Editing Payment Method -->
+<div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="background:#0f172a; border:1px solid var(--border-glow); border-radius:24px; color:#fff;">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title" style="font-weight:800;">Edit Payment Method</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editPayKey">
+        <div class="mb-3">
+          <label class="form-label">Method Name</label>
+          <input id="editPayName" class="form-control" placeholder="bKash / Binance">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Account Type</label>
+          <select id="editPayType" class="form-select">
+            <option>Send Money</option>
+            <option>Cash Out</option>
+            <option>Personal</option>
+            <option>Agent</option>
+            <option>Binance Pay ID / USDT Address</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Account Number / Details</label>
+          <input id="editPayNumber" class="form-control" placeholder="017xxxxxxxx or Wallet">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Logo Image URL</label>
+          <input id="editPayLogo" class="form-control" placeholder="https://... logo url">
+        </div>
+        <div class="text-end mt-4">
+          <button class="btn btn-primary w-100 py-3 fw-bold" onclick="updatePaymentMethod()">Save Changes</button>
         </div>
       </div>
     </div>
@@ -711,6 +802,23 @@
   };
   if(!firebase.apps.length) firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
+
+  let globalStocksCache = {};
+  let globalOrdersCache = {};
+  let globalDepositsCache = {};
+  let globalUsersCache = {};
+  let globalCategoriesCache = {};
+  let isDataLoaded = false;
+
+  // Real-time synchronization cache triggers
+  db.ref('stocks').on('value', snap => { globalStocksCache = snap.val() || {}; loadDashboard(); });
+  db.ref('orders').on('value', snap => { globalOrdersCache = snap.val() || {}; loadDashboard(); });
+  db.ref('deposits').on('value', snap => { globalDepositsCache = snap.val() || {}; loadDashboard(); });
+  db.ref('users').on('value', snap => { globalUsersCache = snap.val() || {}; loadDashboard(); });
+  db.ref('categories').on('value', snap => { 
+    globalCategoriesCache = snap.val() || {}; 
+    isDataLoaded = true;
+  });
 
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(() => {
@@ -758,6 +866,7 @@
       document.getElementById('adminSidebar').classList.remove('mobile-show');
     }
 
+    // Instantly render cached tabs without network wait time
     if(name==='live-inventory') loadLiveInventory();
     if(name==='categories') loadCategories();
     if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); renderAdminFakeStocks(); }
@@ -769,12 +878,27 @@
   }
 
   function initApp(){
-    document.getElementById('admin-auth').style.display='none';
-    document.getElementById('admin-app').style.display='block';
-    openTab('dashboard');
+    document.getElementById('admin-auth').style.display = 'none';
+    document.getElementById('admin-app').style.display = 'block';
+    
+    // একসাথে সব ডেটা আগে থেকেই ব্যাকগ্রাউন্ডে লোড করে নেওয়া হচ্ছে
+    Promise.all([
+      db.ref('stocks').once('value'),
+      db.ref('orders').once('value'),
+      db.ref('deposits').once('value'),
+      db.ref('users').once('value'),
+      db.ref('categories').once('value')
+    ]).then(snapshots => {
+      globalStocksCache = snapshots[0].val() || {};
+      globalOrdersCache = snapshots[1].val() || {};
+      globalDepositsCache = snapshots[2].val() || {};
+      globalUsersCache = snapshots[3].val() || {};
+      globalCategoriesCache = snapshots[4].val() || {};
+      isDataLoaded = true;
+      openTab('dashboard');
+    });
   }
 
-  // --- USER ACTIVITY HISTORY SEARCH (A-Z) ---
   function searchUserActivityHistory(){
     const queryEmail = (document.getElementById('activityUserSearchInput').value || '').trim().toLowerCase();
     if(!queryEmail){
@@ -790,69 +914,65 @@
       document.getElementById('lblActivityEmail').innerText = queryEmail;
     });
 
-    db.ref('orders').once('value', orderSnap => {
-      const orders = orderSnap.val() || {};
-      const pBody = document.getElementById('activityPurchasesBody');
-      pBody.innerHTML = '';
-      let pCount = 0;
+    const orders = globalOrdersCache;
+    const pBody = document.getElementById('activityPurchasesBody');
+    pBody.innerHTML = '';
+    let pCount = 0;
 
-      Object.values(orders).forEach(o => {
-        if(o && o.user && o.user.toLowerCase().trim() === queryEmail) {
-          pCount++;
-          let formattedDate = o.date || '-';
-          if(o.timestamp) {
-            formattedDate = new Date(o.timestamp).toLocaleString();
-          }
-          pBody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td><strong>${escapeHtml(o.category || '-')}</strong></td>
-              <td>${o.quantity || 1}</td>
-              <td class="text-success">৳${o.totalPrice || o.price || 0}</td>
-              <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDate)}</td>
-            </tr>
-          `);
+    Object.values(orders).forEach(o => {
+      if(o && o.user && o.user.toLowerCase().trim() === queryEmail) {
+        pCount++;
+        let formattedDate = o.date || '-';
+        if(o.timestamp) {
+          formattedDate = new Date(o.timestamp).toLocaleString();
         }
-      });
-
-      if(pCount === 0){
-        pBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No purchases found for this user</td></tr>';
+        pBody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><strong>${escapeHtml(o.category || '-')}</strong></td>
+            <td>${o.quantity || 1}</td>
+            <td class="text-success">৳${o.totalPrice || o.price || 0}</td>
+            <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDate)}</td>
+          </tr>
+        `);
       }
     });
 
-    db.ref('deposits').once('value', depSnap => {
-      const deposits = depSnap.val() || {};
-      const dBody = document.getElementById('activityDepositsBody');
-      dBody.innerHTML = '';
-      let dCount = 0;
+    if(pCount === 0){
+      pBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No purchases found for this user</td></tr>';
+    }
 
-      Object.values(deposits).forEach(d => {
-        if(d && d.email && d.email.toLowerCase().trim() === queryEmail) {
-          dCount++;
-          const statusBadge = d.status === 'Approved' ? 'badge-approved' : (d.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
-          let formattedDepDate = 'N/A';
-          if(d.timestamp) {
-            formattedDepDate = new Date(d.timestamp).toLocaleString();
-          } else if(d.date) {
-            formattedDepDate = d.date;
-          }
-          dBody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td>
-              <td class="text-success"><strong>৳${d.amount || 0}</strong></td>
-              <td>
-                <code style="color:#93c5fd">${escapeHtml(d.trx || '-')}</code><br>
-                <span class="${statusBadge}" style="font-size:9px; padding:2px 6px;">${escapeHtml(d.status || 'Pending')}</span>
-              </td>
-              <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDepDate)}</td>
-            </tr>
-          `);
+    const deposits = globalDepositsCache;
+    const dBody = document.getElementById('activityDepositsBody');
+    dBody.innerHTML = '';
+    let dCount = 0;
+
+    Object.values(deposits).forEach(d => {
+      if(d && d.email && d.email.toLowerCase().trim() === queryEmail) {
+        dCount++;
+        const statusBadge = d.status === 'Approved' ? 'badge-approved' : (d.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+        let formattedDepDate = 'N/A';
+        if(d.timestamp) {
+          formattedDepDate = new Date(d.timestamp).toLocaleString();
+        } else if(d.date) {
+          formattedDepDate = d.date;
         }
-      });
-
-      if(dCount === 0){
-        dBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No deposit records found for this user</td></tr>';
+        dBody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td>
+            <td class="text-success"><strong>৳${d.amount || 0}</strong></td>
+            <td>
+              <code style="color:#93c5fd">${escapeHtml(d.trx || '-')}</code><br>
+              <span class="${statusBadge}" style="font-size:9px; padding:2px 6px;">${escapeHtml(d.status || 'Pending')}</span>
+            </td>
+            <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDepDate)}</td>
+          </tr>
+        `);
       }
     });
+
+    if(dCount === 0){
+      dBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No deposit records found for this user</td></tr>';
+    }
 
     document.getElementById('userActivityInitialPrompt').style.display = 'none';
     document.getElementById('userActivityDetailsContainer').style.display = 'block';
@@ -863,123 +983,156 @@
     const tbody = document.getElementById('liveInventoryBody');
     tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">Loading live inventory...</td></tr>';
 
-    db.ref('categories').once('value', catSnap => {
-      const categories = catSnap.val() || {};
-      db.ref('stocks').once('value', stockSnap => {
-        const stocks = stockSnap.val() || {};
+    const categories = globalCategoriesCache;
+    const stocks = globalStocksCache;
 
-        tbody.innerHTML = '';
-        const catKeys = Object.keys(categories);
-        if(catKeys.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>';
-          return;
+    tbody.innerHTML = '';
+    const catKeys = Object.keys(categories);
+    if(catKeys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>';
+      return;
+    }
+
+    catKeys.forEach(catKey => {
+      const c = categories[catKey];
+      if(!c) return;
+      const mainCat = c.cat || '';
+      const subCat = c.subCat || '';
+      const categoryFullName = `${mainCat} - ${subCat}`;
+
+      let realCount = 0;
+      let itemPrice = 0;
+
+      Object.values(stocks).forEach(item => {
+        if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
+          realCount++;
+          if(item.price) itemPrice = item.price;
         }
-
-        catKeys.forEach(catKey => {
-          const c = categories[catKey];
-          if(!c) return;
-          const mainCat = c.cat || '';
-          const subCat = c.subCat || '';
-          const categoryFullName = `${mainCat} - ${subCat}`;
-
-          let realCount = 0;
-          let itemPrice = 0;
-
-          Object.values(stocks).forEach(item => {
-            if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
-              realCount++;
-              if(item.price) itemPrice = item.price;
-            }
-          });
-
-          const stockBadgeClass = realCount > 0 ? 'badge-approved' : 'badge-rejected';
-          const stockText = `${realCount} pcs`;
-
-          tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td data-label="Category"><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
-              <td data-label="Item Title"><strong>${escapeHtml(subCat)}</strong></td>
-              <td data-label="Price"><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
-              <td data-label="Real In Stock"><span class="${stockBadgeClass}">${stockText}</span></td>
-            </tr>
-          `);
-        });
       });
+
+      if (realCount > 0) {
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td data-label="Category"><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
+            <td data-label="Item Title"><strong class="text-white">${escapeHtml(subCat)}</strong></td>
+            <td data-label="Price"><span style="color:#fcd535;font-weight:700">৳${itemPrice.toFixed(2)}</span></td>
+            <td data-label="Real In Stock"><span class="badge-approved">${realCount} pcs</span></td>
+          </tr>
+        `);
+      }
     });
+
+    if (tbody.innerHTML === '') {
+      tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No available stock items in inventory</td></tr>';
+    }
   }
 
   function loadDashboard(){
-    db.ref('users').once('value',u=>{ 
-      const usersData = u.val()||{};
-      const uniqueEmails = new Set();
-      Object.values(usersData).forEach(user => {
-        if(user && user.email) uniqueEmails.add(user.email.toLowerCase().trim());
-      });
-      document.getElementById('statUsers').innerText = uniqueEmails.size; 
+    const usersData = globalUsersCache;
+    const uniqueEmails = new Set();
+    Object.values(usersData).forEach(user => {
+      if(user && user.email) uniqueEmails.add(user.email.toLowerCase().trim());
     });
-    db.ref('stocks').once('value',s=>{ const avail=Object.values(s.val()||{}).filter(x=>x.status==='available').length; document.getElementById('statStocks').innerText=avail; });
-    db.ref('deposits').once('value',d=>{ 
-      const depositsVal = d.val()||{};
-      const depositsArr = Object.values(depositsVal);
-      const pending=depositsArr.filter(x=>x.status==='Pending').length; 
-      document.getElementById('statDeposits').innerText=pending; 
+    document.getElementById('statUsers').innerText = uniqueEmails.size;
 
-      // Calculate Total Approved Deposits with Time Filter (Default: Last 1 Month)
-      const timeFilter = document.getElementById('depositTimeFilter').value;
-      const now = Date.now();
-      let cutoffTime = 0;
-      if(timeFilter === '1month') {
-        cutoffTime = now - (30 * 24 * 60 * 60 * 1000);
-      } else if(timeFilter === '2months') {
-        cutoffTime = now - (60 * 24 * 60 * 60 * 1000);
-      } else if(timeFilter === '3months') {
-        cutoffTime = now - (90 * 24 * 60 * 60 * 1000);
-      } else if(timeFilter === 'all') {
-        cutoffTime = 0;
-      }
+    const avail = Object.values(globalStocksCache).filter(x => x.status === 'available').length;
+    document.getElementById('statStocks').innerText = avail;
 
-      let totalApprovedAmount = 0;
-      depositsArr.forEach(dep => {
-        if(dep && dep.status === 'Approved') {
-          let depTime = dep.timestamp || 0;
-          if(depTime >= cutoffTime) {
-            totalApprovedAmount += parseFloat(dep.amount || 0);
-          }
+    const depositsVal = globalDepositsCache;
+    const depositsArr = Object.values(depositsVal);
+    const pending = depositsArr.filter(x => x.status === 'Pending').length; 
+    document.getElementById('statDeposits').innerText = pending; 
+
+    const timeFilter = document.getElementById('depositTimeFilter').value;
+    const now = Date.now();
+    let cutoffTime = 0;
+    if(timeFilter === '1month') {
+      cutoffTime = now - (30 * 24 * 60 * 60 * 1000);
+    } else if(timeFilter === '2months') {
+      cutoffTime = now - (60 * 24 * 60 * 60 * 1000);
+    } else if(timeFilter === '3months') {
+      cutoffTime = now - (90 * 24 * 60 * 60 * 1000);
+    } else if(timeFilter === 'all') {
+      cutoffTime = 0;
+    }
+
+    let totalApprovedAmount = 0;
+    depositsArr.forEach(dep => {
+      if(dep && dep.status === 'Approved') {
+        let depTime = dep.timestamp || 0;
+        if(cutoffTime === 0 || depTime >= cutoffTime || !depTime) {
+          totalApprovedAmount += parseFloat(dep.amount || 0);
         }
-      });
-      document.getElementById('statTotalApprovedDeposit').innerText = '৳' + totalApprovedAmount.toLocaleString();
+      }
     });
+    document.getElementById('statTotalApprovedDeposit').innerText = '৳' + totalApprovedAmount.toLocaleString();
+
+    const time24h = now - (24 * 60 * 60 * 1000);
+    const time30d = now - (30 * 24 * 60 * 60 * 1000);
+
+    let stockAdded24h = 0;
+    let stockAdded30d = 0;
+    Object.values(globalStocksCache).forEach(s => {
+      let stTime = s.timestamp || 0;
+      if(stTime >= time24h) stockAdded24h++;
+      if(stTime >= time30d) stockAdded30d++;
+    });
+    document.getElementById('d24Stock').innerText = stockAdded24h;
+    document.getElementById('d30Stock').innerText = stockAdded30d;
+
+    let depositCount24h = 0;
+    let depositAmount24h = 0;
+    depositsArr.forEach(d => {
+      if(d && d.status === 'Approved') {
+        let dTime = d.timestamp || 0;
+        if(dTime >= time24h) {
+          depositCount24h++;
+          depositAmount24h += parseFloat(d.amount || 0);
+        }
+      }
+    });
+    document.getElementById('d24DepositCount').innerHTML = `${depositCount24h} <span style="font-size:14px; font-weight:normal;" id="d24DepositAmount">(&#2547;${depositAmount24h.toLocaleString()})</span>`;
+
+    let sold24h = 0;
+    let sold30d = 0;
+    Object.values(globalOrdersCache).forEach(o => {
+      let oTime = o.timestamp || 0;
+      let qty = parseInt(o.quantity || 1);
+      if(oTime >= time24h) sold24h += qty;
+      if(oTime >= time30d) sold30d += qty;
+    });
+    document.getElementById('d24Sold').innerText = sold24h;
+    document.getElementById('d30Sold').innerText = sold30d;
+
     loadDashboardLast10Orders();
   }
 
   function loadDashboardLast10Orders() {
-    db.ref('orders').once('value', snap => {
-      const ordersData = snap.val() || {};
-      const tbody = document.getElementById('dashboardLast10OrdersBody');
-      tbody.innerHTML = '';
-      let keys = Object.keys(ordersData);
-      if(keys.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">No purchases found yet</td></tr>';
-        return;
-      }
-      keys.sort((a, b) => (ordersData[b].timestamp || 0) - (ordersData[a].timestamp || 0));
-      let last10Keys = keys.slice(0, 10);
+    const ordersData = globalOrdersCache;
+    const tbody = document.getElementById('dashboardLast10OrdersBody');
+    tbody.innerHTML = '';
+    let keys = Object.keys(ordersData);
+    if(keys.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-3">No purchases found yet</td></tr>';
+      return;
+    }
+    keys.sort((a, b) => (ordersData[b].timestamp || 0) - (ordersData[a].timestamp || 0));
+    let last10Keys = keys.slice(0, 10);
 
-      last10Keys.forEach(k => {
-        let o = ordersData[k];
-        let formattedOrderDate = o.date || '-';
-        if(o.timestamp) formattedOrderDate = new Date(o.timestamp).toLocaleString();
-        tbody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td data-label="Order ID"><code>${escapeHtml(o.orderId || '#---')}</code></td>
-            <td data-label="User Email">${escapeHtml(o.user || '-')}</td>
-            <td data-label="Category">${escapeHtml(o.category || '-')}</td>
-            <td data-label="Quantity">${o.quantity || 1}</td>
-            <td data-label="Total Price">৳${o.totalPrice || o.price || 0}</td>
-            <td data-label="Date">${escapeHtml(formattedOrderDate)}</td>
-          </tr>
-        `);
-      });
+    last10Keys.forEach(k => {
+      let o = ordersData[k];
+      let formattedOrderDate = o.date || '-';
+      if(o.timestamp) formattedOrderDate = new Date(o.timestamp).toLocaleString();
+      tbody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td data-label="Order ID"><code>${escapeHtml(o.orderId || '#---')}</code></td>
+          <td data-label="User Email">${escapeHtml(o.user || '-')}</td>
+          <td data-label="Category">${escapeHtml(o.category || '-')}</td>
+          <td data-label="Quantity">${o.quantity || 1}</td>
+          <td data-label="Total Price" class="text-success fw-bold">&#2547;${o.totalPrice || o.price || 0}</td>
+          <td data-label="Date">${escapeHtml(formattedOrderDate)}</td>
+        </tr>
+      `);
     });
   }
 
@@ -1001,78 +1154,76 @@
   }
 
   function loadCategories(){
-    db.ref('categories').once('value',snap=>{
-      const cats=snap.val()||{}; 
-      const body=document.getElementById('categoriesBody'); 
-      body.innerHTML='';
-      const mainList = document.getElementById('mainCategoryList'); 
-      const subList = document.getElementById('subCategoryList');
-      mainList.innerHTML = ''; 
-      subList.innerHTML = '';
-      
-      let keys=Object.keys(cats||{}); 
-      if(!keys.length){ 
-        body.innerHTML='<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>'; 
-        return; 
-      }
-      
-      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+    const cats = globalCategoriesCache; 
+    const body=document.getElementById('categoriesBody'); 
+    body.innerHTML='';
+    const mainList = document.getElementById('mainCategoryList'); 
+    const subList = document.getElementById('subCategoryList');
+    mainList.innerHTML = ''; 
+    subList.innerHTML = '';
+    
+    let keys=Object.keys(cats||{}); 
+    if(!keys.length){ 
+      body.innerHTML='<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>'; 
+      return; 
+    }
+    
+    keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
 
-      const grouped = {};
-      const uniqueMains = new Set(); 
-      const uniqueSubs = new Set();
+    const grouped = {};
+    const uniqueMains = new Set(); 
+    const uniqueSubs = new Set();
 
-      keys.forEach(k=>{
-        const c=cats[k]||{};
-        if(c.cat) uniqueMains.add(c.cat);
-        if(c.subCat) uniqueSubs.add(c.subCat);
+    keys.forEach(k=>{
+      const c=cats[k]||{};
+      if(c.cat) uniqueMains.add(c.cat);
+      if(c.subCat) uniqueSubs.add(c.subCat);
 
-        const mainName = c.cat || 'Uncategorized';
-        if(!grouped[mainName]) grouped[mainName] = [];
-        grouped[mainName].push({ key: k, data: c });
-      });
+      const mainName = c.cat || 'Uncategorized';
+      if(!grouped[mainName]) grouped[mainName] = [];
+      grouped[mainName].push({ key: k, data: c });
+    });
 
-      Object.keys(grouped).forEach((mainCat, index) => {
-        const subItems = grouped[mainCat];
-        const collapseId = 'subCatGroup_' + index;
+    Object.keys(grouped).forEach((mainCat, index) => {
+      const subItems = grouped[mainCat];
+      const collapseId = 'subCatGroup_' + index;
 
+      body.insertAdjacentHTML('beforeend', `
+        <tr class="main-category-row" onclick="toggleCategoryGroup('${collapseId}', this)">
+          <td data-label="Category">
+            <i class="fa-solid fa-chevron-right me-2 transition-icon" id="icon_${collapseId}"></i>
+            <strong style="font-size:15px; color:#ffffff;">${escapeHtml(mainCat)}</strong> 
+            <span class="badge bg-primary ms-2" style="font-size:10px; background:var(--accent)!important;">${subItems.length} sub-categories</span>
+          </td>
+          <td data-label="Description"><span class="text-muted" style="font-style:italic;">Click to expand/collapse sub-categories</span></td>
+          <td data-label="Status">-</td>
+          <td data-label="Action" style="text-align:right;">-</td>
+        </tr>
+      `);
+
+      subItems.forEach(subObj => {
+        const k = subObj.key;
+        const c = subObj.data;
         body.insertAdjacentHTML('beforeend', `
-          <tr class="main-category-row" onclick="toggleCategoryGroup('${collapseId}', this)">
-            <td data-label="Category">
-              <i class="fa-solid fa-chevron-right me-2 transition-icon" id="icon_${collapseId}"></i>
-              <strong style="font-size:15px; color:#ffffff;">${escapeHtml(mainCat)}</strong> 
-              <span class="badge bg-primary ms-2" style="font-size:10px; background:var(--accent)!important;">${subItems.length} sub-categories</span>
+          <tr class="sub-category-row sub-group-${collapseId}" style="display: none;">
+            <td data-label="Sub-Category" style="padding-left: 35px;">
+              <i class="fa-solid fa-angle-right me-2 text-muted" style="font-size:10px;"></i>
+              <span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span>
             </td>
-            <td data-label="Description"><span class="text-muted" style="font-style:italic;">Click to expand/collapse sub-categories</span></td>
-            <td data-label="Status">-</td>
-            <td data-label="Action" style="text-align:right;">-</td>
+            <td data-label="Description"><span style="color:#f8fafc;white-space:pre-wrap">${escapeHtml(c.description||'No description')}</span></td>
+            <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
+            <td data-label="Action" style="text-align:right;">
+              <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
+              <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
+            </td>
           </tr>
         `);
-
-        subItems.forEach(subObj => {
-          const k = subObj.key;
-          const c = subObj.data;
-          body.insertAdjacentHTML('beforeend', `
-            <tr class="sub-category-row sub-group-${collapseId}" style="display: none;">
-              <td data-label="Sub-Category" style="padding-left: 35px;">
-                <i class="fa-solid fa-angle-right me-2 text-muted" style="font-size:10px;"></i>
-                <span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span>
-              </td>
-              <td data-label="Description"><span style="color:#e2e8f0;white-space:pre-wrap">${escapeHtml(c.description||'No description')}</span></td>
-              <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
-              <td data-label="Action" style="text-align:right;">
-                <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
-                <button class="btn btn-sm btn-outline-light me-1 px-3 py-2 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button>
-                <button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button>
-              </td>
-            </tr>
-          `);
-        });
       });
-
-      uniqueMains.forEach(m => mainList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(m)}">`));
-      uniqueSubs.forEach(s => subList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(s)}">`));
     });
+
+    uniqueMains.forEach(m => mainList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(m)}">`));
+    uniqueSubs.forEach(s => subList.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(s)}">`));
   }
 
   function toggleCategoryGroup(collapseId, rowEl) {
@@ -1090,7 +1241,7 @@
       rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 27, 75, 0.8) 100%)';
     } else {
       iconEl.style.transform = 'rotate(0deg)';
-      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(30, 27, 75, 0.4) 100%)';
+      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(30, 27, 75, 0.5) 100%)';
     }
   }
 
@@ -1113,50 +1264,81 @@
   function removeCategory(key){ if(!confirm('Delete category?')) return; db.ref(`categories/${key}`).remove().then(()=>loadCategories()); }
 
   function loadCategoryOptions(){
-    db.ref('categories').once('value',s=>{ 
-      const cats=s.val()||{}; 
-      const sel=document.getElementById('stockCategory'); 
-      sel.innerHTML='<option value="">Select Category</option>'; 
-      let keys = Object.keys(cats);
-      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
-      keys.forEach(k=>{ 
-        let c = cats[k];
-        if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); 
-      }); 
-      if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; 
+    const cats = globalCategoriesCache; 
+    const sel=document.getElementById('stockCategory'); 
+    sel.innerHTML='<option value="">Select Category</option>'; 
+    let keys = Object.keys(cats);
+    keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+
+    const groupedMains = {};
+    keys.forEach(k => {
+      let c = cats[k];
+      if(c && c.status === 'ON') {
+        let m = c.cat || 'Other';
+        if(!groupedMains[m]) groupedMains[m] = [];
+        groupedMains[m].push(c);
+      }
     });
+
+    Object.keys(groupedMains).forEach(mainCat => {
+      let optgroup = document.createElement('optgroup');
+      optgroup.label = mainCat;
+      groupedMains[mainCat].forEach(c => {
+        let opt = document.createElement('option');
+        opt.value = `${c.cat} - ${c.subCat}`;
+        opt.textContent = c.subCat;
+        optgroup.appendChild(opt);
+      });
+      sel.appendChild(optgroup);
+    });
+
+    if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>';
   }
 
   function onStockCategorySelect(selectEl) {
     const selectedCategory = selectEl.value;
     if(!selectedCategory) return;
     
-    // Auto-fetch existing price for this category from active stocks if available
-    db.ref('stocks').once('value', snapshot => {
-      const stocks = snapshot.val() || {};
-      for(let k in stocks) {
-        let item = stocks[k];
-        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.price) {
-          document.getElementById('stockPrice').value = item.price;
-          break;
-        }
+    const stocks = globalStocksCache;
+    for(let k in stocks) {
+      let item = stocks[k];
+      if(item && item.category && item.category.trim() === selectedCategory.trim() && item.price) {
+        document.getElementById('stockPrice').value = item.price;
+        break;
       }
-    });
+    }
   }
 
   function loadFakeCategoryOptions(){
-    db.ref('categories').once('value',s=>{ 
-      const cats=s.val()||{}; 
-      const sel=document.getElementById('fakeStockCategory'); 
-      sel.innerHTML=''; 
-      let keys = Object.keys(cats);
-      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
-      keys.forEach(k=>{ 
-        let c = cats[k];
-        if(c.status==='ON') sel.insertAdjacentHTML('beforeend', `<option value="${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}">${escapeHtml(c.cat)} -> ${escapeHtml(c.subCat)}</option>`); 
-      }); 
-      if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>'; 
+    const cats = globalCategoriesCache; 
+    const sel=document.getElementById('fakeStockCategory'); 
+    sel.innerHTML=''; 
+    let keys = Object.keys(cats);
+    keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+
+    const groupedMains = {};
+    keys.forEach(k => {
+      let c = cats[k];
+      if(c && c.status === 'ON') {
+        let m = c.cat || 'Other';
+        if(!groupedMains[m]) groupedMains[m] = [];
+        groupedMains[m].push(c);
+      }
     });
+
+    Object.keys(groupedMains).forEach(mainCat => {
+      let optgroup = document.createElement('optgroup');
+      optgroup.label = mainCat;
+      groupedMains[mainCat].forEach(c => {
+        let opt = document.createElement('option');
+        opt.value = `${c.cat} - ${c.subCat}`;
+        opt.textContent = c.subCat;
+        optgroup.appendChild(opt);
+      });
+      sel.appendChild(optgroup);
+    });
+
+    if(!sel.childElementCount) sel.innerHTML='<option value="">No active categories</option>';
   }
 
   function renderAdminFakeStocks() {
@@ -1173,9 +1355,9 @@
         let item = fakeStocks[key];
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td data-label="Category"><strong>${escapeHtml(item.category)}</strong></td>
+            <td data-label="Category"><strong class="text-white">${escapeHtml(item.category)}</strong></td>
             <td data-label="Fake Count"><span class="badge-pending">${item.fakeCount}</span></td>
-            <td data-label="Price">৳${item.price}</td>
+            <td data-label="Price" class="text-success fw-bold">&#2547;${item.price}</td>
             <td data-label="Action">
               <button class="btn-edit-action" onclick="editFakeStock('${key}')" title="Edit Fake Stock Count & Price"><i class="fa-solid fa-pen"></i></button>
               <button class="btn-delete" onclick="deleteFakeStock('${key}')" title="Remove Fake Stock"><i class="fa-solid fa-trash"></i></button>
@@ -1243,19 +1425,33 @@
   }
 
   function loadViewStockCategoryOptions(){
-    db.ref('categories').once('value',s=>{ 
-      const cats=s.val()||{}; 
-      const sel=document.getElementById('viewStockCategory'); 
-      sel.innerHTML='<option value="">Select Category</option>'; 
-      let keys = Object.keys(cats);
-      keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
-      keys.forEach(k=>{ 
-        let c = cats[k];
-        if(c.status==='ON') {
-          const catName = `${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}`;
-          sel.insertAdjacentHTML('beforeend', `<option value="${catName}">${catName}</option>`); 
-        }
-      }); 
+    const cats = globalCategoriesCache; 
+    const sel=document.getElementById('viewStockCategory'); 
+    sel.innerHTML='<option value="">Select Category</option>'; 
+    let keys = Object.keys(cats);
+    keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+
+    const groupedMains = {};
+    keys.forEach(k => {
+      let c = cats[k];
+      if(c && c.status === 'ON') {
+        let m = c.cat || 'Other';
+        if(!groupedMains[m]) groupedMains[m] = [];
+        groupedMains[m].push(c);
+      }
+    });
+
+    Object.keys(groupedMains).forEach(mainCat => {
+      let optgroup = document.createElement('optgroup');
+      optgroup.label = mainCat;
+      groupedMains[mainCat].forEach(c => {
+        let catName = `${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}`;
+        let opt = document.createElement('option');
+        opt.value = catName;
+        opt.textContent = c.subCat;
+        optgroup.appendChild(opt);
+      });
+      sel.appendChild(optgroup);
     });
   }
 
@@ -1269,31 +1465,29 @@
       return;
     }
 
-    db.ref('stocks').once('value', snapshot => {
-      const stocks = snapshot.val() || {};
-      const keys = Object.keys(stocks);
-      let found = 0;
+    const stocks = globalStocksCache;
+    const keys = Object.keys(stocks);
+    let found = 0;
 
-      keys.forEach(k => {
-        const item = stocks[k];
-        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
-          found++;
-          tbody.insertAdjacentHTML('beforeend', `
-            <tr>
-              <td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td>
-              <td data-label="Account Details"><code>${escapeHtml(item.accountDetails)}</code></td>
-              <td data-label="Price">৳${escapeHtml(item.price)}</td>
-              <td data-label="Status"><span class="badge-approved">Available</span></td>
-              <td data-label="Action"><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
-            </tr>
-          `);
-        }
-      });
-
-      if(found === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
+    keys.forEach(k => {
+      const item = stocks[k];
+      if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
+        found++;
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td>
+            <td data-label="Account Details"><code style="color:#93c5fd">${escapeHtml(item.accountDetails)}</code></td>
+            <td data-label="Price" class="text-success fw-bold">&#2547;${escapeHtml(item.price)}</td>
+            <td data-label="Status"><span class="badge-approved">Available</span></td>
+            <td data-label="Action"><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
+          </tr>
+        `);
       }
     });
+
+    if(found === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
+    }
   }
 
   function updateCategoryBulkPrice(){
@@ -1309,30 +1503,28 @@
       return;
     }
 
-    db.ref('stocks').once('value', snapshot => {
-      const stocks = snapshot.val() || {};
-      const updates = {};
-      let count = 0;
+    const stocks = globalStocksCache;
+    const updates = {};
+    let count = 0;
 
-      Object.keys(stocks).forEach(k => {
-        const item = stocks[k];
-        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
-          updates[`stocks/${k}/price`] = newPrice;
-          count++;
-        }
-      });
-
-      if(count === 0) {
-        showToast('No available stocks found in this category to update!');
-        return;
+    Object.keys(stocks).forEach(k => {
+      const item = stocks[k];
+      if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
+        updates[`stocks/${k}/price`] = newPrice;
+        count++;
       }
-
-      db.ref().update(updates).then(() => {
-        showToast(`Successfully updated price for ${count} item(s)!`);
-        document.getElementById('bulkNewPrice').value = '';
-        loadStockMailsByCategory();
-      }).catch(e => showToast('Error: '+e.message));
     });
+
+    if(count === 0) {
+      showToast('No available stocks found in this category to update!');
+      return;
+    }
+
+    db.ref().update(updates).then(() => {
+      showToast(`Successfully updated price for ${count} item(s)!`);
+      document.getElementById('bulkNewPrice').value = '';
+      loadStockMailsByCategory();
+    }).catch(e => showToast('Error: '+e.message));
   }
 
   function toggleSelectAllStocks(masterCheckbox){
@@ -1384,7 +1576,7 @@
     const lines=raw.split('\n').map(l=>l.trim()).filter(Boolean); 
     let cnt=0;
     lines.forEach(line=>{ 
-      db.ref('stocks').push({category:cat, price:price, accountDetails:line, status:'available', soldTo:null}); 
+      db.ref('stocks').push({category:cat, price:price, accountDetails:line, status:'available', soldTo:null, timestamp: Date.now()}); 
       cnt++; 
     });
     
@@ -1393,14 +1585,14 @@
     loadDashboard();
   }
 
-  let depositsCache = {};
-  function loadDeposits(){ db.ref('deposits').once('value',snap=>{ depositsCache = snap.val()||{}; renderDeposits(); }); }
+  function loadDeposits(){ renderDeposits(); }
   
   function renderDeposits(){
     const q=(document.getElementById('searchTrx').value||'').trim().toLowerCase(); 
     const status=document.getElementById('filterStatus').value;
     const body=document.getElementById('depositsBody'); 
     body.innerHTML='';
+    const depositsCache = globalDepositsCache;
     const keys=Object.keys(depositsCache||{}); 
     if(!keys.length){ 
       body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No deposits found</td></tr>'; 
@@ -1416,9 +1608,9 @@
       
       body.insertAdjacentHTML('beforeend', `
         <tr>
-          <td data-label="User">${escapeHtml(d.email||'')}</td>
+          <td data-label="User" class="text-white">${escapeHtml(d.email||'')}</td>
           <td data-label="Method"><span class="provider-pill">${escapeHtml(d.method||'')}</span></td>
-          <td data-label="Amount"><strong>৳${d.amount||0}</strong></td>
+          <td data-label="Amount" class="text-success fw-bold">&#2547;${d.amount||0}</td>
           <td data-label="TrxID & Reason">${trxContent}</td>
           <td data-label="Status">${statusHtml}</td>
           <td data-label="Action" style="text-align: right;">
@@ -1475,12 +1667,15 @@
           <tr>
             <td data-label="Name">
               ${m.logo ? `<img src="${escapeHtml(m.logo)}" style="width:30px;height:30px;border-radius:8px;object-fit:cover;margin-right:10px;vertical-align:middle;">` : ''}
-              <strong>${escapeHtml(m.name)}</strong>
+              <strong class="text-white">${escapeHtml(m.name)}</strong>
             </td>
-            <td data-label="Type">${escapeHtml(m.type)}</td>
-            <td data-label="Number"><code>${escapeHtml(m.number)}</code></td>
-            <td data-label="Logo URL"><code>${escapeHtml(m.logo || 'No Logo')}</code></td>
-            <td data-label="Action"><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td>
+            <td data-label="Type" class="text-white">${escapeHtml(m.type)}</td>
+            <td data-label="Number"><code style="color:#93c5fd">${escapeHtml(m.number)}</code></td>
+            <td data-label="Logo URL"><code style="color:#cbd5e1">${escapeHtml(m.logo || 'No Logo')}</code></td>
+            <td data-label="Action">
+              <button class="btn-edit-action" onclick="openEditPaymentModal('${k}', '${escapeHtml(m.name)}', '${escapeHtml(m.type)}', '${escapeHtml(m.number)}', '${escapeHtml(m.logo || '')}')" title="Edit Payment"><i class="fa-solid fa-pen"></i></button>
+              <button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button>
+            </td>
           </tr>
         `);
       });
@@ -1500,6 +1695,37 @@
       showToast('Payment method added successfully');
       loadPayments();
     });
+  }
+
+  function openEditPaymentModal(key, name, type, number, logo){
+    document.getElementById('editPayKey').value = key;
+    document.getElementById('editPayName').value = name;
+    document.getElementById('editPayType').value = type;
+    document.getElementById('editPayNumber').value = number;
+    document.getElementById('editPayLogo').value = logo;
+    const modal = new bootstrap.Modal(document.getElementById('editPaymentModal'));
+    modal.show();
+  }
+
+  function updatePaymentMethod(){
+    const key = document.getElementById('editPayKey').value;
+    const name = document.getElementById('editPayName').value.trim();
+    const type = document.getElementById('editPayType').value.trim();
+    const number = document.getElementById('editPayNumber').value.trim();
+    const logo = document.getElementById('editPayLogo').value.trim();
+
+    if(!key || !name || !number){
+      showToast('Please fill out required fields!');
+      return;
+    }
+
+    db.ref(`paymentMethods/${key}`).update({ name, type, number, logo }).then(() => {
+      showToast('Payment method updated successfully!');
+      const modalEl = document.getElementById('editPaymentModal');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      if(modal) modal.hide();
+      loadPayments();
+    }).catch(e => showToast('Error: ' + e.message));
   }
 
   function removePayment(key){
@@ -1552,12 +1778,8 @@
     });
   }
 
-  let usersCacheData = {};
   function loadUsers(){
-    db.ref('users').once('value', snap => {
-      usersCacheData = snap.val() || {};
-      renderUsers();
-    });
+    renderUsers();
   }
 
   function renderUsers(){
@@ -1565,6 +1787,7 @@
     const tbody = document.getElementById('usersBody');
     tbody.innerHTML = '';
     
+    let usersCacheData = globalUsersCache;
     let entries = Object.entries(usersCacheData);
     if(entries.length === 0) {
       tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>';
@@ -1596,8 +1819,8 @@
         const bal = balancesData[u.safeKey] || 0;
         tbody.insertAdjacentHTML('beforeend', `
           <tr>
-            <td data-label="Email"><strong>${escapeHtml(u.originalEmail)}</strong></td>
-            <td data-label="Balance"><strong class="text-success">৳${bal}</strong></td>
+            <td data-label="Email"><strong class="text-white">${escapeHtml(u.originalEmail)}</strong></td>
+            <td data-label="Balance"><strong class="text-success">&#2547;${bal}</strong></td>
             <td data-label="Action">
               <button class="btn btn-sm btn-outline-warning rounded-pill px-3 py-2 me-1" onclick="openBalanceModal('${u.safeKey}', '${escapeHtml(u.originalEmail)}', ${bal})"><i class="fa-solid fa-calculator me-1"></i> +/- Balance</button>
               <button class="btn btn-sm btn-danger rounded-pill px-3 py-2" onclick="deleteUser('${u.safeKey}', '${escapeHtml(u.originalEmail)}')"><i class="fa-solid fa-trash me-1"></i> Delete</button>
