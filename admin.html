@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mail Market — Premium Admin Portal</title>
+  <title>Mail Market Habibi — Premium Admin Portal</title>
 
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Great+Vibes&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     :root{
-      --bg-main:#020617;
-      --bg-sidebar:#090d16;
-      --card-bg:linear-gradient(135deg, rgba(15, 23, 42, 0.9) 0%, rgba(9, 13, 22, 0.95) 100%);
-      --text-main:#f8fafc;
-      --text-muted:#cbd5e1;
+      --bg-main:#05070f;
+      --bg-sidebar:#090e1a;
+      --card-bg:linear-gradient(135deg, rgba(13, 20, 38, 0.85) 0%, rgba(7, 11, 20, 0.95) 100%);
+      --text-main:#f1f5f9;
+      --text-muted:#94a3b8;
       --accent:#6366f1;
       --accent-hover:#4f46e5;
-      --accent-glow:rgba(99, 102, 241, 0.4);
+      --accent-glow:rgba(99, 102, 241, 0.25);
       --success:#10b981;
       --danger:#ef4444;
-      --border-color: rgba(255, 255, 255, 0.15);
-      --border-glow: rgba(99, 102, 241, 0.35);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-glow: rgba(99, 102, 241, 0.3);
     }
     *{box-sizing:border-box}
     body{
@@ -31,140 +31,161 @@
       background:var(--bg-main);
       color:var(--text-main);
       -webkit-font-smoothing:antialiased;
+      background-image: radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.04) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.03) 0%, transparent 40%);
+      background-attachment: fixed;
     }
 
-    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center, #1e1b4b 0%, #020617 100%);}
+    /* Fullscreen Instant Loader */
+    #global-loader {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #05070f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999999;
+      transition: opacity 0.4s ease;
+    }
+    .spinner-box {
+      width: 60px; height: 60px;
+      border: 4px solid rgba(99, 102, 241, 0.15);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      box-shadow: 0 0 25px var(--accent-glow);
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .auth-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at center, #111827 0%, #05070f 100%);}
     .auth-card{width:100%;max-width:420px;background:var(--card-bg);backdrop-filter:blur(20px);border-radius:24px;padding:38px;border:1px solid var(--border-glow);box-shadow:0 25px 50px -12px rgba(0,0,0,0.8);}
     
-    .admin-sidebar{width:265px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 4px 0 25px rgba(0,0,0,0.4); overflow-y: auto;}
-    .admin-main{margin-left:265px;padding:38px;min-height:100vh;transition:margin 0.3s ease;}
+    .admin-sidebar{width:275px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;}
+    .admin-main{margin-left:275px;padding:38px;min-height:100vh;transition:margin 0.3s ease;}
 
-    .sidebar-brand{padding:0 24px 26px 24px;display:flex;align-items:center;gap:14px;font-weight:800;font-size:20px;border-bottom:1px solid var(--border-color);color:#fff;background:linear-gradient(90deg, #fff, #a5b4fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    /* Premium Sleek Logo Styling */
+    .sidebar-brand{
+      padding:0 22px 24px 22px;
+      display:flex;
+      align-items:center;
+      gap:14px;
+      border-bottom:1px solid var(--border-color);
+    }
+    .brand-icon-box {
+      width: 44px; height: 44px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+      display: flex; align-items: center; justify-content: center;
+      color: #fff; font-size: 20px;
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+      flex-shrink: 0;
+    }
+    .brand-text-wrap {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+    .brand-title-main {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+      background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .brand-title-sub {
+      font-family: 'Great Vibes', cursive;
+      font-size: 24px;
+      color: #818cf8;
+      margin-top: -2px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 15px rgba(129, 140, 248, 0.4);
+    }
+
     .sidebar-menu{padding:20px 16px}
-    .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:13px 18px;border-radius:12px;color:var(--text-muted);text-decoration:none;font-weight:600;margin-bottom:8px;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);}
-    .sidebar-menu a.active,.sidebar-menu a:hover{background:linear-gradient(135deg, var(--accent), var(--accent-hover));color:#fff;box-shadow:0 8px 20px var(--accent-glow);transform:translateX(6px);}
+    .sidebar-menu a{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:12px;color:var(--text-muted);text-decoration:none;font-weight:600;font-size:13.5px;margin-bottom:6px;transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);}
+    .sidebar-menu a.active,.sidebar-menu a:hover{background:linear-gradient(135deg, var(--accent), var(--accent-hover));color:#fff;box-shadow:0 8px 20px var(--accent-glow);transform:translateX(4px);}
 
     .mobile-topbar{display:none;align-items:center;justify-content:space-between;background:var(--bg-sidebar);padding:14px 20px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:1040;}
     .mobile-menu-btn{background:var(--card-bg);border:1px solid var(--border-color);color:#fff;padding:8px 12px;border-radius:10px;font-size:18px;cursor:pointer;}
 
-    .card-panel{background:var(--card-bg);backdrop-filter:blur(16px);padding:30px;border-radius:24px;border:1px solid var(--border-color);box-shadow:0 20px 40px rgba(0,0,0,0.4);margin-bottom:26px;position:relative;overflow:hidden;}
-    .card-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);}
+    .card-panel{background:var(--card-bg);backdrop-filter:blur(16px);padding:28px;border-radius:22px;border:1px solid var(--border-color);box-shadow:0 15px 35px rgba(0,0,0,0.3);margin-bottom:24px;position:relative;overflow:hidden;}
+    .card-panel::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);}
 
     h1,h2,h5{font-weight:800;color:#ffffff;margin-bottom:16px;letter-spacing:-0.03em;}
-    h1{font-size:30px;background:linear-gradient(180deg, #fff 0%, #cbd5e1 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+    h1{font-size:26px;background:linear-gradient(180deg, #fff 0%, #94a3b8 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
     
     label.form-label{font-weight:700;color:var(--text-muted);font-size:11px;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.08em;}
     
     .form-control, .form-select, textarea, input {
-      background-color: rgba(15, 23, 42, 0.85) !important;
+      background-color: rgba(7, 11, 20, 0.9) !important;
       border: 1px solid var(--border-color) !important;
       color: #ffffff !important;
-      border-radius: 14px;
-      padding: 13px 18px;
-      font-size: 14px;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 13.5px;
       transition: all 0.25s ease;
     }
     .form-control:focus, .form-select:focus, textarea:focus, input:focus {
       border-color: var(--accent) !important;
       box-shadow: 0 0 0 4px var(--accent-glow) !important;
-      background-color: rgba(15, 23, 42, 0.95) !important;
+      background-color: rgba(7, 11, 20, 0.98) !important;
       color: #ffffff !important;
     }
-    .form-control::placeholder, textarea::placeholder{color:#cbd5e1 !important}
+    .form-control::placeholder, textarea::placeholder{color:#64748b !important}
 
-    .stats-row{display:flex;gap:22px;flex-wrap:wrap;margin-bottom:26px}
-    .stat-card{flex:1;min-width:220px;display:flex;align-items:center;gap:18px;padding:26px;border-radius:24px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 12px 35px rgba(0,0,0,0.3);transition:transform 0.25s;}
-    .stat-card:hover{transform:translateY(-4px);border-color:var(--border-glow);}
-    .stat-icon{width:58px;height:58px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 20px var(--accent-glow)}
-    .stat-title{color:var(--text-muted);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:0.05em;}
-    .stat-number{font-weight:800;font-size:28px;color:#ffffff;margin-top:2px;}
+    .stats-row{display:flex;gap:20px;flex-wrap:wrap;margin-bottom:24px}
+    .stat-card{flex:1;min-width:210px;display:flex;align-items:center;gap:16px;padding:22px;border-radius:20px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.25);transition:transform 0.25s;}
+    .stat-card:hover{transform:translateY(-3px);border-color:var(--border-glow);}
+    .stat-icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 20px var(--accent-glow)}
+    .stat-title{color:var(--text-muted);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:0.05em;}
+    .stat-number{font-weight:800;font-size:26px;color:#ffffff;margin-top:2px;}
 
-    .table-card{border-radius:24px;padding:26px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:26px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+    .table-card{border-radius:22px;padding:24px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:24px;box-shadow:0 15px 35px rgba(0,0,0,0.3);}
     .styled-table{width:100%;border-collapse:collapse}
-    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:15px 16px;text-align:left;border-bottom:1px solid var(--border-color)}
-    .styled-table tbody td{padding:16px;border-bottom:1px solid rgba(255,255,255,0.08);color:#f8fafc;font-size:14px;vertical-align:middle;}
+    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.08em;padding:14px 16px;text-align:left;border-bottom:1px solid var(--border-color)}
+    .styled-table tbody td{padding:15px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#f1f5f9;font-size:13.5px;vertical-align:middle;}
     .styled-table tbody tr{transition:background-color 0.2s;}
-    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.05);}
+    .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.03);}
     
-    .badge-approved{background:rgba(16, 185, 129, 0.2);color:#34d399;border:1px solid rgba(16, 185, 129, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-pending{background:rgba(245, 158, 11, 0.2);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
-    .badge-rejected{background:rgba(239, 68, 68, 0.2);color:#f87171;border:1px solid rgba(239, 68, 68, 0.4);padding:6px 12px;border-radius:10px;font-weight:700;font-size:11px}
+    .badge-approved{background:rgba(16, 185, 129, 0.15);color:#34d399;border:1px solid rgba(16, 185, 129, 0.3);padding:5px 10px;border-radius:8px;font-weight:700;font-size:11px}
+    .badge-pending{background:rgba(245, 158, 11, 0.15);color:#fbbf24;border:1px solid rgba(245, 158, 11, 0.3);padding:5px 10px;border-radius:8px;font-weight:700;font-size:11px}
+    .badge-rejected{background:rgba(239, 68, 68, 0.15);color:#f87171;border:1px solid rgba(239, 68, 68, 0.3);padding:5px 10px;border-radius:8px;font-weight:700;font-size:11px}
 
-    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:12px 24px;border-radius:14px;font-weight:700;box-shadow:0 4px 15px var(--accent-glow);transition:all 0.2s; color:#fff;}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent-hover));border:none;padding:11px 22px;border-radius:12px;font-weight:700;box-shadow:0 4px 15px var(--accent-glow);transition:all 0.2s; color:#fff;}
     .btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px var(--accent-glow);background:linear-gradient(135deg, #4f46e5, #4338ca); color:#fff;}
     
-    .btn-action-group {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
+    .btn-action-group { display: flex; gap: 8px; align-items: center; }
     .btn-deposit-approve {
       background: linear-gradient(135deg, #10b981, #059669);
-      border: none;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
+      border: none; color: #fff; padding: 7px 14px; border-radius: 10px;
+      font-weight: 700; font-size: 11.5px; display: inline-flex; align-items: center; gap: 6px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25); transition: all 0.25s; cursor: pointer;
     }
-    .btn-deposit-approve:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 18px rgba(16, 185, 129, 0.5);
-      background: linear-gradient(135deg, #059669, #047857);
-      color: #fff;
-    }
+    .btn-deposit-approve:hover { transform: translateY(-2px); background: linear-gradient(135deg, #059669, #047857); color: #fff; }
     .btn-deposit-reject {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.4);
-      color: #f87171;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-weight: 700;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      cursor: pointer;
+      background: rgba(239, 68, 68, 0.12); border: 1px solid rgba(239, 68, 68, 0.3);
+      color: #f87171; padding: 7px 12px; border-radius: 10px; font-weight: 700; font-size: 11.5px;
+      display: inline-flex; align-items: center; gap: 6px; transition: all 0.25s; cursor: pointer;
     }
-    .btn-deposit-reject:hover {
-      background: var(--danger);
-      color: #fff;
-      box-shadow: 0 6px 18px rgba(239, 68, 68, 0.4);
-      transform: translateY(-2px);
-      border-color: var(--danger);
-    }
+    .btn-deposit-reject:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
 
-    .btn-delete{background:rgba(239, 68, 68, 0.15);border:1px solid rgba(239, 68, 68, 0.35);color:#f87171;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
-    .btn-delete:hover{background:var(--danger);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.4);}
+    .btn-delete{background:rgba(239, 68, 68, 0.12);border:1px solid rgba(239, 68, 68, 0.3);color:#f87171;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+    .btn-delete:hover{background:var(--danger);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.35);}
 
-    .btn-edit-action{background:rgba(99, 102, 241, 0.15);border:1px solid rgba(99, 102, 241, 0.35);color:#a5b4fc;width:38px;height:38px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
+    .btn-edit-action{background:rgba(99, 102, 241, 0.12);border:1px solid rgba(99, 102, 241, 0.3);color:#a5b4fc;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
     .btn-edit-action:hover{background:var(--accent);color:#fff;box-shadow:0 4px 15px var(--accent-glow);}
 
-    .provider-pill{display:inline-block;padding:6px 14px;border-radius:20px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.08);border:1px solid var(--border-color);color:#f8fafc;}
+    .provider-pill{display:inline-block;padding:5px 12px;border-radius:16px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:#f1f5f9;}
 
     .main-category-row {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(30, 27, 75, 0.5) 100%);
-      cursor: pointer;
-      font-weight: bold;
-      border-bottom: 1px solid rgba(99, 102, 241, 0.3) !important;
+      background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 23, 42, 0.4) 100%);
+      cursor: pointer; font-weight: bold; border-bottom: 1px solid rgba(99, 102, 241, 0.25) !important;
     }
-    .main-category-row:hover {
-      background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 27, 75, 0.7) 100%) !important;
-    }
-    .sub-category-row {
-      background: rgba(15, 23, 42, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    .sub-category-row:hover {
-      background: rgba(30, 41, 59, 0.9) !important;
-    }
+    .main-category-row:hover { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%) !important; }
+    .sub-category-row { background: rgba(7, 11, 20, 0.65); border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+    .sub-category-row:hover { background: rgba(15, 23, 42, 0.85) !important; }
 
     @media (max-width:991px){
       .admin-sidebar{transform:translateX(-100%);}
@@ -175,37 +196,44 @@
       
       .styled-table thead { display: none; }
       .styled-table, .styled-table tbody, .styled-table tr, .styled-table td { display: block; width: 100%; }
-      .styled-table tr { margin-bottom: 15px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-color); border-radius: 16px; padding: 12px; }
-      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; word-break: break-word; color:#f8fafc; }
+      .styled-table tr { margin-bottom: 14px; background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); border-radius: 16px; padding: 10px; }
+      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; word-break: break-word; color:#f1f5f9; }
       .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-right: 10px; flex-shrink: 0; }
-      .styled-table td:last-child { border-bottom: none; justify-content: flex-end; padding-top: 12px; }
+      .styled-table td:last-child { border-bottom: none; justify-content: flex-end; padding-top: 10px; }
     }
   </style>
 </head>
 <body>
 
+<!-- FULLSCREEN INSTANT LOADING SCREEN -->
+<div id="global-loader">
+  <div class="spinner-box mb-3"></div>
+  <div style="font-weight: 800; font-size: 18px; color: #fff; letter-spacing: 0.5px;">MAIL MARKET HABIBI</div>
+  <div style="color: var(--text-muted); font-size: 12px; margin-top: 6px;">Loading secure systems...</div>
+</div>
+
 <div id="toast" style="position:fixed;right:24px;bottom:24px;z-index:99999;display:none">
-  <div class="card-panel py-3 px-4 shadow-lg text-white" id="toast-text" style="margin:0;background:#0f172a;border-color:var(--accent);"></div>
+  <div class="card-panel py-3 px-4 shadow-lg text-white" id="toast-text" style="margin:0;background:#0d1426;border-color:var(--accent);"></div>
 </div>
 
 <!-- ADMIN LOGIN -->
 <div id="admin-auth" class="auth-wrap" style="display:none;">
   <div class="auth-card">
-    <div style="text-align:center; margin-bottom:28px;">
-      <div style="width:58px;height:58px;border-radius:18px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:24px;box-shadow:0 8px 20px var(--accent-glow);margin-bottom:14px;"><i class="fa-solid fa-shield-halved"></i></div>
-      <h2 style="margin:0;font-size:24px;">Admin Portal</h2>
-      <div class="text-muted" style="font-size:13px;margin-top:6px">Sign in to securely manage your platform</div>
+    <div style="text-align:center; margin-bottom:26px;">
+      <div style="width:52px;height:52px;border-radius:16px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:inline-flex;align-items:center;justify-content:center;color:#fff;font-size:22px;box-shadow:0 8px 20px var(--accent-glow);margin-bottom:12px;"><i class="fa-solid fa-shield-halved"></i></div>
+      <h2 style="margin:0;font-size:22px;">Mail Market Habibi</h2>
+      <div class="text-muted" style="font-size:12.5px;margin-top:4px">Sign in to securely manage your platform</div>
     </div>
     <div>
       <label class="form-label">Email Address</label>
       <input id="adminEmail" class="form-control" type="email" placeholder="admin@gmail.com">
     </div>
-    <div style="margin-top:16px;position:relative">
+    <div style="margin-top:14px;position:relative">
       <label class="form-label">Password</label>
       <input id="adminPass" class="form-control" type="password" placeholder="••••••••">
-      <button style="position:absolute;right:14px;top:38px;border:none;background:transparent;color:var(--text-muted)" onclick="togglePass()"><i id="eyeIcon" class="fa-solid fa-eye"></i></button>
+      <button style="position:absolute;right:14px;top:36px;border:none;background:transparent;color:var(--text-muted)" onclick="togglePass()"><i id="eyeIcon" class="fa-solid fa-eye"></i></button>
     </div>
-    <div style="margin-top:28px">
+    <div style="margin-top:24px">
       <button class="btn btn-primary w-100 py-3" onclick="adminLogin()">Sign In to Dashboard</button>
     </div>
   </div>
@@ -215,16 +243,21 @@
 <div id="admin-app" style="display:none">
   <div class="mobile-topbar">
     <div style="display:flex;align-items:center;gap:10px;font-weight:800;color:#fff;">
-      <div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved"></i></div>
-      Mail Market
+      <div style="width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-shield-halved"></i></div>
+      Mail Market Habibi
     </div>
     <button class="mobile-menu-btn" onclick="toggleMobileSidebar()"><i class="fa-solid fa-bars"></i></button>
   </div>
 
   <aside id="adminSidebar" class="admin-sidebar">
     <div class="sidebar-brand">
-      <div style="width:40px;height:40px;border-radius:14px;background:linear-gradient(135deg, var(--accent), var(--accent-hover));display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 4px 15px var(--accent-glow)"><i class="fa-solid fa-shield-halved"></i></div>
-      <div>Mail Market</div>
+      <div class="brand-icon-box">
+        <i class="fa-solid fa-envelope-open-text"></i>
+      </div>
+      <div class="brand-text-wrap">
+        <span class="brand-title-main">Mail Market</span>
+        <span class="brand-title-sub">Habibi</span>
+      </div>
     </div>
     <nav class="sidebar-menu">
       <a href="#" id="m-dashboard" class="active" onclick="openTab('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
@@ -236,7 +269,7 @@
       <a href="#" id="m-deposits" onclick="openTab('deposits')"><i class="fa-solid fa-wallet"></i> Deposit Requests</a>
       <a href="#" id="m-payments" onclick="openTab('payments')"><i class="fa-solid fa-credit-card"></i> Payments</a>
       <a href="#" id="m-users" onclick="openTab('users')"><i class="fa-solid fa-users"></i> Users</a>
-      <div style="margin:20px 0;border-top:1px solid var(--border-color)"></div>
+      <div style="margin:18px 0;border-top:1px solid var(--border-color)"></div>
       <a href="#" style="color:#f87171" onclick="logoutAdmin()"><i class="fa-solid fa-right-from-bracket"></i> Logout</a>
     </nav>
   </aside>
@@ -262,7 +295,7 @@
       <!-- LAST 24 HOURS & LAST 30 DAYS PERFORMANCE METRICS -->
       <div class="row g-4 mb-4">
         <div class="col-xl-6">
-          <div class="card-panel h-100 mb-0" style="border-color: rgba(99, 102, 241, 0.4);">
+          <div class="card-panel h-100 mb-0" style="border-color: rgba(99, 102, 241, 0.35);">
             <h5 class="mb-3" style="color: #a5b4fc;"><i class="fa-solid fa-bolt me-2"></i>Last 24 Hours Performance</h5>
             <div class="row g-3">
               <div class="col-6">
@@ -274,7 +307,7 @@
               <div class="col-6">
                 <div class="p-3 rounded-4 bg-dark bg-opacity-75 border border-secondary border-opacity-25">
                   <div class="stat-title">Total Deposits</div>
-                  <div id="d24DepositCount" class="stat-number text-warning">0 <span style="font-size:14px; font-weight:normal;" id="d24DepositAmount">(&#2547;0)</span></div>
+                  <div id="d24DepositCount" class="stat-number text-warning">0 <span style="font-size:13px; font-weight:normal;" id="d24DepositAmount">(&#2547;0)</span></div>
                 </div>
               </div>
               <div class="col-12">
@@ -288,7 +321,7 @@
         </div>
 
         <div class="col-xl-6">
-          <div class="card-panel h-100 mb-0" style="border-color: rgba(16, 185, 129, 0.4);">
+          <div class="card-panel h-100 mb-0" style="border-color: rgba(16, 185, 129, 0.35);">
             <h5 class="text-success mb-3"><i class="fa-solid fa-calendar-days me-2"></i>Last 30 Days Performance</h5>
             <div class="row g-3">
               <div class="col-6">
@@ -313,7 +346,7 @@
         <div class="row align-items-center">
           <div class="col-md-8">
             <div class="stat-title text-success mb-1"><i class="fa-solid fa-wallet me-2"></i>Total Approved Deposit Amount</div>
-            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:36px;">&#2547;0</div>
+            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:32px;">&#2547;0</div>
           </div>
           <div class="col-md-4 mt-3 mt-md-0 text-md-end">
             <label class="form-label">Time Period</label>
@@ -362,12 +395,12 @@
             </div>
           </div>
           <div class="col-md-4 text-md-end">
-            <div class="text-muted" style="font-size:12px; margin-top:20px;">View what they bought & deposit logs with date</div>
+            <div class="text-muted" style="font-size:11.5px; margin-top:20px;">View what they bought & deposit logs with date</div>
           </div>
         </div>
 
         <div id="userActivityDetailsContainer" style="display:none;">
-          <div class="p-3 mb-4 rounded-4" style="background: rgba(99, 102, 241, 0.15); border: 1px solid var(--border-glow);">
+          <div class="p-3 mb-4 rounded-4" style="background: rgba(99, 102, 241, 0.12); border: 1px solid var(--border-glow);">
             <h5 class="mb-1" style="color: #a5b4fc;"><i class="fa-solid fa-user-circle me-2"></i>User Profile: <span id="lblActivityEmail" class="text-white"></span></h5>
             <div class="d-flex gap-4 mt-2" style="font-size: 13px;">
               <div>Current Balance: <strong class="text-success" id="lblActivityBalance">&#2547;0</strong></div>
@@ -431,10 +464,10 @@
       <h1>Live Inventory Stock</h1>
       <div class="card-panel">
         <div class="d-flex align-items-center gap-3 mb-4">
-          <div style="width:46px;height:46px;border-radius:14px;background:rgba(99,102,241,0.2);border:1px solid rgba(99,102,241,0.4);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:20px;"><i class="fa-solid fa-boxes-stacked"></i></div>
+          <div style="width:44px;height:44px;border-radius:14px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:18px;"><i class="fa-solid fa-boxes-stacked"></i></div>
           <div>
-            <h5 class="mb-0 text-white" style="font-size:18px;">Live Inventory Stock Status (Real Stock Only - Available Items)</h5>
-            <div class="text-muted" style="font-size:12px;">Real-time available stock count & pricing across categories (excluding sold-out items)</div>
+            <h5 class="mb-0 text-white" style="font-size:17px;">Live Inventory Stock Status (Real Stock Only - Available Items)</h5>
+            <div class="text-muted" style="font-size:11.5px;">Real-time available stock count & pricing across categories (excluding sold-out items)</div>
           </div>
         </div>
         <div style="overflow:auto">
@@ -639,7 +672,7 @@
     <!-- PAYMENTS & SUPPORT SETTINGS TAB -->
     <section id="tab-payments" style="display:none">
       <h1>Payments & Support Settings</h1>
-      <div class="card-panel mb-3" style="border-color: rgba(59, 130, 246, 0.4);">
+      <div class="card-panel mb-3" style="border-color: rgba(59, 130, 246, 0.35);">
         <div class="row g-3">
           <div class="col-md-8">
             <label class="form-label" style="color: #60a5fa;">Send Live Notification to User Panels</label>
@@ -652,7 +685,7 @@
         </div>
       </div>
       
-      <div class="card-panel mb-3" style="border-color: rgba(252, 213, 53, 0.4);">
+      <div class="card-panel mb-3" style="border-color: rgba(252, 213, 53, 0.35);">
         <div class="row g-3">
           <div class="col-md-8">
             <label class="form-label" style="color: #fcd535;">Binance Dollar Rate (1 USDT = ? BDT)</label>
@@ -720,13 +753,13 @@
 <!-- Modal for Easy Balance Plus/Minus -->
 <div class="modal fade" id="balanceModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background:#0f172a; border:1px solid var(--border-glow); border-radius:24px; color:#fff;">
+    <div class="modal-content" style="background:#0d1426; border:1px solid var(--border-glow); border-radius:22px; color:#fff;">
       <div class="modal-header border-0 pb-0">
         <h5 class="modal-title" style="font-weight:800;">Manage User Balance</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p class="text-muted" style="font-size:13px;" id="modalUserEmailLabel"></p>
+        <p class="text-muted" style="font-size:12.5px;" id="modalUserEmailLabel"></p>
         <div class="mb-3">
           <label class="form-label">Current Balance</label>
           <div class="fs-4 text-success fw-bold" id="modalCurrentBalance">&#2547;0</div>
@@ -747,7 +780,7 @@
 <!-- Modal for Editing Payment Method -->
 <div class="modal fade" id="editPaymentModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content" style="background:#0f172a; border:1px solid var(--border-glow); border-radius:24px; color:#fff;">
+    <div class="modal-content" style="background:#0d1426; border:1px solid var(--border-glow); border-radius:22px; color:#fff;">
       <div class="modal-header border-0 pb-0">
         <h5 class="modal-title" style="font-weight:800;">Edit Payment Method</h5>
         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -810,15 +843,11 @@
   let globalCategoriesCache = {};
   let isDataLoaded = false;
 
-  // Real-time synchronization cache triggers
   db.ref('stocks').on('value', snap => { globalStocksCache = snap.val() || {}; loadDashboard(); });
   db.ref('orders').on('value', snap => { globalOrdersCache = snap.val() || {}; loadDashboard(); });
   db.ref('deposits').on('value', snap => { globalDepositsCache = snap.val() || {}; loadDashboard(); });
   db.ref('users').on('value', snap => { globalUsersCache = snap.val() || {}; loadDashboard(); });
-  db.ref('categories').on('value', snap => { 
-    globalCategoriesCache = snap.val() || {}; 
-    isDataLoaded = true;
-  });
+  db.ref('categories').on('value', snap => { globalCategoriesCache = snap.val() || {}; });
 
   firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
     .then(() => {
@@ -826,12 +855,21 @@
         if (user) {
           initApp();
         } else {
+          hideLoader();
           document.getElementById('admin-auth').style.display = 'flex';
           document.getElementById('admin-app').style.display = 'none';
         }
       });
     })
-    .catch(e => console.error("Persistence error:", e));
+    .catch(e => { hideLoader(); console.error("Persistence error:", e); });
+
+  function hideLoader() {
+    const loader = document.getElementById('global-loader');
+    if(loader) {
+      loader.style.opacity = '0';
+      setTimeout(() => loader.style.display = 'none', 400);
+    }
+  }
 
   function showToast(msg){ 
     document.getElementById('toast-text').innerText = msg; 
@@ -866,7 +904,6 @@
       document.getElementById('adminSidebar').classList.remove('mobile-show');
     }
 
-    // Instantly render cached tabs without network wait time
     if(name==='live-inventory') loadLiveInventory();
     if(name==='categories') loadCategories();
     if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); renderAdminFakeStocks(); }
@@ -881,7 +918,6 @@
     document.getElementById('admin-auth').style.display = 'none';
     document.getElementById('admin-app').style.display = 'block';
     
-    // একসাথে সব ডেটা আগে থেকেই ব্যাকগ্রাউন্ডে লোড করে নেওয়া হচ্ছে
     Promise.all([
       db.ref('stocks').once('value'),
       db.ref('orders').once('value'),
@@ -895,7 +931,12 @@
       globalUsersCache = snapshots[3].val() || {};
       globalCategoriesCache = snapshots[4].val() || {};
       isDataLoaded = true;
+      
+      hideLoader();
       openTab('dashboard');
+    }).catch(e => {
+      hideLoader();
+      console.error("Data load error:", e);
     });
   }
 
@@ -1091,7 +1132,7 @@
         }
       }
     });
-    document.getElementById('d24DepositCount').innerHTML = `${depositCount24h} <span style="font-size:14px; font-weight:normal;" id="d24DepositAmount">(&#2547;${depositAmount24h.toLocaleString()})</span>`;
+    document.getElementById('d24DepositCount').innerHTML = `${depositCount24h} <span style="font-size:13px; font-weight:normal;" id="d24DepositAmount">(&#2547;${depositAmount24h.toLocaleString()})</span>`;
 
     let sold24h = 0;
     let sold30d = 0;
@@ -1192,7 +1233,7 @@
         <tr class="main-category-row" onclick="toggleCategoryGroup('${collapseId}', this)">
           <td data-label="Category">
             <i class="fa-solid fa-chevron-right me-2 transition-icon" id="icon_${collapseId}"></i>
-            <strong style="font-size:15px; color:#ffffff;">${escapeHtml(mainCat)}</strong> 
+            <strong style="font-size:14.5px; color:#ffffff;">${escapeHtml(mainCat)}</strong> 
             <span class="badge bg-primary ms-2" style="font-size:10px; background:var(--accent)!important;">${subItems.length} sub-categories</span>
           </td>
           <td data-label="Description"><span class="text-muted" style="font-style:italic;">Click to expand/collapse sub-categories</span></td>
@@ -1206,11 +1247,11 @@
         const c = subObj.data;
         body.insertAdjacentHTML('beforeend', `
           <tr class="sub-category-row sub-group-${collapseId}" style="display: none;">
-            <td data-label="Sub-Category" style="padding-left: 35px;">
+            <td data-label="Sub-Category" style="padding-left: 32px;">
               <i class="fa-solid fa-angle-right me-2 text-muted" style="font-size:10px;"></i>
               <span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span>
             </td>
-            <td data-label="Description"><span style="color:#f8fafc;white-space:pre-wrap">${escapeHtml(c.description||'No description')}</span></td>
+            <td data-label="Description"><span style="color:#f1f5f9;white-space:pre-wrap">${escapeHtml(c.description||'No description')}</span></td>
             <td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td>
             <td data-label="Action" style="text-align:right;">
               <button class="btn-edit-action" onclick="editCategoryDetails('${k}')" title="Edit Category Details"><i class="fa-solid fa-pen"></i></button>
@@ -1229,19 +1270,16 @@
   function toggleCategoryGroup(collapseId, rowEl) {
     const subRows = document.querySelectorAll('.sub-group-' + collapseId);
     const iconEl = document.getElementById('icon_' + collapseId);
-    
     let isHidden = subRows[0] && subRows[0].style.display === 'none';
     
-    subRows.forEach(tr => {
-      tr.style.display = isHidden ? 'table-row' : 'none';
-    });
+    subRows.forEach(tr => { tr.style.display = isHidden ? 'table-row' : 'none'; });
 
     if(isHidden) {
       iconEl.style.transform = 'rotate(90deg)';
-      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(30, 27, 75, 0.8) 100%)';
+      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.22) 0%, rgba(15, 23, 42, 0.7) 100%)';
     } else {
       iconEl.style.transform = 'rotate(0deg)';
-      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(30, 27, 75, 0.5) 100%)';
+      rowEl.style.background = 'linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(15, 23, 42, 0.4) 100%)';
     }
   }
 
@@ -1251,9 +1289,7 @@
       const newDesc = prompt('Edit description:', c.description || '');
       if(newDesc === null) return;
 
-      db.ref(`categories/${key}`).update({
-        description: newDesc.trim()
-      }).then(()=>{
+      db.ref(`categories/${key}`).update({ description: newDesc.trim() }).then(()=>{
         showToast('Category updated successfully');
         loadCategories();
       }).catch(e=>showToast('Error: '+e.message));
@@ -1298,7 +1334,6 @@
   function onStockCategorySelect(selectEl) {
     const selectedCategory = selectEl.value;
     if(!selectedCategory) return;
-    
     const stocks = globalStocksCache;
     for(let k in stocks) {
       let item = stocks[k];
@@ -1494,14 +1529,8 @@
     const selectedCategory = document.getElementById('viewStockCategory').value;
     const newPrice = parseFloat(document.getElementById('bulkNewPrice').value);
 
-    if(!selectedCategory) {
-      showToast('Please select a category first!');
-      return;
-    }
-    if(isNaN(newPrice) || newPrice < 0){
-      showToast('Please enter a valid price!');
-      return;
-    }
+    if(!selectedCategory) { showToast('Please select a category first!'); return; }
+    if(isNaN(newPrice) || newPrice < 0){ showToast('Please enter a valid price!'); return; }
 
     const stocks = globalStocksCache;
     const updates = {};
@@ -1515,10 +1544,7 @@
       }
     });
 
-    if(count === 0) {
-      showToast('No available stocks found in this category to update!');
-      return;
-    }
+    if(count === 0) { showToast('No available stocks found in this category to update!'); return; }
 
     db.ref().update(updates).then(() => {
       showToast(`Successfully updated price for ${count} item(s)!`);
@@ -1534,16 +1560,11 @@
 
   function deleteSelectedStocks(){
     const selectedCheckboxes = document.querySelectorAll('.stock-checkbox:checked');
-    if(selectedCheckboxes.length === 0){
-      showToast('Please select at least one mail to delete!');
-      return;
-    }
+    if(selectedCheckboxes.length === 0){ showToast('Please select at least one mail to delete!'); return; }
     if(!confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected mail(s)?`)) return;
 
     let updates = {};
-    selectedCheckboxes.forEach(cb => {
-      updates[`stocks/${cb.value}`] = null;
-    });
+    selectedCheckboxes.forEach(cb => { updates[`stocks/${cb.value}`] = null; });
 
     db.ref().update(updates).then(() => {
       showToast('Selected stock mails deleted successfully');
@@ -1671,7 +1692,7 @@
             </td>
             <td data-label="Type" class="text-white">${escapeHtml(m.type)}</td>
             <td data-label="Number"><code style="color:#93c5fd">${escapeHtml(m.number)}</code></td>
-            <td data-label="Logo URL"><code style="color:#cbd5e1">${escapeHtml(m.logo || 'No Logo')}</code></td>
+            <td data-label="Logo URL"><code style="color:#94a3b8">${escapeHtml(m.logo || 'No Logo')}</code></td>
             <td data-label="Action">
               <button class="btn-edit-action" onclick="openEditPaymentModal('${k}', '${escapeHtml(m.name)}', '${escapeHtml(m.type)}', '${escapeHtml(m.number)}', '${escapeHtml(m.logo || '')}')" title="Edit Payment"><i class="fa-solid fa-pen"></i></button>
               <button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button>
@@ -1714,10 +1735,7 @@
     const number = document.getElementById('editPayNumber').value.trim();
     const logo = document.getElementById('editPayLogo').value.trim();
 
-    if(!key || !name || !number){
-      showToast('Please fill out required fields!');
-      return;
-    }
+    if(!key || !name || !number){ showToast('Please fill out required fields!'); return; }
 
     db.ref(`paymentMethods/${key}`).update({ name, type, number, logo }).then(() => {
       showToast('Payment method updated successfully!');
@@ -1778,9 +1796,7 @@
     });
   }
 
-  function loadUsers(){
-    renderUsers();
-  }
+  function loadUsers(){ renderUsers(); }
 
   function renderUsers(){
     const q = (document.getElementById('searchUserGmail').value || '').trim().toLowerCase();
@@ -1848,21 +1864,14 @@
   function modifyUserBalance(action){
     if(!currentEditingUserKey) return;
     const inputVal = parseFloat(document.getElementById('balanceInputAmount').value);
-    if(isNaN(inputVal) || inputVal <= 0){
-      showToast('Please enter a valid amount!');
-      return;
-    }
+    if(isNaN(inputVal) || inputVal <= 0){ showToast('Please enter a valid amount!'); return; }
 
     db.ref(`balances/${currentEditingUserKey}`).once('value', snap => {
       let currentBal = parseFloat(snap.val() || 0);
       let newBal = currentBal;
 
-      if(action === 'plus'){
-        newBal = currentBal + inputVal;
-      } else if(action === 'minus'){
-        newBal = currentBal - inputVal;
-        if(newBal < 0) newBal = 0;
-      }
+      if(action === 'plus'){ newBal = currentBal + inputVal; } 
+      else if(action === 'minus'){ newBal = currentBal - inputVal; if(newBal < 0) newBal = 0; }
 
       db.ref(`balances/${currentEditingUserKey}`).set(newBal).then(() => {
         showToast(`Balance successfully ${action === 'plus' ? 'increased' : 'decreased'}!`);
@@ -1883,7 +1892,8 @@
       let allUsers = snap.val() || {};
       Object.keys(allUsers).forEach(k => {
         let u = allUsers[k];
-        if(u && u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim()) {
+        let uEmail = u && u.email ? String(u.email) : '';
+        if(uEmail && uEmail.toLowerCase().trim() === email.toLowerCase().trim()) {
           updates[`users/${k}`] = null;
         }
       });
@@ -1892,9 +1902,7 @@
         showToast('User deleted successfully from database!');
         loadUsers();
         loadDashboard();
-      }).catch(e => {
-        showToast('Error deleting user: ' + e.message);
-      });
+      }).catch(e => { showToast('Error deleting user: ' + e.message); });
     });
   }
 </script>
