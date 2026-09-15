@@ -36,7 +36,6 @@
       background-attachment: fixed;
     }
 
-    /* Fullscreen Instant Loader */
     #global-loader {
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -64,7 +63,6 @@
     .admin-sidebar{width:275px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:24px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 10px 0 30px rgba(0,0,0,0.5); overflow-y: auto;}
     .admin-main{margin-left:275px;padding:38px;min-height:100vh;transition:margin 0.3s ease;}
 
-    /* Premium Sleek Logo Styling */
     .sidebar-brand{
       padding:0 22px 24px 22px;
       display:flex;
@@ -171,10 +169,10 @@
     }
     .btn-deposit-reject:hover { background: var(--danger); color: #fff; transform: translateY(-2px); }
 
-    .btn-delete{background:rgba(239, 68, 68, 0.12);border:1px solid rgba(239, 68, 68, 0.3);color:#f87171;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;}
+    .btn-delete{background:rgba(239, 68, 68, 0.12);border:1px solid rgba(239, 68, 68, 0.3);color:#f87171;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
     .btn-delete:hover{background:var(--danger);color:#fff;box-shadow:0 4px 15px rgba(239,68,68,0.35);}
 
-    .btn-edit-action{background:rgba(99, 102, 241, 0.12);border:1px solid rgba(99, 102, 241, 0.3);color:#a5b4fc;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;}
+    .btn-edit-action{background:rgba(99, 102, 241, 0.12);border:1px solid rgba(99, 102, 241, 0.3);color:#a5b4fc;width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s; margin-right:6px;flex-shrink:0;}
     .btn-edit-action:hover{background:var(--accent);color:#fff;box-shadow:0 4px 15px var(--accent-glow);}
 
     .provider-pill{display:inline-block;padding:5px 12px;border-radius:16px;font-weight:700;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid var(--border-color);color:#f1f5f9;}
@@ -186,6 +184,14 @@
     .main-category-row:hover { background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(15, 23, 42, 0.6) 100%) !important; }
     .sub-category-row { background: rgba(7, 11, 20, 0.65); border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
     .sub-category-row:hover { background: rgba(15, 23, 42, 0.85) !important; }
+
+    /* Fix for large/hot mail text wrapping & overflow handling */
+    .mail-code-cell {
+      word-break: break-all;
+      white-space: pre-wrap;
+      max-width: 450px;
+      line-height: 1.5;
+    }
 
     @media (max-width:991px){
       .admin-sidebar{transform:translateX(-100%);}
@@ -200,12 +206,12 @@
       .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; word-break: break-word; color:#f1f5f9; }
       .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-right: 10px; flex-shrink: 0; }
       .styled-table td:last-child { border-bottom: none; justify-content: flex-end; padding-top: 10px; }
+      .mail-code-cell { text-align: left; max-width: 100%; }
     }
   </style>
 </head>
 <body>
 
-<!-- FULLSCREEN INSTANT LOADING SCREEN -->
 <div id="global-loader">
   <div class="spinner-box mb-3"></div>
   <div style="font-weight: 800; font-size: 18px; color: #fff; letter-spacing: 0.5px;">MAIL MARKET HABIBI</div>
@@ -266,6 +272,7 @@
       <a href="#" id="m-categories" onclick="openTab('categories')"><i class="fa-solid fa-list"></i> Categories</a>
       <a href="#" id="m-stocks" onclick="openTab('stocks')"><i class="fa-solid fa-box-archive"></i> Add Stocks</a>
       <a href="#" id="m-stock-view" onclick="openTab('stock-view')"><i class="fa-solid fa-eye"></i> View Stock Mails</a>
+      <a href="#" id="m-price-update" onclick="openTab('price-update')"><i class="fa-solid fa-tags"></i> Update Prices</a>
       <a href="#" id="m-deposits" onclick="openTab('deposits')"><i class="fa-solid fa-wallet"></i> Deposit Requests</a>
       <a href="#" id="m-payments" onclick="openTab('payments')"><i class="fa-solid fa-credit-card"></i> Payments</a>
       <a href="#" id="m-users" onclick="openTab('users')"><i class="fa-solid fa-users"></i> Users</a>
@@ -292,7 +299,6 @@
         </div>
       </div>
 
-      <!-- LAST 24 HOURS & LAST 30 DAYS PERFORMANCE METRICS -->
       <div class="row g-4 mb-4">
         <div class="col-xl-6">
           <div class="card-panel h-100 mb-0" style="border-color: rgba(99, 102, 241, 0.35);">
@@ -341,7 +347,6 @@
         </div>
       </div>
 
-      <!-- TOTAL APPROVED DEPOSIT CARD WITH TIME FILTER -->
       <div class="card-panel mb-4" style="border-color: rgba(16, 185, 129, 0.3);">
         <div class="row align-items-center">
           <div class="col-md-8">
@@ -404,6 +409,7 @@
             <h5 class="mb-1" style="color: #a5b4fc;"><i class="fa-solid fa-user-circle me-2"></i>User Profile: <span id="lblActivityEmail" class="text-white"></span></h5>
             <div class="d-flex gap-4 mt-2" style="font-size: 13px;">
               <div>Current Balance: <strong class="text-success" id="lblActivityBalance">&#2547;0</strong></div>
+              <div>Join Date: <strong class="text-info" id="lblActivityJoinDate">-</strong></div>
             </div>
           </div>
 
@@ -466,8 +472,8 @@
         <div class="d-flex align-items-center gap-3 mb-4">
           <div style="width:44px;height:44px;border-radius:14px;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:18px;"><i class="fa-solid fa-boxes-stacked"></i></div>
           <div>
-            <h5 class="mb-0 text-white" style="font-size:17px;">Live Inventory Stock Status (Real Stock Only - Available Items)</h5>
-            <div class="text-muted" style="font-size:11.5px;">Real-time available stock count & pricing across categories (excluding sold-out items)</div>
+            <h5 class="mb-0 text-white" style="font-size:17px;">Live Inventory Stock Status (Real Stock Only - Active Categories Only)</h5>
+            <div class="text-muted" style="font-size:11.5px;">Real-time available stock count & pricing across active categories (excluding OFF/deleted categories & sold items)</div>
           </div>
         </div>
         <div style="overflow:auto">
@@ -536,7 +542,7 @@
     <section id="tab-stocks" style="display:none">
       <h1>Add Stocks</h1>
       <div class="card-panel mb-4">
-        <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload & Price Setting</h5>
+        <h5 class="text-info mb-3"><i class="fa-solid fa-database me-2"></i>Real Stock Upload & Price Setting (Active Categories Only)</h5>
         <div class="row g-3">
           <div class="col-md-4">
             <label class="form-label">Select Sub-Category</label>
@@ -597,31 +603,25 @@
       </div>
     </section>
 
+    <!-- VIEW STOCK MAILS TAB -->
     <section id="tab-stock-view" style="display:none">
       <h1>View Stock Mails</h1>
       <div class="card-panel mb-3">
-        <div class="row g-3">
-          <div class="col-md-4">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-6">
             <label class="form-label">Select Category to View Mails</label>
             <select id="viewStockCategory" class="form-select" onchange="loadStockMailsByCategory()"></select>
           </div>
-          <div class="col-md-4">
-            <label class="form-label">Update All Prices in Category (BDT)</label>
-            <div class="input-group">
-              <input id="bulkNewPrice" type="number" class="form-control" placeholder="New price">
-              <button class="btn btn-success" onclick="updateCategoryBulkPrice()">Update All</button>
-            </div>
-          </div>
-          <div class="col-md-4 text-md-end d-flex align-items-end justify-content-md-end mt-2 mt-md-0">
-            <button class="btn btn-danger btn-sm px-3 py-2" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected Mails</button>
+          <div class="col-md-6 text-md-end">
+            <button class="btn btn-danger px-4 py-2" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected Mails</button>
           </div>
         </div>
       </div>
       <div class="table-card">
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="text-white">Available Stock Mails List</h5>
+          <h5 class="text-white" id="stockViewTitle">Available Stock Mails List</h5>
         </div>
-        <div style="overflow:auto">
+        <div style="overflow:auto; max-height: 550px;">
           <table class="styled-table">
             <thead>
               <tr>
@@ -634,6 +634,48 @@
             </thead>
             <tbody id="stockMailsTableBody">
               <tr><td colspan="5" class="text-muted text-center py-4">Please select a category above</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- DEDICATED PRICE UPDATE TAB -->
+    <section id="tab-price-update" style="display:none">
+      <h1>Update Category Prices</h1>
+      <div class="card-panel mb-4" style="border-color: rgba(16, 185, 129, 0.35);">
+        <h5 class="text-success mb-3"><i class="fa-solid fa-tags me-2"></i>Bulk Price Management (Hotmail & All Large Stocks)</h5>
+        <p class="text-muted" style="font-size: 13px;">Select any active category below and type the new price. This will instantly update the price for all available items inside that category.</p>
+        
+        <div class="row g-3 align-items-end mt-2">
+          <div class="col-md-5">
+            <label class="form-label">Select Category</label>
+            <select id="priceUpdateCategory" class="form-select"></select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label">New Price (BDT)</label>
+            <input id="bulkNewPriceDedicated" type="number" class="form-control" placeholder="Enter new price">
+          </div>
+          <div class="col-md-3">
+            <button class="btn btn-success w-100 fw-bold py-3" onclick="updateCategoryBulkPriceDedicated()"><i class="fa-solid fa-check-double me-1"></i> Update Price Now</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <h5 class="text-white mb-3">Current Active Category Prices Overview</h5>
+        <div style="overflow:auto">
+          <table class="styled-table">
+            <thead>
+              <tr>
+                <th>Main Category</th>
+                <th>Sub Category</th>
+                <th>Current Price</th>
+                <th>Available Stock Count</th>
+              </tr>
+            </thead>
+            <tbody id="priceOverviewTableBody">
+              <tr><td colspan="4" class="text-muted text-center py-3">Loading overview...</td></tr>
             </tbody>
           </table>
         </div>
@@ -908,6 +950,7 @@
     if(name==='categories') loadCategories();
     if(name==='stocks') { loadCategoryOptions(); loadFakeCategoryOptions(); renderAdminFakeStocks(); }
     if(name==='stock-view') loadViewStockCategoryOptions();
+    if(name==='price-update') loadPriceUpdateOptions();
     if(name==='deposits') loadDeposits();
     if(name==='payments') { loadPayments(); loadSupport(); loadBinanceRateSettings(); loadUserNotificationSetting(); }
     if(name==='users') loadUsers();
@@ -955,27 +998,51 @@
       document.getElementById('lblActivityEmail').innerText = queryEmail;
     });
 
+    // Find join date from users cache or global users
+    let joinDateStr = 'N/A';
+    const usersData = globalUsersCache;
+    for(let k in usersData) {
+      let u = usersData[k];
+      if(u && u.email && u.email.toLowerCase().trim() === queryEmail) {
+        if(u.timestamp) {
+          joinDateStr = new Date(u.timestamp).toLocaleString();
+        } else if(u.date) {
+          joinDateStr = u.date;
+        }
+        break;
+      }
+    }
+    document.getElementById('lblActivityJoinDate').innerText = joinDateStr;
+
     const orders = globalOrdersCache;
     const pBody = document.getElementById('activityPurchasesBody');
     pBody.innerHTML = '';
     let pCount = 0;
 
+    let matchedOrders = [];
     Object.values(orders).forEach(o => {
       if(o && o.user && o.user.toLowerCase().trim() === queryEmail) {
-        pCount++;
-        let formattedDate = o.date || '-';
-        if(o.timestamp) {
-          formattedDate = new Date(o.timestamp).toLocaleString();
-        }
-        pBody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td><strong>${escapeHtml(o.category || '-')}</strong></td>
-            <td>${o.quantity || 1}</td>
-            <td class="text-success">৳${o.totalPrice || o.price || 0}</td>
-            <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDate)}</td>
-          </tr>
-        `);
+        matchedOrders.push(o);
       }
+    });
+
+    // Sort New to Old Format
+    matchedOrders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    matchedOrders.forEach(o => {
+      pCount++;
+      let formattedDate = o.date || '-';
+      if(o.timestamp) {
+        formattedDate = new Date(o.timestamp).toLocaleString();
+      }
+      pBody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td><strong>${escapeHtml(o.category || '-')}</strong></td>
+          <td>${o.quantity || 1}</td>
+          <td class="text-success">৳${o.totalPrice || o.price || 0}</td>
+          <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDate)}</td>
+        </tr>
+      `);
     });
 
     if(pCount === 0){
@@ -987,28 +1054,36 @@
     dBody.innerHTML = '';
     let dCount = 0;
 
+    let matchedDeposits = [];
     Object.values(deposits).forEach(d => {
       if(d && d.email && d.email.toLowerCase().trim() === queryEmail) {
-        dCount++;
-        const statusBadge = d.status === 'Approved' ? 'badge-approved' : (d.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
-        let formattedDepDate = 'N/A';
-        if(d.timestamp) {
-          formattedDepDate = new Date(d.timestamp).toLocaleString();
-        } else if(d.date) {
-          formattedDepDate = d.date;
-        }
-        dBody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td>
-            <td class="text-success"><strong>৳${d.amount || 0}</strong></td>
-            <td>
-              <code style="color:#93c5fd">${escapeHtml(d.trx || '-')}</code><br>
-              <span class="${statusBadge}" style="font-size:9px; padding:2px 6px;">${escapeHtml(d.status || 'Pending')}</span>
-            </td>
-            <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDepDate)}</td>
-          </tr>
-        `);
+        matchedDeposits.push(d);
       }
+    });
+
+    // Sort New to Old Format
+    matchedDeposits.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+    matchedDeposits.forEach(d => {
+      dCount++;
+      const statusBadge = d.status === 'Approved' ? 'badge-approved' : (d.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
+      let formattedDepDate = 'N/A';
+      if(d.timestamp) {
+        formattedDepDate = new Date(d.timestamp).toLocaleString();
+      } else if(d.date) {
+        formattedDepDate = d.date;
+      }
+      dBody.insertAdjacentHTML('beforeend', `
+        <tr>
+          <td><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td>
+          <td class="text-success"><strong>৳${d.amount || 0}</strong></td>
+          <td>
+            <code style="color:#93c5fd">${escapeHtml(d.trx || '-')}</code><br>
+            <span class="${statusBadge}" style="font-size:9px; padding:2px 6px;">${escapeHtml(d.status || 'Pending')}</span>
+          </td>
+          <td style="font-size:12px; color:var(--text-muted);">${escapeHtml(formattedDepDate)}</td>
+        </tr>
+      `);
     });
 
     if(dCount === 0){
@@ -1028,7 +1103,7 @@
     const stocks = globalStocksCache;
 
     tbody.innerHTML = '';
-    const catKeys = Object.keys(categories);
+    let catKeys = Object.keys(categories);
     if(catKeys.length === 0) {
       tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>';
       return;
@@ -1036,7 +1111,9 @@
 
     catKeys.forEach(catKey => {
       const c = categories[catKey];
-      if(!c) return;
+      // Check if category is active (ON) - if OFF or deleted, do not show in stock/inventory
+      if(!c || c.status !== 'ON') return;
+
       const mainCat = c.cat || '';
       const subCat = c.subCat || '';
       const categoryFullName = `${mainCat} - ${subCat}`;
@@ -1064,7 +1141,7 @@
     });
 
     if (tbody.innerHTML === '') {
-      tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No available stock items in inventory</td></tr>';
+      tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No available stock items in active inventory</td></tr>';
     }
   }
 
@@ -1076,7 +1153,21 @@
     });
     document.getElementById('statUsers').innerText = uniqueEmails.size;
 
-    const avail = Object.values(globalStocksCache).filter(x => x.status === 'available').length;
+    // Calculate real stock only from active categories
+    const categories = globalCategoriesCache;
+    const activeCategoriesSet = new Set();
+    Object.values(categories).forEach(c => {
+      if(c && c.status === 'ON' && c.cat && c.subCat) {
+        activeCategoriesSet.add(`${c.cat} - ${c.subCat}`.trim());
+      }
+    });
+
+    let avail = 0;
+    Object.values(globalStocksCache).forEach(item => {
+      if(item && item.status === 'available' && item.category && activeCategoriesSet.has(item.category.trim())) {
+        avail++;
+      }
+    });
     document.getElementById('statStocks').innerText = avail;
 
     const depositsVal = globalDepositsCache;
@@ -1469,6 +1560,7 @@
     const groupedMains = {};
     keys.forEach(k => {
       let c = cats[k];
+      // Only show active (ON) categories in view stock dropdown
       if(c && c.status === 'ON') {
         let m = c.cat || 'Other';
         if(!groupedMains[m]) groupedMains[m] = [];
@@ -1500,56 +1592,149 @@
       return;
     }
 
-    const stocks = globalStocksCache;
-    const keys = Object.keys(stocks);
-    let found = 0;
+    tbody.innerHTML = '<tr><td colspan="5" class="text-info text-center py-4"><i class="fa-solid fa-spinner fa-spin me-2"></i> Loading mails, please wait...</td></tr>';
 
+    setTimeout(() => {
+      const stocks = globalStocksCache;
+      tbody.innerHTML = '';
+      let found = 0;
+      let limitCount = 0;
+
+      for(let k in stocks) {
+        const item = stocks[k];
+        if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
+          found++;
+          limitCount++;
+          // Large stock performance optimization & robust layout for hotmails/long tokens
+          if(limitCount <= 500) {
+            tbody.insertAdjacentHTML('beforeend', `
+              <tr>
+                <td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td>
+                <td data-label="Account Details" class="mail-code-cell"><code style="color:#93c5fd">${escapeHtml(item.accountDetails)}</code></td>
+                <td data-label="Price" class="text-success fw-bold">&#2547;${escapeHtml(item.price)}</td>
+                <td data-label="Status"><span class="badge-approved">Available</span></td>
+                <td data-label="Action"><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
+              </tr>
+            `);
+          }
+        }
+      }
+
+      if(found === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
+      } else if(found > 500) {
+        showToast(`Showing first 500 items out of ${found} total available items for smooth performance.`);
+      }
+    }, 50);
+  }
+
+  // --- DEDICATED PRICE UPDATE LOGIC ---
+  function loadPriceUpdateOptions(){
+    const cats = globalCategoriesCache; 
+    const sel = document.getElementById('priceUpdateCategory'); 
+    sel.innerHTML = '<option value="">Select Category</option>'; 
+    let keys = Object.keys(cats);
+    keys.sort((a,b) => (cats[a].sortOrder || 0) - (cats[b].sortOrder || 0));
+
+    const groupedMains = {};
     keys.forEach(k => {
-      const item = stocks[k];
-      if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
-        found++;
-        tbody.insertAdjacentHTML('beforeend', `
-          <tr>
-            <td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td>
-            <td data-label="Account Details"><code style="color:#93c5fd">${escapeHtml(item.accountDetails)}</code></td>
-            <td data-label="Price" class="text-success fw-bold">&#2547;${escapeHtml(item.price)}</td>
-            <td data-label="Status"><span class="badge-approved">Available</span></td>
-            <td data-label="Action"><button class="btn-delete" onclick="deleteStockItem('${k}')" title="Delete Mail"><i class="fa-solid fa-trash"></i></button></td>
-          </tr>
-        `);
+      let c = cats[k];
+      if(c && c.status === 'ON') {
+        let m = c.cat || 'Other';
+        if(!groupedMains[m]) groupedMains[m] = [];
+        groupedMains[m].push(c);
       }
     });
 
-    if(found === 0) {
-      tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
-    }
+    Object.keys(groupedMains).forEach(mainCat => {
+      let optgroup = document.createElement('optgroup');
+      optgroup.label = mainCat;
+      groupedMains[mainCat].forEach(c => {
+        let catName = `${escapeHtml(c.cat)} - ${escapeHtml(c.subCat)}`;
+        let opt = document.createElement('option');
+        opt.value = catName;
+        opt.textContent = c.subCat;
+        optgroup.appendChild(opt);
+      });
+      sel.appendChild(optgroup);
+    });
+
+    renderPriceOverviewTable();
   }
 
-  function updateCategoryBulkPrice(){
-    const selectedCategory = document.getElementById('viewStockCategory').value;
-    const newPrice = parseFloat(document.getElementById('bulkNewPrice').value);
+  function renderPriceOverviewTable(){
+    const tbody = document.getElementById('priceOverviewTableBody');
+    tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">Loading price overview...</td></tr>';
+
+    setTimeout(() => {
+      const categories = globalCategoriesCache;
+      const stocks = globalStocksCache;
+      tbody.innerHTML = '';
+      
+      let catKeys = Object.keys(categories);
+      if(catKeys.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-3">No categories found</td></tr>';
+        return;
+      }
+
+      catKeys.forEach(catKey => {
+        const c = categories[catKey];
+        if(!c || c.status !== 'ON') return; // Only show active categories
+
+        const mainCat = c.cat || '';
+        const subCat = c.subCat || '';
+        const categoryFullName = `${mainCat} - ${subCat}`;
+
+        let realCount = 0;
+        let itemPrice = 0;
+
+        for(let sKey in stocks) {
+          let item = stocks[sKey];
+          if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
+            realCount++;
+            if(item.price) itemPrice = item.price;
+          }
+        }
+
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr>
+            <td data-label="Main Category"><span class="provider-pill">${escapeHtml(mainCat)}</span></td>
+            <td data-label="Sub Category"><strong class="text-white">${escapeHtml(subCat)}</strong></td>
+            <td data-label="Current Price" class="text-warning fw-bold">&#2547;${itemPrice || 0}</td>
+            <td data-label="Available Stock Count"><span class="badge-approved">${realCount} items</span></td>
+          </tr>
+        `);
+      });
+    }, 50);
+  }
+
+  function updateCategoryBulkPriceDedicated(){
+    const selectedCategory = document.getElementById('priceUpdateCategory').value;
+    const newPrice = parseFloat(document.getElementById('bulkNewPriceDedicated').value);
 
     if(!selectedCategory) { showToast('Please select a category first!'); return; }
     if(isNaN(newPrice) || newPrice < 0){ showToast('Please enter a valid price!'); return; }
+
+    showToast('Updating prices in database, please wait...');
 
     const stocks = globalStocksCache;
     const updates = {};
     let count = 0;
 
-    Object.keys(stocks).forEach(k => {
+    for(let k in stocks) {
       const item = stocks[k];
       if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
         updates[`stocks/${k}/price`] = newPrice;
         count++;
       }
-    });
+    }
 
     if(count === 0) { showToast('No available stocks found in this category to update!'); return; }
 
     db.ref().update(updates).then(() => {
-      showToast(`Successfully updated price for ${count} item(s)!`);
-      document.getElementById('bulkNewPrice').value = '';
-      loadStockMailsByCategory();
+      showToast(`Successfully updated price to ৳${newPrice} for ${count} item(s)!`);
+      document.getElementById('bulkNewPriceDedicated').value = '';
+      renderPriceOverviewTable();
     }).catch(e => showToast('Error: '+e.message));
   }
 
@@ -1816,12 +2001,15 @@
         const cleanEmail = u.email.toLowerCase().trim();
         if (!uniqueUsersMap.has(cleanEmail)) {
           const safeKey = cleanEmail.replace(/[@.]/g, '_');
-          uniqueUsersMap.set(cleanEmail, { safeKey, email: cleanEmail, originalEmail: u.email });
+          uniqueUsersMap.set(cleanEmail, { safeKey, email: cleanEmail, originalEmail: u.email, timestamp: u.timestamp || 0 });
         }
       }
     });
 
     let uniqueEntries = Array.from(uniqueUsersMap.values());
+    
+    // Sort New to Old Format (A-Z list sorted by newest registration timestamp)
+    uniqueEntries.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
     db.ref('balances').once('value', balSnap => {
       const balancesData = balSnap.val() || {};
