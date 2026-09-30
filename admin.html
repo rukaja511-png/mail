@@ -97,7 +97,6 @@
     }
     .form-control::placeholder, textarea::placeholder, input::placeholder{color:var(--text-muted) !important; opacity: 0.5;}
 
-    /* Ultra Premium Dashboard Stats Grid */
     .stats-row{display:grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));gap:20px;margin-bottom:24px}
     .stat-card{display:flex;align-items:center;gap:16px;padding:22px;border-radius:18px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.25);transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);position:relative;overflow:hidden;}
     .stat-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:0; transition: opacity 0.3s ease; }
@@ -336,7 +335,15 @@
 
     <!-- ALL ORDERS TAB -->
     <section id="tab-all-orders" style="display:none">
-      <h1>All Orders & Purchases</h1>
+      <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+        <h1>All Orders & Purchases</h1>
+        <div class="card-panel py-2 px-3 mb-0" style="background: rgba(99, 102, 241, 0.15); border-color: var(--border-glow);">
+          <span class="text-muted" style="font-size:12px; font-weight:700; text-transform:uppercase;">Total Orders:</span> 
+          <span id="allOrdersLiveCountBadge" class="text-success fw-bold fs-5 ms-1">0</span>
+          <span class="badge bg-success ms-2 animate-pulse" style="font-size:9px;">LIVE</span>
+        </div>
+      </div>
+
       <div class="card-panel mb-3">
         <div class="row g-2 align-items-center">
           <div class="col-md-6">
@@ -429,8 +436,8 @@
         <h5 class="mb-3 text-white" style="font-size:16px;">Live Inventory Stock Status (Real Stock Only)</h5>
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead><tr><th>Category</th><th>Item Title</th><th>Price</th><th>Real In Stock</th></tr></thead>
-            <tbody id="liveInventoryBody"><tr><td colspan="4" class="text-muted text-center py-4">Loading live inventory...</td></tr></tbody>
+            <thead><tr><th style="width:40%;">Main Category</th><th style="width:40%;">Sub Category</th><th style="width:20%; text-align:right;">Real Stock</th></tr></thead>
+            <tbody id="liveInventoryBody"><tr><td colspan="3" class="text-muted text-center py-4">Loading live inventory...</td></tr></tbody>
           </table>
         </div>
       </div>
@@ -528,12 +535,13 @@
       <h1>View Stock Mails</h1>
       <div class="card-panel mb-3">
         <div class="row g-3 align-items-end">
-          <div class="col-md-6">
+          <div class="col-md-5">
             <label class="form-label">Select Category to View Mails</label>
             <select id="viewStockCategory" class="form-select" onchange="loadStockMailsByCategory()"></select>
           </div>
-          <div class="col-md-6 text-md-end">
-            <button class="btn btn-danger px-4 py-3" style="background:linear-gradient(135deg, #ef4444, #dc2626); border:none; border-radius:12px;" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected Mails</button>
+          <div class="col-md-7 text-md-end d-flex gap-2 justify-content-md-end flex-wrap">
+            <button class="btn btn-primary px-4 py-3" style="background:linear-gradient(135deg, #6366f1, #4f46e5); border:none; border-radius:12px;" onclick="copySelectedStocks()"><i class="fa-solid fa-copy me-1"></i> Copy Selected (<span id="selectedStockCountBadge">0</span>)</button>
+            <button class="btn btn-danger px-4 py-3" style="background:linear-gradient(135deg, #ef4444, #dc2626); border:none; border-radius:12px;" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected</button>
           </div>
         </div>
       </div>
@@ -594,6 +602,24 @@
     <!-- DEPOSIT REQUESTS TAB -->
     <section id="tab-deposits" style="display:none">
       <h1>Deposit Requests</h1>
+
+      <div class="stats-row mb-3">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #3b82f6, #1d4ed8);"><i class="fa-solid fa-wallet"></i></div>
+          <div class="stat-info">
+            <div class="stat-title">Total Deposits</div>
+            <div id="statTotalDepositsCount" class="stat-number">0</div>
+          </div>
+        </div>
+        <div class="stat-card" style="border-color: rgba(239, 68, 68, 0.35);">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #ef4444, #dc2626);"><i class="fa-solid fa-ban"></i></div>
+          <div class="stat-info">
+            <div class="stat-title">Rejected Deposits</div>
+            <div id="statRejectedDepositsCount" class="stat-number text-danger">0</div>
+          </div>
+        </div>
+      </div>
+
       <div class="card-panel mb-3">
         <div class="row g-2 align-items-center">
           <div class="col-md-4"><input id="searchTrx" class="form-control" placeholder="Search by TrxID..." oninput="renderDeposits()"></div>
@@ -814,7 +840,11 @@
     globalOrdersCache = snap.val() || {}; 
     if(document.getElementById('tab-all-orders').style.display==='block') renderAllOrders();
   });
-  db.ref('deposits').on('value', snap => { globalDepositsCache = snap.val() || {}; if(document.getElementById('tab-dashboard').style.display==='block') loadDashboard(); });
+  db.ref('deposits').on('value', snap => { 
+    globalDepositsCache = snap.val() || {}; 
+    if(document.getElementById('tab-dashboard').style.display==='block') loadDashboard(); 
+    if(document.getElementById('tab-deposits').style.display==='block') renderDeposits();
+  });
   db.ref('users').on('value', snap => { globalUsersCache = snap.val() || {}; });
   db.ref('categories').on('value', snap => { globalCategoriesCache = snap.val() || {}; if(document.getElementById('tab-categories').style.display==='block') loadCategories(); });
   db.ref('fakeStocks').on('value', snap => { globalFakeStocksCache = snap.val() || {}; if(document.getElementById('tab-stocks').style.display==='block') renderAdminFakeStocks(); });
@@ -887,6 +917,8 @@
     const q = (document.getElementById('searchAllOrders').value || '').trim().toLowerCase();
     
     let keys = Object.keys(globalOrdersCache);
+    document.getElementById('allOrdersLiveCountBadge').innerText = keys.length;
+
     if(!keys.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-muted text-center py-4">No purchases or orders found yet</td></tr>'; return; }
     
     keys.sort((a, b) => (globalOrdersCache[b].timestamp || 0) - (globalOrdersCache[a].timestamp || 0));
@@ -1006,27 +1038,76 @@
     const tbody = document.getElementById('liveInventoryBody');
     tbody.innerHTML = '';
     let catKeys = Object.keys(globalCategoriesCache);
-    if(!catKeys.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
+    if(!catKeys.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
 
+    // Group by Main Category and calculate real stock for each subcategory
+    const mainCatMap = {};
     catKeys.forEach(catKey => {
       const c = globalCategoriesCache[catKey];
       if(!c || c.status !== 'ON') return;
 
-      const categoryFullName = `${c.cat} - ${c.subCat}`;
-      let realCount = 0, itemPrice = c.price || 0;
+      const mainCat = c.cat || 'Uncategorized';
+      const subCat = c.subCat || '';
+      const categoryFullName = `${mainCat} - ${subCat}`;
 
+      let realCount = 0;
       Object.values(globalStocksCache).forEach(item => {
         if(item && item.category && item.category.trim() === categoryFullName.trim() && item.status === 'available') {
           realCount++;
-          if(item.price) itemPrice = item.price;
         }
       });
 
-      if (realCount > 0) {
-        tbody.insertAdjacentHTML('beforeend', `<tr><td data-label="Category"><span class="provider-pill">${escapeHtml(c.cat)}</span></td><td data-label="Item Title"><strong class="text-white">${escapeHtml(c.subCat)}</strong></td><td data-label="Price" class="text-warning fw-bold">৳${itemPrice}</td><td data-label="Real In Stock"><span class="badge-approved">${realCount} pcs</span></td></tr>`);
+      if(!mainCatMap[mainCat]) {
+        mainCatMap[mainCat] = { totalStock: 0, subCategories: [] };
+      }
+      mainCatMap[mainCat].totalStock += realCount;
+      mainCatMap[mainCat].subCategories.push({ subCat: subCat, realCount: realCount });
+    });
+
+    let renderedAny = false;
+    Object.keys(mainCatMap).forEach((mainCat, index) => {
+      const groupData = mainCatMap[mainCat];
+      // Shudhu matro sei main category gulo dekhabe jar total real stock > 0 ache
+      if (groupData.totalStock > 0) {
+        renderedAny = true;
+        const collapseId = 'liveInvGroup_' + index;
+        
+        // Main Category Row (Clickable)
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr class="main-category-row" onclick="toggleLiveInvGroup('${collapseId}', this)">
+            <td data-label="Main Category">
+              <i class="fa-solid fa-chevron-right me-2" id="icon_${collapseId}"></i>
+              <strong style="color:#ffffff;">${escapeHtml(mainCat)}</strong>
+            </td>
+            <td data-label="Sub Category"><span class="text-muted">Click to view sub-categories</span></td>
+            <td data-label="Real Stock" style="text-align:right;"><span class="badge-approved">${groupData.totalStock} pcs</span></td>
+          </tr>
+        `);
+
+        // Sub Category Rows (Hidden by default, shown on click)
+        groupData.subCategories.forEach(sub => {
+          tbody.insertAdjacentHTML('beforeend', `
+            <tr class="sub-category-row live-sub-${collapseId}" style="display: none;">
+              <td data-label="Main Category" style="padding-left: 28px; color:var(--text-muted);">${escapeHtml(mainCat)}</td>
+              <td data-label="Sub Category"><span style="color:#a5b4fc; font-weight:600;">${escapeHtml(sub.subCat)}</span></td>
+              <td data-label="Real Stock" style="text-align:right;"><span class="${sub.realCount > 0 ? 'badge-approved' : 'badge-rejected'}">${sub.realCount} pcs</span></td>
+            </tr>
+          `);
+        });
       }
     });
-    if (!tbody.innerHTML) tbody.innerHTML = '<tr><td colspan="4" class="text-muted text-center py-4">No available stock items in active inventory</td></tr>';
+
+    if (!renderedAny) {
+      tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No real stock available in any category</td></tr>';
+    }
+  }
+
+  function toggleLiveInvGroup(collapseId, rowEl) {
+    const subRows = document.querySelectorAll('.live-sub-' + collapseId);
+    const iconEl = document.getElementById('icon_' + collapseId);
+    let isHidden = subRows[0] && subRows[0].style.display === 'none';
+    subRows.forEach(tr => { tr.style.display = isHidden ? 'table-row' : 'none'; });
+    if(iconEl) iconEl.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
   }
 
   function loadDashboard(){
@@ -1147,7 +1228,7 @@
 
       subItems.forEach(subObj => {
         const k = subObj.key, c = subObj.data;
-        body.insertAdjacentHTML('beforeend', `<tr class="sub-category-row sub-group-${collapseId}" style="display: none;"><td data-label="Sub-Category" style="padding-left: 28px;"><span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span></td><td data-label="Description"><span style="color:#f8fafc;">${escapeHtml(c.description||'No description')}</span> (Price: ৳${c.price||0})</td><td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td><td data-label="Action" style="text-align:right;"><button class="btn-edit-subcat" onclick="openEditSubCatModal('${k}', '${escapeHtml(c.subCat||'')}')" title="Change Sub-Category"><i class="fa-solid fa-layer-group"></i> Sub</button><button class="btn-edit-desc" onclick="openEditDescriptionModal('${k}', '${escapeHtml(c.description||'')}')" title="Edit Description"><i class="fa-solid fa-pen"></i> Desc</button><button class="btn btn-sm btn-outline-light me-1 px-2.5 py-1 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button><button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+        body.insertAdjacentHTML('beforeend', `<tr class="sub-category-row sub-group-${collapseId}" style="display: none;"><td data-label="Sub-Category" style="padding-left: 28px;"><span style="color:#a5b4fc; font-weight:600;">${escapeHtml(c.subCat||'')}</span></td><td data-label="Description"><span style="color:#f8fafc;" id="desc_text_${k}">${escapeHtml(c.description||'No description')}</span> (Price: ৳${c.price||0})</td><td data-label="Status">${c.status==='ON'?'<span class="badge-approved">ON</span>':'<span class="badge-rejected">OFF</span>'}</td><td data-label="Action" style="text-align:right;"><button class="btn-edit-subcat" onclick="openEditSubCatModal('${k}', '${escapeHtml(c.subCat||'')}')" title="Change Sub-Category"><i class="fa-solid fa-layer-group"></i> Sub</button><button class="btn-edit-desc" onclick="openEditDescriptionModal('${k}')" title="Edit Description"><i class="fa-solid fa-pen"></i> Desc</button><button class="btn btn-sm btn-outline-light me-1 px-2.5 py-1 rounded-2" onclick="toggleCategory('${k}','${c.status||'ON'}')">${c.status==='ON'?'OFF':'ON'}</button><button class="btn-delete" onclick="removeCategory('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
       });
     });
   }
@@ -1157,12 +1238,16 @@
     const iconEl = document.getElementById('icon_' + collapseId);
     let isHidden = subRows[0] && subRows[0].style.display === 'none';
     subRows.forEach(tr => { tr.style.display = isHidden ? 'table-row' : 'none'; });
-    iconEl.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
+    if(iconEl) iconEl.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
   }
 
-  function openEditDescriptionModal(key, desc){
+  function openEditDescriptionModal(key){
     document.getElementById('editDescKey').value = key;
-    document.getElementById('editModalDescInput').value = desc;
+    let currentDesc = '';
+    if(globalCategoriesCache[key] && globalCategoriesCache[key].description) {
+      currentDesc = globalCategoriesCache[key].description;
+    }
+    document.getElementById('editModalDescInput').value = currentDesc;
     new bootstrap.Modal(document.getElementById('editDescriptionModal')).show();
   }
 
@@ -1355,6 +1440,8 @@
     const selectedCategory = document.getElementById('viewStockCategory').value;
     const tbody = document.getElementById('stockMailsTableBody');
     tbody.innerHTML = '';
+    document.getElementById('selectedStockCountBadge').innerText = '0';
+    document.getElementById('selectAllStocks').checked = false;
     
     if(!selectedCategory) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">Please select a category above</td></tr>'; return; }
 
@@ -1364,11 +1451,39 @@
       if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
         found++;
         if(found <= 500) {
-          tbody.insertAdjacentHTML('beforeend', `<tr><td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}"></td><td data-label="Account Details" class="mail-code-cell"><code>${escapeHtml(item.accountDetails)}</code></td><td data-label="Price" class="text-success fw-bold">৳${escapeHtml(item.price)}</td><td data-label="Status"><span class="badge-approved">Available</span></td><td data-label="Action" style="text-align:right;"><button class="btn-delete" onclick="deleteStockItem('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+          tbody.insertAdjacentHTML('beforeend', `<tr><td data-label="Select"><input type="checkbox" class="stock-checkbox" value="${k}" data-details="${escapeHtml(item.accountDetails)}" onchange="updateSelectedStockCount()"></td><td data-label="Account Details" class="mail-code-cell"><code>${escapeHtml(item.accountDetails)}</code></td><td data-label="Price" class="text-success fw-bold">৳${escapeHtml(item.price)}</td><td data-label="Status"><span class="badge-approved">Available</span></td><td data-label="Action" style="text-align:right;"><button class="btn-delete" onclick="deleteStockItem('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
         }
       }
     }
     if(!found) tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No available stocks found in this category</td></tr>';
+  }
+
+  function updateSelectedStockCount() {
+    const checkedBoxes = document.querySelectorAll('.stock-checkbox:checked');
+    document.getElementById('selectedStockCountBadge').innerText = checkedBoxes.length;
+  }
+
+  function toggleSelectAllStocks(masterCheckbox){
+    document.querySelectorAll('.stock-checkbox').forEach(cb => cb.checked = masterCheckbox.checked);
+    updateSelectedStockCount();
+  }
+
+  function copySelectedStocks(){
+    const checkedBoxes = document.querySelectorAll('.stock-checkbox:checked');
+    if(!checkedBoxes.length){ showToast('Please select at least one mail to copy!'); return; }
+
+    let detailsList = [];
+    checkedBoxes.forEach(cb => {
+      let details = cb.getAttribute('data-details');
+      if(details) detailsList.push(details);
+    });
+
+    const textToCopy = detailsList.join('\n');
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      showToast(`Successfully copied ${checkedBoxes.length} mail(s) to clipboard!`);
+    }).catch(err => {
+      showToast('Failed to copy: ' + err.message);
+    });
   }
 
   function loadPriceUpdateOptions(){
@@ -1473,10 +1588,6 @@
     }).catch(e => showToast('Error: '+e.message));
   }
 
-  function toggleSelectAllStocks(masterCheckbox){
-    document.querySelectorAll('.stock-checkbox').forEach(cb => cb.checked = masterCheckbox.checked);
-  }
-
   function deleteSelectedStocks(){
     const selectedCheckboxes = document.querySelectorAll('.stock-checkbox:checked');
     if(!selectedCheckboxes.length){ showToast('Select at least one mail'); return; }
@@ -1534,12 +1645,25 @@
   }
 
   function loadDeposits(){ renderDeposits(); }
+
   function renderDeposits(){
     const q=(document.getElementById('searchTrx').value||'').trim().toLowerCase(); 
     const status=document.getElementById('filterStatus').value;
     const body=document.getElementById('depositsBody'); 
     body.innerHTML='';
     const keys=Object.keys(globalDepositsCache); 
+
+    let totalDepositsCount = keys.length;
+    let rejectedDepositsCount = 0;
+
+    keys.forEach(k => {
+      let d = globalDepositsCache[k];
+      if(d && d.status === 'Rejected') rejectedDepositsCount++;
+    });
+
+    document.getElementById('statTotalDepositsCount').innerText = totalDepositsCount;
+    document.getElementById('statRejectedDepositsCount').innerText = rejectedDepositsCount;
+
     if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No deposits found</td></tr>'; return; }
     
     keys.reverse().forEach(k=>{ 
@@ -1659,12 +1783,10 @@
     tbody.innerHTML = '';
     
     let uniqueUsersMap = new Map();
-    Object.entries(globalUsersCache).forEach(([key, u]) => {
-      if (u && u.email) {
-        const cleanEmail = u.email.toLowerCase().trim();
-        if (!uniqueUsersMap.has(cleanEmail)) {
-          uniqueUsersMap.set(cleanEmail, { safeKey: cleanEmail.replace(/[@.]/g, '_'), email: cleanEmail, originalEmail: u.email });
-        }
+    Object.entries(globalUsersCache).filter(([_, u]) => u && u.email).forEach(([key, u]) => {
+      const cleanEmail = u.email.toLowerCase().trim();
+      if (!uniqueUsersMap.has(cleanEmail)) {
+        uniqueUsersMap.set(cleanEmail, { safeKey: cleanEmail.replace(/[@.]/g, '_'), email: cleanEmail, originalEmail: u.email });
       }
     });
 
@@ -1701,37 +1823,33 @@
 
     db.ref(`balances/${currentEditingUserKey}`).once('value', snap => {
       let currentBal = parseFloat(snap.val() || 0);
-      let newBal = action === 'plus' ? currentBal + inputVal : Math.max(0, currentBal - inputVal);
+      let newBal = action === 'plus' ? currentBal + inputVal : currentBal - inputVal;
+      if(newBal < 0) newBal = 0;
 
-      let updates = {};
-      updates[`balances/${currentEditingUserKey}`] = newBal;
-      
-      const logKey = db.ref('adminBalanceLogs').push().key;
-      updates[`adminBalanceLogs/${logKey}`] = {
-        userEmail: currentEditingUserEmail,
-        action: action,
-        amount: inputVal,
-        timestamp: Date.now()
-      };
-
-      db.ref().update(updates).then(() => {
-        showToast('Balance updated & recorded successfully');
-        document.getElementById('modalCurrentBalance').innerText = '৳' + newBal;
-        renderUsers();
+      db.ref(`balances/${currentEditingUserKey}`).set(newBal).then(() => {
+        const logKey = db.ref('adminBalanceLogs').push().key;
+        db.ref(`adminBalanceLogs/${logKey}`).set({
+          user: currentEditingUserEmail,
+          action: action,
+          amount: inputVal,
+          timestamp: Date.now()
+        });
+        bootstrap.Modal.getInstance(document.getElementById('balanceModal')).hide();
+        showToast('Balance updated successfully!');
+        loadUsers();
       });
     });
   }
 
   function deleteUser(safeKey, email){
-    if(!confirm(`Delete user: ${email}?`)) return;
-    let updates = {[`balances/${safeKey}`]: null};
-    db.ref('users').once('value', snap => {
-      Object.keys(snap.val() || {}).forEach(k => {
-        let u = snap.val()[k];
-        if(u && u.email && u.email.toLowerCase().trim() === email.toLowerCase().trim()) updates[`users/${k}`] = null;
+    if(confirm(`Are you sure you want to delete user ${email}?`)){
+      let updates = {};
+      updates[`balances/${safeKey}`] = null;
+      db.ref().update(updates).then(() => {
+        showToast('User balance removed successfully');
+        loadUsers();
       });
-      db.ref().update(updates).then(() => { showToast('User deleted'); loadUsers(); });
-    });
+    }
   }
 </script>
 </body>
