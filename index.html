@@ -238,7 +238,6 @@
             width: 100%;
             text-align: left;
             text-decoration: none;
-            /* Fix applied here to show full name via wrapping */
             white-space: normal;
             word-break: break-word;
         }
@@ -1788,7 +1787,7 @@
                 </div>
                 <div class="p-3 rounded-4 text-main d-flex align-items-center justify-content-between gap-3 flex-wrap" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);"><span>2. Type: <strong>${escapeHtml(selectedPaymentMethodData.type)}</strong></span></div>
                 <div class="p-3 rounded-4 text-main d-flex align-items-center justify-content-between gap-3 flex-wrap" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);">
-                    <span class="text-truncate">3. Amount: <strong class="text-success">৳${displayInstructionAmount} BDT</strong></span> ${copyAmountBtnHtml}
+                    <span class="text-truncate">3. Amount: <strong class="text-success">$${displayInstructionAmount} USD</strong></span> ${copyAmountBtnHtml}
                 </div>`;
         }
 
@@ -1797,6 +1796,7 @@
     }
 
     function backToDepositStep1() {
+        document.getElementById('deposit-step-1').style.display.style = 'flex';
         document.getElementById('deposit-step-1').style.display = 'flex';
         document.getElementById('deposit-step-2').style.display = 'none';
     }
@@ -1811,12 +1811,15 @@
 
         let nameLower = selectedPaymentMethodData.name.toLowerCase();
         let isBdtMethod = ['bkash', 'nagad', 'rocket', 'upay'].some(m => nameLower.includes(m));
+        
+        // Fix: Properly calculate USD and BDT amounts based on the selected method type
         let finalUsdAmount = isBdtMethod ? (amount / currentBinanceRate) : amount;
+        let finalBdtAmount = isBdtMethod ? amount : (amount * currentBinanceRate);
 
         let depositData = {
             email: email,
             method: selectedPaymentMethodData.name,
-            amount: amount,
+            amount: parseFloat(finalBdtAmount.toFixed(2)),
             usdAmount: parseFloat(finalUsdAmount.toFixed(2)),
             trxId: trxId,
             status: 'Pending',
@@ -1903,17 +1906,19 @@
             }
             keys.forEach(k => {
                 let d = deposits[k];
-                let statusBadge = '';
-                if(d.status === 'Approved') statusBadge = `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2.5 py-1 rounded-pill">Approved</span>`;
-                else if(d.status === 'Rejected') statusBadge = `<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2.5 py-1 rounded-pill">Rejected</span>`;
-                else statusBadge = `<span class="badge bg-warning bg-opacity-10 text-warning border border-warning border-opacity-25 px-2.5 py-1 rounded-pill">Pending</span>`;
+                let badgeClass = 'bg-warning text-dark';
+                if(d.status === 'Approved') badgeClass = 'bg-success text-white';
+                if(d.status === 'Rejected') badgeClass = 'bg-danger text-white';
+                
+                let isBdt = ['bkash', 'nagad', 'rocket', 'upay'].some(m => d.method.toLowerCase().includes(m));
+                let displayAmountStr = isBdt ? `৳${d.amount}` : `$${d.usdAmount} ($${d.amount} USD)`;
 
                 tbody.innerHTML += `
                     <tr>
                         <td class="fw-bold text-main">${escapeHtml(d.method)}</td>
-                        <td class="fw-bold text-info">৳${escapeHtml(d.amount)}</td>
+                        <td class="fw-bold text-success">${escapeHtml(displayAmountStr)}</td>
                         <td class="font-monospace">${escapeHtml(d.trxId)}</td>
-                        <td>${statusBadge}</td>
+                        <td><span class="badge ${badgeClass} px-2.5 py-1 rounded-pill">${escapeHtml(d.status)}</span></td>
                     </tr>`;
             });
         });
