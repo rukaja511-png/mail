@@ -43,7 +43,7 @@
     .auth-card{width:100%;max-width:420px;background:var(--card-bg);backdrop-filter:blur(25px);border-radius:24px;padding:36px;border:1px solid var(--border-glow);box-shadow:0 30px 60px rgba(0,0,0,0.8);}
     
     .admin-sidebar{width:260px;background:var(--bg-sidebar);position:fixed;left:0;top:0;bottom:0;padding-top:20px;border-right:1px solid var(--border-color);z-index:1050;transition:transform 0.3s ease;box-shadow: 10px 0 35px rgba(0,0,0,0.5); overflow-y: auto;}
-    .admin-main{margin-left:260px;padding:32px;min-height:100vh;transition:margin 0.3s ease;}
+    .admin-main{margin-left:260px;padding:24px;min-height:100vh;transition:margin 0.3s ease;}
 
     .sidebar-brand{
       padding:0 20px 20px 20px;
@@ -72,11 +72,11 @@
     .mobile-topbar{display:none;align-items:center;justify-content:space-between;background:var(--bg-sidebar);padding:14px 20px;border-bottom:1px solid var(--border-color);position:sticky;top:0;z-index:1040;}
     .mobile-menu-btn{background:var(--card-bg);border:1px solid var(--border-color);color:#fff;padding:8px 12px;border-radius:10px;font-size:16px;cursor:pointer;}
 
-    .card-panel{background:var(--card-bg);backdrop-filter:blur(20px);padding:24px;border-radius:20px;border:1px solid var(--border-color);box-shadow:0 15px 35px rgba(0,0,0,0.3);margin-bottom:24px;position:relative;overflow:hidden;}
+    .card-panel{background:var(--card-bg);backdrop-filter:blur(20px);padding:20px;border-radius:18px;border:1px solid var(--border-color);box-shadow:0 10px 25px rgba(0,0,0,0.3);margin-bottom:16px;position:relative;overflow:hidden;}
     .card-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1.5px; background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.5), transparent); }
     
-    h1,h2,h5,h6{font-weight:800;color:#ffffff !important;margin-bottom:12px;letter-spacing:-0.02em;}
-    h1{font-size:26px; margin-bottom:22px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
+    h1,h2,h5,h6{font-weight:800;color:#ffffff !important;margin-bottom:8px;letter-spacing:-0.02em;}
+    h1{font-size:24px; margin-bottom:16px; background: linear-gradient(to right, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;}
     
     label.form-label{font-weight:700;color:var(--text-muted) !important;font-size:11px;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;}
     
@@ -97,29 +97,29 @@
     }
     .form-control::placeholder, textarea::placeholder, input::placeholder{color:var(--text-muted) !important; opacity: 0.5;}
 
-    .stats-row{display:grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));gap:20px;margin-bottom:24px}
-    .stat-card{display:flex;align-items:center;gap:16px;padding:22px;border-radius:18px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 10px 30px rgba(0,0,0,0.25);transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);position:relative;overflow:hidden;}
+    .stats-row{display:grid;grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));gap:16px;margin-bottom:16px}
+    .stat-card{display:flex;align-items:center;gap:14px;padding:16px 18px;border-radius:16px;background:var(--card-bg);border:1px solid var(--border-color);box-shadow:0 8px 20px rgba(0,0,0,0.2);transition:all 0.35s cubic-bezier(0.16, 1, 0.3, 1);position:relative;overflow:hidden;}
     .stat-card::after { content:''; position:absolute; bottom:0; left:0; width:100%; height:2px; background:linear-gradient(90deg, transparent, var(--accent), transparent); opacity:0; transition: opacity 0.3s ease; }
-    .stat-card:hover{transform: translateY(-4px);border-color: var(--border-glow);box-shadow: 0 15px 35px rgba(99, 102, 241, 0.2);}
+    .stat-card:hover{transform: translateY(-3px);border-color: var(--border-glow);box-shadow: 0 12px 25px rgba(99, 102, 241, 0.2);}
     .stat-card:hover::after { opacity: 1; }
     
-    .stat-icon{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 8px 20px var(--accent-glow);flex-shrink:0;}
+    .stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;background:linear-gradient(135deg, var(--accent), var(--accent-hover));box-shadow:0 6px 15px var(--accent-glow);flex-shrink:0;}
     .stat-info{display:flex;flex-direction:column;justify-content:center;overflow:hidden;}
     .stat-title{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;white-space:nowrap;text-overflow:ellipsis;}
-    .stat-number{font-weight:800;font-size:24px;color:#ffffff;margin-top:3px;line-height:1.2;}
+    .stat-number{font-weight:800;font-size:22px;color:#ffffff;margin-top:2px;line-height:1.2;}
 
-    .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
-    .perf-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.25); backdrop-filter: blur(20px); }
-    .perf-inner-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
-    .perf-sub-card { background: rgba(4, 7, 14, 0.75); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; transition: all 0.3s ease; }
+    .perf-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .perf-box { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 18px; padding: 18px; box-shadow: 0 8px 20px rgba(0,0,0,0.2); backdrop-filter: blur(20px); }
+    .perf-inner-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px; }
+    .perf-sub-card { background: rgba(4, 7, 14, 0.75); border: 1px solid var(--border-color); border-radius: 12px; padding: 12px 14px; transition: all 0.3s ease; }
     .perf-sub-card:hover { border-color: rgba(99, 102, 241, 0.3); transform: translateY(-2px); }
-    .perf-sub-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
-    .perf-sub-val { font-size: 20px; font-weight: 800; color: #ffffff; }
+    .perf-sub-title { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 2px; }
+    .perf-sub-val { font-size: 18px; font-weight: 800; color: #ffffff; }
 
-    .table-card{border-radius:20px;padding:24px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:24px;box-shadow:0 10px 30px rgba(0,0,0,0.25);backdrop-filter: blur(20px);}
+    .table-card{border-radius:18px;padding:20px;background:var(--card-bg);border:1px solid var(--border-color);margin-bottom:16px;box-shadow:0 8px 20px rgba(0,0,0,0.2);backdrop-filter: blur(20px);}
     .styled-table{width:100%;border-collapse:collapse}
-    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;padding:14px 16px;text-align:left;border-bottom:1px solid var(--border-color)}
-    .styled-table tbody td{padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#f8fafc;font-size:13.5px;vertical-align:middle;}
+    .styled-table thead th{color:var(--text-muted);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;padding:12px 14px;text-align:left;border-bottom:1px solid var(--border-color)}
+    .styled-table tbody td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:#f8fafc;font-size:13.5px;vertical-align:middle;}
     .styled-table tbody tr:hover{background-color:rgba(255,255,255,0.035);}
     
     .badge-approved{background:rgba(16, 185, 129, 0.15);color:#34d399;border:1px solid rgba(16, 185, 129, 0.4);padding:5px 10px;border-radius:8px;font-weight:700;font-size:11px}
@@ -150,17 +150,21 @@
     .sub-category-row { background: rgba(4, 7, 14, 0.75); border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
     .mail-code-cell { word-break: break-all; white-space: pre-wrap; max-width: 450px; line-height: 1.4; color: #93c5fd; }
 
+    .time-tag { display: flex; align-items: center; gap: 4px; font-size: 11px; margin-top: 2px; }
+    .time-req { color: #fbbf24; }
+    .time-app { color: #34d399; }
+
     @media (max-width:991px){
       .admin-sidebar{transform:translateX(-100%);}
       .admin-sidebar.mobile-show{transform:translateX(0);}
-      .admin-main{margin-left:0;padding:16px}
+      .admin-main{margin-left:0;padding:12px}
       .mobile-topbar{display:flex;}
       .stats-row{grid-template-columns: 1fr;}
       .perf-grid { grid-template-columns: 1fr; }
       .styled-table thead { display: none; }
       .styled-table, .styled-table tbody, .styled-table tr, .styled-table td { display: block; width: 100%; }
-      .styled-table tr { margin-bottom: 14px; background: rgba(13, 20, 38, 0.95); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
-      .styled-table td { padding: 9px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; color:#f8fafc !important; }
+      .styled-table tr { margin-bottom: 12px; background: rgba(13, 20, 38, 0.95); border: 1px solid var(--border-color); border-radius: 14px; padding: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+      .styled-table td { padding: 8px 4px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.04); display: flex; justify-content: space-between; align-items: center; color:#f8fafc !important; }
       .styled-table td::before { content: attr(data-label); font-weight: 700; color: var(--text-muted); font-size: 10.5px; text-transform: uppercase; margin-right: 12px; text-align: left; }
     }
   </style>
@@ -278,7 +282,7 @@
         <div class="row align-items-center g-3">
           <div class="col-md-5">
             <div class="stat-title mb-1" style="color:#34d399 !important;"><i class="fa-solid fa-wallet me-1"></i>Total Approved Deposit Amount</div>
-            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:28px;">৳0</div>
+            <div id="statTotalApprovedDeposit" class="stat-number text-white" style="font-size:26px;">৳0</div>
           </div>
           <div class="col-md-4">
             <label class="form-label">Payment Method Filter</label>
@@ -300,7 +304,7 @@
 
       <div class="perf-grid">
         <div class="perf-box">
-          <h5 class="text-white mb-3" style="font-size: 15px;"><i class="fa-solid fa-bolt text-warning me-1"></i>Last 24 Hours Performance</h5>
+          <h5 class="text-white mb-2" style="font-size: 15px;"><i class="fa-solid fa-bolt text-warning me-1"></i>Last 24 Hours Performance</h5>
           <div class="perf-inner-cards">
             <div class="perf-sub-card">
               <div class="perf-sub-title">Stock Added</div>
@@ -311,15 +315,15 @@
               <div id="perf24Deposits" class="perf-sub-val text-warning" style="font-size:16px;">0 <span style="font-size: 10.5px; font-weight: normal; color:var(--text-muted);" id="perf24DepAmount">(৳0)</span></div>
             </div>
           </div>
-          <div class="perf-sub-card mt-3">
+          <div class="perf-sub-card mt-2">
             <div class="perf-sub-title">Items Sold</div>
             <div id="perf24Sold" class="perf-sub-val text-success">0</div>
           </div>
         </div>
 
         <div class="perf-box" style="border-color: rgba(16, 185, 129, 0.3);">
-          <h5 class="text-white mb-3" style="font-size: 15px;"><i class="fa-solid fa-calendar-days text-success me-1"></i>Current Month Performance</h5>
-          <div class="perf-inner-cards" style="margin-top: 38px;">
+          <h5 class="text-white mb-2" style="font-size: 15px;"><i class="fa-solid fa-calendar-days text-success me-1"></i>Current Month Performance</h5>
+          <div class="perf-inner-cards">
             <div class="perf-sub-card">
               <div class="perf-sub-title">Stock Added</div>
               <div id="perf30Stock" class="perf-sub-val text-info">0</div>
@@ -540,6 +544,8 @@
             <select id="viewStockCategory" class="form-select" onchange="loadStockMailsByCategory()"></select>
           </div>
           <div class="col-md-7 text-md-end d-flex gap-2 justify-content-md-end flex-wrap">
+            <button class="btn btn-warning px-4 py-3 fw-bold" style="background:linear-gradient(135deg, #f59e0b, #d97706); border:none; border-radius:12px; color:#fff;" onclick="deselectAllStocks()"><i class="fa-solid fa-square-xmark me-1"></i> Deselect All</button>
+            <button class="btn btn-success px-4 py-3" style="background:linear-gradient(135deg, #10b981, #059669); border:none; border-radius:12px;" onclick="copyAllCategoryStocks()"><i class="fa-solid fa-copy me-1"></i> Copy All Category</button>
             <button class="btn btn-primary px-4 py-3" style="background:linear-gradient(135deg, #6366f1, #4f46e5); border:none; border-radius:12px;" onclick="copySelectedStocks()"><i class="fa-solid fa-copy me-1"></i> Copy Selected (<span id="selectedStockCountBadge">0</span>)</button>
             <button class="btn btn-danger px-4 py-3" style="background:linear-gradient(135deg, #ef4444, #dc2626); border:none; border-radius:12px;" onclick="deleteSelectedStocks()"><i class="fa-solid fa-trash me-1"></i> Delete Selected</button>
           </div>
@@ -611,6 +617,15 @@
             <div id="statTotalDepositsCount" class="stat-number">0</div>
           </div>
         </div>
+
+        <div class="stat-card" style="border-color: rgba(16, 185, 129, 0.35);">
+          <div class="stat-icon" style="background:linear-gradient(135deg, #10b981, #059669);"><i class="fa-solid fa-circle-check"></i></div>
+          <div class="stat-info">
+            <div class="stat-title">Approved Deposits</div>
+            <div id="statApprovedDepositsCount" class="stat-number text-success">0</div>
+          </div>
+        </div>
+
         <div class="stat-card" style="border-color: rgba(239, 68, 68, 0.35);">
           <div class="stat-icon" style="background:linear-gradient(135deg, #ef4444, #dc2626);"><i class="fa-solid fa-ban"></i></div>
           <div class="stat-info">
@@ -622,7 +637,7 @@
 
       <div class="card-panel mb-3">
         <div class="row g-2 align-items-center">
-          <div class="col-md-4"><input id="searchTrx" class="form-control" placeholder="Search by TrxID..." oninput="renderDeposits()"></div>
+          <div class="col-md-4"><input id="searchTrx" class="form-control" placeholder="Search by User Email, TrxID or Method..." oninput="renderDeposits()"></div>
           <div class="col-md-3">
             <select id="filterStatus" class="form-select" onchange="renderDeposits()">
               <option value="">All Status</option>
@@ -639,7 +654,7 @@
       <div class="table-card">
         <div style="overflow:auto">
           <table class="styled-table">
-            <thead><tr><th>User</th><th>Method</th><th>Amount</th><th>TrxID & Reason</th><th>Status</th><th style="text-align: right;">Action</th></tr></thead>
+            <thead><tr><th>User</th><th>Method</th><th>Amount</th><th>TrxID & Reason</th><th>Date & Time</th><th>Status</th><th style="text-align: right;">Action</th></tr></thead>
             <tbody id="depositsBody"></tbody>
           </table>
         </div>
@@ -845,12 +860,13 @@
     if(document.getElementById('tab-dashboard').style.display==='block') loadDashboard(); 
     if(document.getElementById('tab-deposits').style.display==='block') renderDeposits();
   });
-  db.ref('users').on('value', snap => { globalUsersCache = snap.val() || {}; });
+  db.ref('users').on('value', snap => { globalUsersCache = snap.val() || {}; if(document.getElementById('tab-users').style.display==='block') renderUsers(); });
   db.ref('categories').on('value', snap => { globalCategoriesCache = snap.val() || {}; if(document.getElementById('tab-categories').style.display==='block') loadCategories(); });
   db.ref('fakeStocks').on('value', snap => { globalFakeStocksCache = snap.val() || {}; if(document.getElementById('tab-stocks').style.display==='block') renderAdminFakeStocks(); });
   db.ref('paymentMethods').on('value', snap => { 
     globalPaymentMethodsCache = snap.val() || {}; 
     if(document.getElementById('tab-dashboard').style.display==='block') updateDashboardPaymentDropdown();
+    if(document.getElementById('tab-payments').style.display==='block') loadPayments();
   });
   db.ref('adminBalanceLogs').on('value', snap => { 
     globalAdminLogsCache = snap.val() || {}; 
@@ -1019,13 +1035,21 @@
     const dBody = document.getElementById('activityDepositsBody');
     dBody.innerHTML = '';
     let matchedDeposits = Object.values(globalDepositsCache).filter(d => d && d.email && d.email.toLowerCase().trim() === queryEmail);
-    matchedDeposits.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+    matchedDeposits.sort((a, b) => (b.requestedAt || b.timestamp || 0) - (a.requestedAt || a.timestamp || 0));
 
     matchedDeposits.forEach(d => {
       const statusBadge = d.status === 'Approved' ? 'badge-approved' : (d.status === 'Rejected' ? 'badge-rejected' : 'badge-pending');
-      let formattedDepDate = d.timestamp ? new Date(d.timestamp).toLocaleString() : (d.date || 'N/A');
+      let reqDateStr = d.requestedAt ? new Date(d.requestedAt).toLocaleString() : (d.timestamp ? new Date(d.timestamp).toLocaleString() : (d.date || 'N/A'));
+      let procDateStr = d.processedAt ? new Date(d.processedAt).toLocaleString() : (d.approvedAt ? new Date(d.approvedAt).toLocaleString() : null);
+      
+      let timeDisplay = `<div class="time-tag time-req"><i class="fa-regular fa-paper-plane me-1"></i>Req: ${escapeHtml(reqDateStr)}</div>`;
+      if(procDateStr) {
+        timeDisplay += `<div class="time-tag time-app"><i class="fa-regular fa-circle-check me-1"></i>Proc: ${escapeHtml(procDateStr)}</div>`;
+      }
+
+      let trxVal = d.trx || d.trxId || d.transactionId || '-';
       let reasonHtml = d.reason ? `<br><small class="text-danger">Reason: ${escapeHtml(d.reason)}</small>` : '';
-      dBody.insertAdjacentHTML('beforeend', `<tr><td data-label="Method"><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td><td data-label="Amount" class="text-success"><strong>৳${d.amount || 0}</strong></td><td data-label="TrxID / Status"><code style="color:#93c5fd">${escapeHtml(d.trx || '-')}</code><br><span class="${statusBadge}" style="font-size:9.5px;">${escapeHtml(d.status || 'Pending')}</span>${reasonHtml}</td><td data-label="Date" style="font-size:11.5px; color:var(--text-muted);">${escapeHtml(formattedDepDate)}</td></tr>`);
+      dBody.insertAdjacentHTML('beforeend', `<tr><td data-label="Method"><span class="provider-pill">${escapeHtml(d.method || '-')}</span></td><td data-label="Amount" class="text-success"><strong>৳${d.amount || 0}</strong></td><td data-label="TrxID / Status"><code style="color:#93c5fd">${escapeHtml(trxVal)}</code><br><span class="${statusBadge}" style="font-size:9.5px;">${escapeHtml(d.status || 'Pending')}</span>${reasonHtml}</td><td data-label="Date">${timeDisplay}</td></tr>`);
     });
     if(!matchedDeposits.length) dBody.innerHTML = '<tr><td colspan="4" class="text-muted text-center">No deposits found</td></tr>';
 
@@ -1040,7 +1064,6 @@
     let catKeys = Object.keys(globalCategoriesCache);
     if(!catKeys.length) { tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No categories found</td></tr>'; return; }
 
-    // Group by Main Category and calculate real stock for each subcategory
     const mainCatMap = {};
     catKeys.forEach(catKey => {
       const c = globalCategoriesCache[catKey];
@@ -1067,12 +1090,10 @@
     let renderedAny = false;
     Object.keys(mainCatMap).forEach((mainCat, index) => {
       const groupData = mainCatMap[mainCat];
-      // Shudhu matro sei main category gulo dekhabe jar total real stock > 0 ache
       if (groupData.totalStock > 0) {
         renderedAny = true;
         const collapseId = 'liveInvGroup_' + index;
         
-        // Main Category Row (Clickable)
         tbody.insertAdjacentHTML('beforeend', `
           <tr class="main-category-row" onclick="toggleLiveInvGroup('${collapseId}', this)">
             <td data-label="Main Category">
@@ -1084,7 +1105,6 @@
           </tr>
         `);
 
-        // Sub Category Rows (Hidden by default, shown on click)
         groupData.subCategories.forEach(sub => {
           tbody.insertAdjacentHTML('beforeend', `
             <tr class="sub-category-row live-sub-${collapseId}" style="display: none;">
@@ -1144,7 +1164,8 @@
     let totalApprovedAmount = 0;
     depositsArr.forEach(dep => {
       if(dep && dep.status === 'Approved') {
-        if(cutoffTime !== 0 && (dep.timestamp || 0) < cutoffTime) return;
+        let depTime = dep.processedAt || dep.approvedAt || dep.timestamp || 0;
+        if(cutoffTime !== 0 && depTime < cutoffTime) return;
         if(paymentFilter !== 'all') {
           let depMethod = (dep.method || '').toLowerCase().trim();
           if(!depMethod.includes(paymentFilter)) return;
@@ -1165,7 +1186,8 @@
 
     let depCount24h = 0, depAmount24h = 0;
     depositsArr.forEach(d => {
-      if(d && d.status === 'Approved' && d.timestamp && d.timestamp >= todayStart) {
+      let depTime = d.processedAt || d.approvedAt || d.timestamp || 0;
+      if(d && d.status === 'Approved' && depTime && depTime >= todayStart) {
         depCount24h++;
         depAmount24h += parseFloat(d.amount || 0);
       }
@@ -1468,6 +1490,37 @@
     updateSelectedStockCount();
   }
 
+  function deselectAllStocks(){
+    document.querySelectorAll('.stock-checkbox').forEach(cb => cb.checked = false);
+    const masterCb = document.getElementById('selectAllStocks');
+    if(masterCb) masterCb.checked = false;
+    updateSelectedStockCount();
+    showToast('All selections cleared!');
+  }
+
+  function copyToClipboardFallback(text) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed";
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      const successful = document.execCommand('copy');
+      if(successful) {
+        showToast('Successfully copied to clipboard!');
+      } else {
+        showToast('Failed to copy text.');
+      }
+    } catch (err) {
+      showToast('Error copying text');
+    }
+    document.body.removeChild(textArea);
+  }
+
   function copySelectedStocks(){
     const checkedBoxes = document.querySelectorAll('.stock-checkbox:checked');
     if(!checkedBoxes.length){ showToast('Please select at least one mail to copy!'); return; }
@@ -1479,11 +1532,41 @@
     });
 
     const textToCopy = detailsList.join('\n');
-    navigator.clipboard.writeText(textToCopy).then(() => {
-      showToast(`Successfully copied ${checkedBoxes.length} mail(s) to clipboard!`);
-    }).catch(err => {
-      showToast('Failed to copy: ' + err.message);
-    });
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast(`Successfully copied ${checkedBoxes.length} mail(s) to clipboard!`);
+      }).catch(() => {
+        copyToClipboardFallback(textToCopy);
+      });
+    } else {
+      copyToClipboardFallback(textToCopy);
+    }
+  }
+
+  function copyAllCategoryStocks(){
+    const selectedCategory = document.getElementById('viewStockCategory').value;
+    if(!selectedCategory) { showToast('Please select a category first!'); return; }
+
+    let detailsList = [];
+    for(let k in globalStocksCache) {
+      const item = globalStocksCache[k];
+      if(item && item.category && item.category.trim() === selectedCategory.trim() && item.status === 'available') {
+        if(item.accountDetails) detailsList.push(item.accountDetails);
+      }
+    }
+
+    if(!detailsList.length) { showToast('No available mails to copy in this category!'); return; }
+
+    const textToCopy = detailsList.join('\n');
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        showToast(`Successfully copied all ${detailsList.length} mail(s) from category!`);
+      }).catch(() => {
+        copyToClipboardFallback(textToCopy);
+      });
+    } else {
+      copyToClipboardFallback(textToCopy);
+    }
   }
 
   function loadPriceUpdateOptions(){
@@ -1654,70 +1737,101 @@
     const keys=Object.keys(globalDepositsCache); 
 
     let totalDepositsCount = keys.length;
+    let approvedDepositsCount = 0;
     let rejectedDepositsCount = 0;
 
     keys.forEach(k => {
       let d = globalDepositsCache[k];
-      if(d && d.status === 'Rejected') rejectedDepositsCount++;
+      if(d) {
+        if(d.status === 'Approved') approvedDepositsCount++;
+        if(d.status === 'Rejected') rejectedDepositsCount++;
+      }
     });
 
     document.getElementById('statTotalDepositsCount').innerText = totalDepositsCount;
+    document.getElementById('statApprovedDepositsCount').innerText = approvedDepositsCount;
     document.getElementById('statRejectedDepositsCount').innerText = rejectedDepositsCount;
 
-    if(!keys.length){ body.innerHTML='<tr><td colspan="6" class="text-muted text-center py-4">No deposits found</td></tr>'; return; }
+    if(!keys.length){ body.innerHTML='<tr><td colspan="7" class="text-muted text-center py-4">No deposits found</td></tr>'; return; }
     
     keys.reverse().forEach(k=>{ 
       const d=globalDepositsCache[k]; 
       if(status && d.status!==status) return; 
-      if(q && !String(d.trx||'').toLowerCase().includes(q)) return;
+      
+      const emailVal = String(d.email || d.user || d.username || '').toLowerCase();
+      const trxVal = String(d.trx || d.trxId || d.transactionId || '').toLowerCase();
+      const methodVal = String(d.method || '').toLowerCase();
+
+      if(q && !trxVal.includes(q) && !emailVal.includes(q) && !methodVal.includes(q)) return;
       
       const statusHtml = d.status==='Approved' ? '<span class="badge-approved">Approved</span>' : (d.status==='Rejected' ? `<span class="badge-rejected">Rejected</span>`:'<span class="badge-pending">Pending</span>');
       let reasonInfo = d.reason ? `<br><small class="text-danger">Reason: ${escapeHtml(d.reason)}</small>` : '';
-      let formattedDepDate = d.timestamp ? new Date(d.timestamp).toLocaleString() : (d.date || 'N/A');
       
-      body.insertAdjacentHTML('beforeend', `<tr><td data-label="User">${escapeHtml(d.email||'')}</td><td data-label="Method"><span class="provider-pill">${escapeHtml(d.method||'')}</span></td><td data-label="Amount" class="text-success fw-bold">৳${d.amount||0}</td><td data-label="TrxID & Reason"><code style="color:#93c5fd">${escapeHtml(d.trx||'')}</code>${reasonInfo}<br><small style="color:var(--text-muted); font-size:10.5px;"><i class="fa-regular fa-clock me-1"></i>${escapeHtml(formattedDepDate)}</small></td><td data-label="Status">${statusHtml}</td><td data-label="Action" style="text-align: right;">${d.status==='Pending'?`<div class="btn-action-group justify-content-end"><button class="btn-deposit-approve" onclick="approveDeposit('${k}','${escapeHtml(d.email)}','${d.amount}')"><i class="fa-solid fa-check"></i> Approve</button><button class="btn-deposit-reject" onclick="rejectDeposit('${k}')"><i class="fa-solid fa-xmark"></i> Reject</button></div>`:'<span style="color:var(--text-muted);">Completed</span>'}</td></tr>`);
+      let reqTime = d.requestedAt || d.requestTime || d.timestamp;
+      let reqDateStr = reqTime ? new Date(reqTime).toLocaleString() : (d.date || 'N/A');
+      
+      let procTime = d.processedAt || d.approvedAt || d.rejectedAt;
+      let procDateStr = procTime ? new Date(procTime).toLocaleString() : null;
+
+      let timeCellHtml = `<div class="time-tag time-req"><i class="fa-regular fa-paper-plane me-1"></i>Req: ${escapeHtml(reqDateStr)}</div>`;
+      if(procDateStr) {
+        timeCellHtml += `<div class="time-tag time-app"><i class="fa-regular fa-circle-check me-1"></i>Proc: ${escapeHtml(procDateStr)}</div>`;
+      }
+
+      const actions = d.status==='Pending' ? `<div class="btn-action-group"><button class="btn-deposit-approve" onclick="approveDeposit('${k}')"><i class="fa-solid fa-check me-1"></i>Approve</button><button class="btn-deposit-reject" onclick="rejectDeposit('${k}')"><i class="fa-solid fa-xmark me-1"></i>Reject</button></div>` : '-';
+      body.insertAdjacentHTML('beforeend', `<tr><td data-label="User">${escapeHtml(emailVal)}</td><td data-label="Method"><span class="provider-pill">${escapeHtml(d.method||'N/A')}</span></td><td data-label="Amount" class="text-success fw-bold">৳${d.amount||0}</td><td data-label="TrxID & Reason"><code>${escapeHtml(trxVal)}</code>${reasonInfo}</td><td data-label="Date & Time">${timeCellHtml}</td><td data-label="Status">${statusHtml}</td><td data-label="Action" style="text-align: right;">${actions}</td></tr>`);
     });
   }
 
-  function approveDeposit(key, email, amount){
-    const safeKey = email.toLowerCase().trim().replace(/[@.]/g, '_');
-    const addAmt = parseFloat(amount);
-    db.ref(`balances/${safeKey}`).once('value', snap => {
-      const newBal = parseFloat(((parseFloat(snap.val() || 0)) + addAmt).toFixed(2));
-      db.ref(`balances/${safeKey}`).set(newBal).then(() => {
-        db.ref(`deposits/${key}`).update({ status: 'Approved', timestamp: Date.now() }).then(() => {
-          showToast('Deposit approved successfully with time & date');
+  function approveDeposit(key){
+    const d=globalDepositsCache[key]; if(!d) return;
+    const userEmail = d.email || d.user || d.username;
+    if(!userEmail) { showToast('Invalid user email'); return; }
+    
+    const safeKey = userEmail.toLowerCase().trim().replace(/[@.]/g, '_');
+    const amt = parseFloat(d.amount || 0);
+
+    db.ref(`balances/${safeKey}`).transaction(cur => (cur || 0) + amt, (err, committed) => {
+      if(committed) {
+        db.ref(`deposits/${key}`).update({ status: 'Approved', processedAt: Date.now() }).then(() => {
+          showToast('Deposit approved and balance added!');
         });
-      });
+      } else {
+        showToast('Transaction failed');
+      }
     });
   }
 
-  function rejectDeposit(key){ 
-    const reason = prompt('Enter rejection reason for this deposit:');
-    if(reason === null) return;
-    db.ref(`deposits/${key}`).update({ status: 'Rejected', reason: reason.trim(), timestamp: Date.now() }).then(() => {
-      showToast('Deposit rejected with reason, time & date');
-      renderDeposits();
-    }).catch(err => {
-      showToast('Failed to reject: ' + err.message);
+  function rejectDeposit(key){
+    const reason = prompt('Enter rejection reason (optional):') || 'Transaction ID not matched';
+    db.ref(`deposits/${key}`).update({ status: 'Rejected', reason: reason, processedAt: Date.now() }).then(() => {
+      showToast('Deposit request rejected');
     });
   }
 
   function loadPayments(){
-    db.ref('paymentMethods').once('value', snap => {
-      const methods = snap.val() || {};
-      const tbody = document.getElementById('paymentsBody');
-      tbody.innerHTML = '';
-      let keys = Object.keys(methods);
-      if(!keys.length) { tbody.innerHTML = '<tr><td colspan="5" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
-      keys.forEach(k => {
-        const m = methods[k];
-        tbody.insertAdjacentHTML('beforeend', `<tr><td data-label="Name"><strong class="text-white">${escapeHtml(m.name)}</strong></td><td data-label="Type">${escapeHtml(m.type)}</td><td data-label="Number"><code>${escapeHtml(m.number)}</code></td><td data-label="Logo URL"><code>${escapeHtml(m.logo || 'No Logo')}</code></td><td data-label="Action" style="text-align:right;"><button class="btn-edit-subcat" onclick="openEditPaymentModal('${k}', '${escapeHtml(m.name)}', '${escapeHtml(m.type)}', '${escapeHtml(m.number)}', '${escapeHtml(m.logo || '')}')"><i class="fa-solid fa-pen"></i></button><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
-      });
+    const body=document.getElementById('paymentsBody'); body.innerHTML='';
+    const keys=Object.keys(globalPaymentMethodsCache);
+    if(!keys.length){ body.innerHTML='<tr><td colspan="5" class="text-muted text-center py-4">No payment methods found</td></tr>'; return; }
+    keys.forEach(k=>{
+      const p=globalPaymentMethodsCache[k];
+      body.insertAdjacentHTML('beforeend', `<tr><td data-label="Name"><strong>${escapeHtml(p.name)}</strong></td><td data-label="Type">${escapeHtml(p.type)}</td><td data-label="Number"><code>${escapeHtml(p.number)}</code></td><td data-label="Logo URL" style="font-size:11px; max-width:180px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${escapeHtml(p.logo||'-')}</td><td data-label="Action" style="text-align:right;"><button class="btn-edit-subcat" onclick="openEditPaymentModal('${k}', '${escapeHtml(p.name)}', '${escapeHtml(p.type)}', '${escapeHtml(p.number)}', '${escapeHtml(p.logo||'')}')"><i class="fa-solid fa-pen"></i></button><button class="btn-delete" onclick="removePayment('${k}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
     });
   }
 
-  function openEditPaymentModal(key, name, type, number, logo) {
+  function addPayment(){
+    const name=document.getElementById('payName').value.trim();
+    const type=document.getElementById('payType').value;
+    const number=document.getElementById('payNumber').value.trim();
+    const logo=document.getElementById('payLogo').value.trim();
+    if(!name||!number){ showToast('Enter name & account number'); return; }
+    db.ref('paymentMethods').push({name:name, type:type, number:number, logo:logo}).then(()=>{
+      document.getElementById('payName').value=''; document.getElementById('payNumber').value=''; document.getElementById('payLogo').value='';
+      showToast('Payment method added');
+    });
+  }
+
+  function openEditPaymentModal(key, name, type, number, logo){
     document.getElementById('editPaymentKey').value = key;
     document.getElementById('editPayName').value = name;
     document.getElementById('editPayType').value = type;
@@ -1726,90 +1840,98 @@
     new bootstrap.Modal(document.getElementById('editPaymentModal')).show();
   }
 
-  function saveEditedPayment() {
+  function saveEditedPayment(){
     const key = document.getElementById('editPaymentKey').value;
     const name = document.getElementById('editPayName').value.trim();
-    const type = document.getElementById('editPayType').value.trim();
+    const type = document.getElementById('editPayType').value;
     const number = document.getElementById('editPayNumber').value.trim();
     const logo = document.getElementById('editPayLogo').value.trim();
-    if(!name || !number) { showToast('Enter name and number'); return; }
 
-    db.ref(`paymentMethods/${key}`).update({ name, type, number, logo }).then(() => {
+    if(!name || !number) { showToast('Name and Number required'); return; }
+
+    db.ref(`paymentMethods/${key}`).update({ name: name, type: type, number: number, logo: logo }).then(() => {
       bootstrap.Modal.getInstance(document.getElementById('editPaymentModal')).hide();
-      showToast('Payment method updated successfully!');
-      loadPayments();
-      updateDashboardPaymentDropdown();
+      showToast('Payment method updated!');
     });
   }
 
-  function addPayment(){
-    const name = document.getElementById('payName').value.trim();
-    const type = document.getElementById('payType').value.trim();
-    const number = document.getElementById('payNumber').value.trim();
-    const logo = document.getElementById('payLogo').value.trim();
-    if(!name || !number) { showToast('Enter name and number'); return; }
-    db.ref('paymentMethods').push({ name, type, number, logo }).then(() => { 
-      showToast('Added successfully'); 
-      loadPayments(); 
-      updateDashboardPaymentDropdown();
-    });
-  }
-  function removePayment(key){ 
-    if(confirm('Delete?')) db.ref(`paymentMethods/${key}`).remove().then(() => { loadPayments(); updateDashboardPaymentDropdown(); }); 
+  function removePayment(key){ if(confirm('Remove payment method?')) db.ref(`paymentMethods/${key}`).remove(); }
+
+  function saveUserNotification(){
+    const msg = document.getElementById('adminNotificationInput').value.trim();
+    db.ref('settings/userNotification').set(msg).then(() => showToast('Notification broadcast updated!'));
   }
 
-  function saveSupport(){ db.ref('settings/supportTelegram').set(document.getElementById('supportInput').value.trim()).then(() => showToast('Saved')); }
-  function loadSupport(){ db.ref('settings/supportTelegram').once('value', snap => { if(snap.exists()) document.getElementById('supportInput').value = snap.val(); }); }
+  function clearUserNotification(){
+    document.getElementById('adminNotificationInput').value = '';
+    db.ref('settings/userNotification').set('').then(() => showToast('Notification cleared!'));
+  }
+
+  function loadUserNotificationSetting(){
+    db.ref('settings/userNotification').once('value', snap => {
+      document.getElementById('adminNotificationInput').value = snap.val() || '';
+    });
+  }
 
   function saveBinanceRate(){
     const rate = parseFloat(document.getElementById('binanceRateInput').value);
-    if(isNaN(rate) || rate <= 0) { showToast('Enter valid rate'); return; }
-    db.ref('settings/binanceRate').set(rate).then(() => showToast('Saved'));
+    if(isNaN(rate) || rate <= 0) { showToast('Please enter a valid rate'); return; }
+    db.ref('settings/binanceRate').set(rate).then(() => showToast('Dollar rate saved!'));
   }
-  function loadBinanceRateSettings(){ db.ref('settings/binanceRate').once('value', snap => { if(snap.exists()) document.getElementById('binanceRateInput').value = snap.val(); }); }
 
-  function saveUserNotification(){
-    const text = document.getElementById('adminNotificationInput').value.trim();
-    if(!text) { showToast('Enter message'); return; }
-    db.ref('settings/userNotification').set(text).then(() => showToast('Notification broadcasted'));
+  function loadBinanceRateSettings(){
+    db.ref('settings/binanceRate').once('value', snap => {
+      document.getElementById('binanceRateInput').value = snap.val() || '';
+    });
   }
-  function clearUserNotification(){ db.ref('settings/userNotification').set('').then(() => showToast('Cleared')); }
-  function loadUserNotificationSetting(){ db.ref('settings/userNotification').once('value', snap => { if(snap.exists()) document.getElementById('adminNotificationInput').value = snap.val(); }); }
+
+  function saveSupport(){
+    const sup = document.getElementById('supportInput').value.trim();
+    db.ref('settings/support').set(sup).then(() => showToast('Support updated!'));
+  }
+
+  function loadSupport(){
+    db.ref('settings/support').once('value', snap => {
+      document.getElementById('supportInput').value = snap.val() || '';
+    });
+  }
 
   function loadUsers(){ renderUsers(); }
+
   function renderUsers(){
     const q = (document.getElementById('searchUserGmail').value || '').trim().toLowerCase();
-    const tbody = document.getElementById('usersBody');
-    tbody.innerHTML = '';
+    const body = document.getElementById('usersBody');
+    body.innerHTML = '';
     
-    let uniqueUsersMap = new Map();
-    Object.entries(globalUsersCache).filter(([_, u]) => u && u.email).forEach(([key, u]) => {
-      const cleanEmail = u.email.toLowerCase().trim();
-      if (!uniqueUsersMap.has(cleanEmail)) {
-        uniqueUsersMap.set(cleanEmail, { safeKey: cleanEmail.replace(/[@.]/g, '_'), email: cleanEmail, originalEmail: u.email });
-      }
-    });
-
-    db.ref('balances').once('value', balSnap => {
-      const balancesData = balSnap.val() || {};
-      tbody.innerHTML = '';
-      let found = 0;
-
-      Array.from(uniqueUsersMap.values()).forEach((u) => {
-        if(q && !u.email.includes(q)) return;
-        found++;
-        const bal = balancesData[u.safeKey] / 1 || 0;
-        tbody.insertAdjacentHTML('beforeend', `<tr><td data-label="Email"><strong class="text-white">${escapeHtml(u.originalEmail)}</strong></td><td data-label="Balance"><strong class="text-success">৳${bal}</strong></td><td data-label="Action"><button class="btn btn-sm btn-outline-warning rounded-pill px-3 py-1 me-1" onclick="openBalanceModal('${u.safeKey}', '${escapeHtml(u.originalEmail)}', ${bal})"><i class="fa-solid fa-calculator me-1"></i> Balance</button><button class="btn btn-sm btn-danger rounded-pill px-3 py-1" onclick="deleteUser('${u.safeKey}', '${escapeHtml(u.originalEmail)}')"><i class="fa-solid fa-trash"></i></button></td></tr>`);
+    let userEmails = new Set();
+    Object.values(globalUsersCache).forEach(u => { if(u && u.email) userEmails.add(u.email.toLowerCase().trim()); });
+    
+    db.ref('balances').once('value', snap => {
+      const balances = snap.val() || {};
+      Object.keys(balances).forEach(safeKey => {
+        let reconstructedEmail = safeKey.replace(/_/g, '.');
+        if(reconstructedEmail.includes('.')) {
+          let lastDot = reconstructedEmail.lastIndexOf('.');
+          reconstructedEmail = reconstructedEmail.substring(0, lastDot) + '@' + reconstructedEmail.substring(lastDot + 1);
+        }
+        userEmails.add(reconstructedEmail.toLowerCase().trim());
       });
-      if(!found) tbody.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No matching users found</td></tr>';
+
+      let arr = Array.from(userEmails);
+      if(!arr.length) { body.innerHTML = '<tr><td colspan="3" class="text-muted text-center py-4">No users found</td></tr>'; return; }
+
+      arr.forEach(email => {
+        if(q && !email.includes(q)) return;
+        const safeKey = email.replace(/[@.]/g, '_');
+        const bal = balances[safeKey] || 0;
+        body.insertAdjacentHTML('beforeend', `<tr><td data-label="Email">${escapeHtml(email)}</td><td data-label="Balance" class="text-success fw-bold">৳${bal}</td><td data-label="Action"><button class="btn btn-sm btn-primary px-3 rounded-2" onclick="openBalanceModal('${escapeHtml(email)}', ${bal})"><i class="fa-solid fa-wallet me-1"></i> Manage Balance</button></td></tr>`);
+      });
     });
   }
 
-  let currentEditingUserKey = null;
-  let currentEditingUserEmail = null;
-  function openBalanceModal(safeKey, email, currentBal){
-    currentEditingUserKey = safeKey;
-    currentEditingUserEmail = email;
+  let selectedUserEmailForBalance = '';
+  function openBalanceModal(email, currentBal){
+    selectedUserEmailForBalance = email;
     document.getElementById('modalUserEmailLabel').innerText = 'User: ' + email;
     document.getElementById('modalCurrentBalance').innerText = '৳' + currentBal;
     document.getElementById('balanceInputAmount').value = '';
@@ -1817,39 +1939,30 @@
   }
 
   function modifyUserBalance(action){
-    if(!currentEditingUserKey) return;
-    const inputVal = parseFloat(document.getElementById('balanceInputAmount').value);
-    if(isNaN(inputVal) || inputVal <= 0){ showToast('Enter valid amount'); return; }
+    const amt = parseFloat(document.getElementById('balanceInputAmount').value);
+    if(isNaN(amt) || amt <= 0){ showToast('Enter valid amount'); return; }
+    
+    const safeKey = selectedUserEmailForBalance.toLowerCase().trim().replace(/[@.]/g, '_');
+    const changeAmt = action === 'plus' ? amt : -amt;
 
-    db.ref(`balances/${currentEditingUserKey}`).once('value', snap => {
-      let currentBal = parseFloat(snap.val() || 0);
-      let newBal = action === 'plus' ? currentBal + inputVal : currentBal - inputVal;
-      if(newBal < 0) newBal = 0;
-
-      db.ref(`balances/${currentEditingUserKey}`).set(newBal).then(() => {
-        const logKey = db.ref('adminBalanceLogs').push().key;
-        db.ref(`adminBalanceLogs/${logKey}`).set({
-          user: currentEditingUserEmail,
+    db.ref(`balances/${safeKey}`).transaction(cur => {
+      let finalVal = (cur || 0) + changeAmt;
+      return finalVal < 0 ? 0 : finalVal;
+    }, (err, committed, snap) => {
+      if(committed) {
+        db.ref('adminBalanceLogs').push({
+          user: selectedUserEmailForBalance,
           action: action,
-          amount: inputVal,
+          amount: amt,
           timestamp: Date.now()
         });
         bootstrap.Modal.getInstance(document.getElementById('balanceModal')).hide();
         showToast('Balance updated successfully!');
-        loadUsers();
-      });
+        renderUsers();
+      } else {
+        showToast('Balance update failed');
+      }
     });
-  }
-
-  function deleteUser(safeKey, email){
-    if(confirm(`Are you sure you want to delete user ${email}?`)){
-      let updates = {};
-      updates[`balances/${safeKey}`] = null;
-      db.ref().update(updates).then(() => {
-        showToast('User balance removed successfully');
-        loadUsers();
-      });
-    }
   }
 </script>
 </body>
