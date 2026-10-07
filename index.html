@@ -190,79 +190,143 @@
         }
         .main-content { padding: 20px; max-width: 1100px; margin: 0 auto; }
         
+        /* Updated Top Horizontal Categories Layout */
         .shop-layout-container {
             display: flex;
+            flex-direction: column;
             gap: 20px;
-            align-items: flex-start;
+            width: 100%;
         }
-        .sidebar-categories {
-            width: 260px;
-            flex-shrink: 0;
+
+        .top-categories-bar {
+            width: 100%;
             background: var(--card-bg);
             backdrop-filter: blur(16px);
             border: 1px solid var(--border-color);
-            border-radius: 22px;
-            padding: 16px;
-            box-shadow: 0 15px 35px var(--shadow-color);
-            position: sticky;
-            top: 75px;
+            border-radius: 20px;
+            padding: 14px 18px;
+            box-shadow: 0 10px 30px var(--shadow-color);
+            position: relative;
         }
-        .sidebar-categories h6 {
+
+        .top-categories-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .top-categories-header h6 {
             font-size: 12.5px;
             text-transform: uppercase;
             letter-spacing: 0.8px;
             color: #38bdf8;
-            margin-bottom: 14px;
-            padding-left: 8px;
+            margin: 0;
             font-weight: 800;
         }
+
+        .scroll-hint-badge {
+            font-size: 11px;
+            color: var(--text-sub);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: rgba(56, 189, 248, 0.08);
+            padding: 4px 10px;
+            border-radius: 20px;
+            border: 1px solid rgba(56, 189, 248, 0.15);
+        }
+
+        .categories-scroll-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
         .main-categories-wrapper { 
             display: flex; 
-            flex-direction: column; 
-            gap: 8px; 
-            scrollbar-width: thin; 
+            flex-direction: row; 
+            gap: 10px; 
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 4px 0;
+            scrollbar-width: none; /* Firefox */
+            -ms-overflow-style: none; /* IE & Edge */
+            width: 100%;
         }
+
+        .main-categories-wrapper::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, Opera */
+        }
+
+        .scroll-arrow-btn {
+            background: rgba(14, 165, 233, 0.25);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #ffffff;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .scroll-arrow-btn:hover {
+            background: rgba(14, 165, 233, 0.8);
+            transform: scale(1.1);
+        }
+
+        .scroll-arrow-btn.left { margin-right: 8px; }
+        .scroll-arrow-btn.right { margin-left: 8px; }
+
         .main-category-pill {
-            background-color: transparent;
-            border: none;
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--text-sub); 
-            padding: 12px 16px; 
-            border-radius: 14px; 
+            padding: 10px 18px; 
+            border-radius: 12px; 
             font-weight: 600; 
-            font-size: 14px; 
+            font-size: 13.5px; 
             cursor: pointer; 
             transition: all 0.3s ease; 
             display: flex; 
-            align-items: flex-start; 
-            gap: 12px;
-            width: 100%;
-            text-align: left;
+            align-items: center; 
+            gap: 8px;
+            white-space: nowrap;
+            flex-shrink: 0;
             text-decoration: none;
-            white-space: normal;
-            word-break: break-word;
         }
+        
         .main-category-pill:hover { 
             color: var(--text-main); 
-            background: rgba(56, 189, 248, 0.1); 
-            transform: translateX(4px);
+            background: rgba(56, 189, 248, 0.12); 
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-2px);
         }
 
-        .main-category-pill.active { background: linear-gradient(135deg, #0ea5e9, #0284c7); color: #fff; box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45); }
+        .main-category-pill.active { 
+            background: linear-gradient(135deg, #0ea5e9, #0284c7); 
+            color: #fff; 
+            border-color: transparent;
+            box-shadow: 0 6px 20px rgba(14, 165, 233, 0.45); 
+        }
 
         .shop-content-area {
-            flex-grow: 1;
             width: 100%;
             min-width: 0;
         }
         .shop-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; }
 
         @media (max-width: 768px) {
-            .shop-layout-container { flex-direction: row; gap: 12px; align-items: flex-start; }
-            .sidebar-categories { width: 160px; min-width: 160px; padding: 12px; position: sticky; top: 75px; }
-            .sidebar-categories h6 { font-size: 11px; padding-left: 4px; margin-bottom: 8px; }
-            .main-category-pill { padding: 9px 10px; font-size: 11.5px; gap: 6px; border-radius: 10px; }
-            .main-category-pill i { font-size: 13px; margin-top: 2px; }
             .shop-grid { grid-template-columns: 1fr; }
+            .top-categories-bar { padding: 12px; }
+            .main-category-pill { padding: 8px 14px; font-size: 12.5px; }
+            .scroll-arrow-btn { width: 30px; height: 30px; font-size: 12px; }
         }
 
         .card-box { 
@@ -775,10 +839,23 @@
     <div class="main-content">
         <div id="user-section-home" class="section-pane active">
             <div class="shop-layout-container">
-                <div class="sidebar-categories">
-                    <h6>Categories</h6>
-                    <div id="main-categories-container" class="main-categories-wrapper"></div>
+                <!-- TOP HORIZONTAL CATEGORIES CONTAINER WITH ARROWS -->
+                <div class="top-categories-bar">
+                    <div class="top-categories-header">
+                        <h6>Categories</h6>
+                        <span class="scroll-hint-badge"><i class="fa-solid fa-arrows-left-right me-1"></i> Scroll to view more</span>
+                    </div>
+                    <div class="categories-scroll-wrapper">
+                        <button class="scroll-arrow-btn left" onclick="scrollCategories(-180)" title="Scroll Left">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div id="main-categories-container" class="main-categories-wrapper"></div>
+                        <button class="scroll-arrow-btn right" onclick="scrollCategories(180)" title="Scroll Right">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                    </div>
                 </div>
+
                 <div class="shop-content-area">
                     <div class="shop-grid" id="user-shop-subcategories-grid"></div>
                 </div>
@@ -978,6 +1055,13 @@
     document.getElementById('signInSlideBtn').addEventListener('click', () => {
         authMainContainer.classList.remove("right-panel-active");
     });
+
+    function scrollCategories(distance) {
+        const container = document.getElementById('main-categories-container');
+        if (container) {
+            container.scrollBy({ left: distance, behavior: 'smooth' });
+        }
+    }
 
     function togglePasswordVisibility(fieldId, icon) {
         const field = document.getElementById(fieldId);
@@ -1796,7 +1880,6 @@
     }
 
     function backToDepositStep1() {
-        document.getElementById('deposit-step-1').style.display.style = 'flex';
         document.getElementById('deposit-step-1').style.display = 'flex';
         document.getElementById('deposit-step-2').style.display = 'none';
     }
@@ -1812,7 +1895,6 @@
         let nameLower = selectedPaymentMethodData.name.toLowerCase();
         let isBdtMethod = ['bkash', 'nagad', 'rocket', 'upay'].some(m => nameLower.includes(m));
         
-        // Fix: Properly calculate USD and BDT amounts based on the selected method type
         let finalUsdAmount = isBdtMethod ? (amount / currentBinanceRate) : amount;
         let finalBdtAmount = isBdtMethod ? amount : (amount * currentBinanceRate);
 
