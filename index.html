@@ -190,7 +190,7 @@
         }
         .main-content { padding: 20px; max-width: 1100px; margin: 0 auto; }
         
-        /* Updated Top Horizontal Categories Layout */
+        /* Top Horizontal Categories Layout */
         .shop-layout-container {
             display: flex;
             flex-direction: column;
@@ -250,13 +250,13 @@
             overflow-x: auto;
             scroll-behavior: smooth;
             padding: 4px 0;
-            scrollbar-width: none; /* Firefox */
-            -ms-overflow-style: none; /* IE & Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
             width: 100%;
         }
 
         .main-categories-wrapper::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, Opera */
+            display: none;
         }
 
         .scroll-arrow-btn {
@@ -481,20 +481,42 @@
         .qty-input { background: transparent; border: none; color: var(--text-main); width: 65px; text-align: center; font-weight: bold; font-size: 16px; outline: none; }
 
         .custom-alert-overlay {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 7, 18, 0.88); backdrop-filter: blur(12px); z-index: 999999; display: none; justify-content: center; align-items: center; padding: 20px;
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(3, 7, 18, 0.88); backdrop-filter: blur(12px); z-index: 999999; display: none; justify-content: center; align-items: center; padding: 16px;
         }
         
+        /* IMPROVED ALERT BOX DESIGN */
         .custom-alert-box { 
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(9, 14, 26, 0.99)); 
             backdrop-filter: blur(24px);
-            border: 1px solid rgba(56, 189, 248, 0.3); 
-            border-radius: 30px; 
-            width: 100%; max-width: 440px; max-height: 88vh; 
-            overflow-y: auto; padding: 24px 26px 28px 26px; 
-            box-shadow: 0 35px 80px rgba(0, 0, 0, 0.9), 0 0 35px rgba(14, 165, 233, 0.15); 
+            border: 1px solid rgba(56, 189, 248, 0.35); 
+            border-radius: 24px; 
+            width: 100%; max-width: 410px; max-height: 90vh; 
+            overflow-y: auto; padding: 22px 24px; 
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.95), 0 0 35px rgba(14, 165, 233, 0.2); 
             margin: auto; 
             word-break: break-word;
+            position: relative;
         }
+
+        .btn-close-custom-corner {
+            position: absolute;
+            top: 16px;
+            right: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-sub);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+        .btn-close-custom-corner:hover { color: #fff; background: rgba(239, 68, 68, 0.2); border-color: rgba(239, 68, 68, 0.4); }
 
         .modal-display-box { 
             background: rgba(3, 7, 18, 0.7); 
@@ -604,12 +626,11 @@
         }
 
         @keyframes popupBounceIn {
-            0% { opacity: 0; transform: scale(0.7) translateY(-30px); }
-            60% { opacity: 1; transform: scale(1.05) translateY(10px); }
+            0% { opacity: 0; transform: scale(0.85) translateY(-10px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
         .custom-alert-box {
-            animation: popupBounceIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            animation: popupBounceIn 0.25s ease-out forwards;
         }
 
         @keyframes pulseRedCross {
@@ -623,7 +644,7 @@
 
         @keyframes iconPulseAnimation {
             0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.5); }
-            50% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(56, 189, 248, 0); }
+            50% { transform: scale(1.08); box-shadow: 0 0 0 8px rgba(56, 189, 248, 0); }
         }
         .premium-icon-pulse {
             animation: iconPulseAnimation 2s infinite ease-in-out;
@@ -640,26 +661,32 @@
 </head>
 <body>
 
+<!-- OPTIMIZED & FIXED NOTIFICATION MODAL -->
 <div id="custom-alert-overlay" class="custom-alert-overlay">
-    <div class="custom-alert-box text-center" style="max-width: 440px;">
-        <div class="d-flex justify-content-end mb-1">
-            <button onclick="closeCustomAlert()" class="btn-close-custom"><i class="fa-solid fa-xmark"></i></button>
-        </div>
-        <div class="d-flex align-items-center justify-content-center gap-3 mb-3 px-1">
-            <div id="alert-icon-wrapper" class="d-inline-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10 text-info shadow-sm flex-shrink-0 premium-icon-pulse" style="width: 52px; height: 52px; font-size: 22px; border: 1.5px solid rgba(56,189,248,0.4);">
+    <div class="custom-alert-box">
+        <!-- Close Button Top Corner -->
+        <button onclick="closeCustomAlert()" class="btn-close-custom-corner" title="Close"><i class="fa-solid fa-xmark"></i></button>
+
+        <!-- Fixed Header Row (Icon + Title with Clear Separation) -->
+        <div class="d-flex align-items-center mb-3 pe-4" style="gap: 12px;">
+            <div id="alert-icon-wrapper" class="d-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10 text-info shadow-sm flex-shrink-0 premium-icon-pulse" style="width: 44px; height: 44px; font-size: 19px; border: 1.5px solid rgba(56,189,248,0.4);">
                 <i id="alert-main-icon" class="fa-solid fa-bullhorn"></i>
             </div>
-            <h4 id="alert-title-text" class="fw-bold text-main m-0 text-start" style="letter-spacing: 0.3px; font-size: 19px;">Important Notice</h4>
+            <h5 id="alert-title-text" class="fw-bold text-main m-0 text-start" style="letter-spacing: 0.3px; font-size: 17px; line-height: 1.3;">Important Notice</h5>
         </div>
-        <div id="custom-alert-message" class="py-2.5 mb-4 fw-semibold text-main text-start" style="font-size: 14px; line-height: 1.7; background: rgba(255,255,255,0.04); padding: 16px 20px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); word-break: break-word;"></div>
-        <button onclick="closeCustomAlert()" class="btn btn-success rounded-pill px-5 fw-bold py-3 shadow w-100" id="alert-action-btn" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); border: none; font-size: 15px; letter-spacing: 0.5px;">
-            <i class="fa-solid fa-check me-1"></i> Got it!
+
+        <!-- Improved Message Box -->
+        <div id="custom-alert-message" class="mb-3.5 fw-semibold text-main text-start" style="font-size: 13.5px; line-height: 1.6; background: rgba(255,255,255,0.035); padding: 14px 16px; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 2px 4px rgba(0,0,0,0.3); word-break: break-word;"></div>
+
+        <!-- Centered Action Button -->
+        <button onclick="closeCustomAlert()" class="btn btn-success rounded-pill px-4 fw-bold py-2.5 shadow w-100 d-flex align-items-center justify-content-center gap-2" id="alert-action-btn" style="background: linear-gradient(135deg, #0ea5e9, #3b82f6); border: none; font-size: 14px; letter-spacing: 0.3px;">
+            <i class="fa-solid fa-check"></i> <span>Got it!</span>
         </button>
     </div>
 </div>
 
 <div id="purchase-modal-overlay" class="custom-alert-overlay">
-    <div class="custom-alert-box position-relative" id="purchase-modal-box-theme">
+    <div class="custom-alert-box position-relative" id="purchase-modal-box-theme" style="max-width: 440px;">
         <div id="modal-error-banner" class="alert alert-danger py-2 px-3 mb-3 text-center fw-bold shadow-sm" style="display: none; font-size: 13.5px; border-radius: 12px; word-break: break-word;"></div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span class="fw-extrabold fs-5 text-main" style="letter-spacing: 0.5px;"><i class="fa-solid fa-cart-shopping me-2" id="modal-title-icon"></i>Confirm Purchase</span>
@@ -866,11 +893,11 @@
         <div id="user-section-deposit" class="section-pane">
             <div id="deposit-step-1" class="card-box" style="background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(8, 14, 28, 0.99)); border: 1px solid rgba(56, 189, 248, 0.22); border-radius: 28px; padding: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.85);">
                 
-                <!-- Deposit Limit Banner -->
+                <!-- Deposit Limit Banner (Updated to ৳25 BDT) -->
                 <div class="p-3.5 rounded-4 mb-4 d-flex justify-content-between align-items-center shadow-sm flex-wrap gap-2" style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.15);">
                     <div>
                         <div class="text-sub" style="font-size: 11.5px; font-weight: 700; letter-spacing: 0.5px;">DEPOSIT LIMIT</div>
-                        <div class="fw-bold text-info fs-5 mt-0.5" id="min-deposit-text" style="color: #38bdf8 !important;">Minimum Deposit ৳20</div>
+                        <div class="fw-bold text-info fs-5 mt-0.5" id="min-deposit-text" style="color: #38bdf8 !important;">Minimum Deposit ৳25</div>
                     </div>
                     <div class="text-info bg-info bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 42px; height: 42px;"><i class="fa-solid fa-shield-halved" style="font-size: 18px;"></i></div>
                 </div>
@@ -897,7 +924,7 @@
                 </button>
             </div>
 
-            <!-- Deposit Step 2: Clean Instructions with Auto-Adjust & Close Copy Buttons -->
+            <!-- Deposit Step 2 -->
             <div id="deposit-step-2" class="card-box" style="display: none; background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(8, 14, 28, 0.99)); border: 1px solid rgba(56, 189, 248, 0.22); border-radius: 28px; padding: 30px; box-shadow: 0 25px 50px rgba(0,0,0,0.85);">
                 <div class="text-center mb-4">
                     <div id="instruction-method-logo" class="pay-logo logo-default mx-auto mb-2" style="width: 65px; height: 65px; font-size: 20px;">BK</div>
@@ -1166,20 +1193,20 @@
         let actionBtn = document.getElementById('alert-action-btn');
 
         if (isError) {
-            iconWrapper.className = "d-inline-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger shadow-sm flex-shrink-0";
+            iconWrapper.className = "d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger shadow-sm flex-shrink-0";
             iconWrapper.style.border = "1.5px solid rgba(239,68,68,0.4)";
             mainIcon.className = "fa-solid fa-circle-xmark pulsing-error-cross";
             titleText.innerText = title || "Error Alert";
             titleText.className = "fw-bold text-danger m-0 text-start";
-            actionBtn.className = "btn btn-danger rounded-pill px-5 fw-bold py-3 shadow w-100";
+            actionBtn.className = "btn btn-danger rounded-pill px-4 fw-bold py-2.5 shadow w-100 d-flex align-items-center justify-content-center gap-2";
             actionBtn.style.background = "linear-gradient(135deg, #ef4444, #dc2626)";
         } else {
-            iconWrapper.className = "d-inline-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10 text-info shadow-sm flex-shrink-0 premium-icon-pulse";
+            iconWrapper.className = "d-flex align-items-center justify-content-center rounded-circle bg-info bg-opacity-10 text-info shadow-sm flex-shrink-0 premium-icon-pulse";
             iconWrapper.style.border = "1.5px solid rgba(56,189,248,0.4)";
             mainIcon.className = customIcon || "fa-solid fa-bullhorn";
             titleText.innerText = title || "Important Notice";
             titleText.className = "fw-bold text-main m-0 text-start";
-            actionBtn.className = "btn btn-success rounded-pill px-5 fw-bold py-3 shadow w-100";
+            actionBtn.className = "btn btn-success rounded-pill px-4 fw-bold py-2.5 shadow w-100 d-flex align-items-center justify-content-center gap-2";
             actionBtn.style.background = "linear-gradient(135deg, #0ea5e9, #3b82f6)";
         }
 
@@ -1779,10 +1806,10 @@
         
         let nameLower = selectedPaymentMethodData.name.toLowerCase();
         let isBdtMethod = ['bkash', 'nagad', 'rocket', 'upay'].some(m => nameLower.includes(m));
-        let minLimit = 20;
+        let minLimit = 25;
 
         if(isNaN(inputVal) || (isBdtMethod && inputVal < minLimit) || (!isBdtMethod && inputVal < (minLimit / currentBinanceRate))) {
-            return showCustomAlert('Minimum deposit amount is ৳20 BDT (or equivalent USD)!', 'Error Alert', true);
+            return showCustomAlert('Minimum deposit amount is ৳25 BDT (or equivalent USD)!', 'Error Alert', true);
         }
 
         document.getElementById('deposit-step-1').style.display = 'none';
